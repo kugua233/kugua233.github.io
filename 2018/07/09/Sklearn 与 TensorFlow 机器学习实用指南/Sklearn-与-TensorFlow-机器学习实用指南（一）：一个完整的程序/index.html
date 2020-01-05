@@ -1,0 +1,1405 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16.ico?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="拆分数据,机器学习,数据预处理,K折交叉验证,格子搜索," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Mosbyllc" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="写在前面：这个系列打算把「Hands-On Machine Learning with Scikit-Learn and TensorFlow 」重新梳理一遍，这本书在看完机器学习基础知识之后有一个很好的算法实践，对于算法落地有很多帮助。这次写的Sklearn 与 TensorFlow 机器学习实用指南系列，目的是让自己更清楚算法的每个流程处理，加强对一些机器学习模型理解。这本书在github有中">
+<meta name="keywords" content="拆分数据,机器学习,数据预处理,K折交叉验证,格子搜索">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Sklearn 与 TensorFlow 机器学习实用指南（一）：一个完整的程序">
+<meta property="og:url" content="http://yoursite.com/2018/07/09/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（一）：一个完整的程序/index.html">
+<meta property="og:site_name" content="Mosbyllc">
+<meta property="og:description" content="写在前面：这个系列打算把「Hands-On Machine Learning with Scikit-Learn and TensorFlow 」重新梳理一遍，这本书在看完机器学习基础知识之后有一个很好的算法实践，对于算法落地有很多帮助。这次写的Sklearn 与 TensorFlow 机器学习实用指南系列，目的是让自己更清楚算法的每个流程处理，加强对一些机器学习模型理解。这本书在github有中">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/2018/07/09/Sklearn%20与%20TensorFlow%20机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（一）：一个完整的程序/01.png">
+<meta property="og:image" content="http://yoursite.com/2018/07/09/Sklearn%20与%20TensorFlow%20机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（一）：一个完整的程序/02.png">
+<meta property="og:image" content="http://yoursite.com/2018/07/09/Sklearn%20与%20TensorFlow%20机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（一）：一个完整的程序/03.png">
+<meta property="og:image" content="http://yoursite.com/2018/07/09/Sklearn%20与%20TensorFlow%20机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（一）：一个完整的程序/04.png">
+<meta property="og:updated_time" content="2018-08-08T11:30:06.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Sklearn 与 TensorFlow 机器学习实用指南（一）：一个完整的程序">
+<meta name="twitter:description" content="写在前面：这个系列打算把「Hands-On Machine Learning with Scikit-Learn and TensorFlow 」重新梳理一遍，这本书在看完机器学习基础知识之后有一个很好的算法实践，对于算法落地有很多帮助。这次写的Sklearn 与 TensorFlow 机器学习实用指南系列，目的是让自己更清楚算法的每个流程处理，加强对一些机器学习模型理解。这本书在github有中">
+<meta name="twitter:image" content="http://yoursite.com/2018/07/09/Sklearn%20与%20TensorFlow%20机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（一）：一个完整的程序/01.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"right","display":"always","offset":12,"b2t":true,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/07/09/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（一）：一个完整的程序/"/>
+
+
+
+
+
+  <title>Sklearn 与 TensorFlow 机器学习实用指南（一）：一个完整的程序 | Mosbyllc</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Mosbyllc</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+<link href="https://cdn.bootcss.com/KaTeX/0.7.1/katex.min.css" rel="stylesheet">
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/09/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（一）：一个完整的程序/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mosbyllc">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Mosbyllc">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Sklearn 与 TensorFlow 机器学习实用指南（一）：一个完整的程序</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-09T16:06:11+08:00">
+                2018-07-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Sklearn-与-TensorFlow-机器学习实用指南/" itemprop="url" rel="index">
+                    <span itemprop="name">Sklearn 与 TensorFlow 机器学习实用指南</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  9,367
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  38
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>写在前面：这个系列打算把「Hands-On Machine Learning with Scikit-Learn and TensorFlow 」重新梳理一遍，这本书在看完机器学习基础知识之后有一个很好的算法实践，对于算法落地有很多帮助。这次写的Sklearn 与 TensorFlow 机器学习实用指南系列，目的是让自己更清楚算法的每个流程处理，加强对一些机器学习模型理解。这本书在<a href="https://github.com/apachecn/hands_on_Ml_with_Sklearn_and_TF" target="_blank" rel="noopener">github</a>有中文的翻译版本（还在更新）.</p>
+<hr>
+<h1 id="拆分数据集"><a href="#拆分数据集" class="headerlink" title="拆分数据集"></a>拆分数据集</h1><h2 id="训练集-测试集"><a href="#训练集-测试集" class="headerlink" title="训练集+测试集"></a>训练集+测试集</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">split_train_test</span><span class="params">(data, test_ratio)</span>:</span></span><br><span class="line">    shuffled_indices = np.random.permutation(len(data))    <span class="comment"># 打乱序列</span></span><br><span class="line">    test_set_size = int(len(data) * test_ratio)    <span class="comment"># 拆分比例</span></span><br><span class="line">    test_indices = shuffled_indices[:test_set_size]</span><br><span class="line">    train_indices = shuffled_indices[test_set_size:]</span><br><span class="line">    <span class="keyword">return</span> data.iloc[train_indices], data.iloc[test_indices]</span><br><span class="line">    </span><br><span class="line">train_set, test_set = split_train_test(housing, <span class="number">0.2</span>)    <span class="comment"># housing数据二八拆分</span></span><br></pre></td></tr></table></figure>
+<p>或者直接将整体数据打乱，然后按需取量。(california_housing_dataframe为谷歌机器学习教程提供的加州住房数据)</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">california_housing_dataframe = california_housing_dataframe.reindex(	<span class="comment"># 整体打乱</span></span><br><span class="line">    np.random.permutation(california_housing_dataframe.index))</span><br><span class="line">train_set = california_housing_dataframe.head(<span class="number">12000</span>)</span><br><span class="line">test_set = california_housing_dataframe.tail(<span class="number">5000</span>)</span><br></pre></td></tr></table></figure>
+<p>以上为训练集+测试集的拆分方式</p>
+<h2 id="训练集-验证集-测试集"><a href="#训练集-验证集-测试集" class="headerlink" title="训练集+验证集+测试集"></a>训练集+验证集+测试集</h2><p><strong>这样的拆分方式主要有存在一些不足。1、程序多次运行后，测试集的数据有可能会加入到训练集当中，调参时用于改进模型超参数的测试集会造成过拟合。2、不便于新数据的加入</strong></p>
+<p>更好的办法是将数据集拆分为训练集+验证集+测试集。</p>
+<p><img src="/2018/07/09/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（一）：一个完整的程序/01.png" alt=""></p>
+<p>那如何解决新加入数据的问题呢？<strong>一个通常的解决办法是使用每个实例的识别码</strong>，以判定是否这个实例是否应该放入测试集（假设实例有单一且不变的识别码）。<strong>例如，你可以计算出每个实例识别码的哈希值，只保留其最后一个字节，如果值小于等于 51（约为 256 的 20%），就将其放入测试集。这样可以保证在多次运行中，测试集保持不变，即使更新了数据集。新的测试集会包含新实例中的 20%，但不会有之前位于训练集的实例</strong>。可能很多数据没有稳定的特征，最简单的办法就是利用索引作为识别码。下面的代码根据识别码按0.7,0.2,0.1比例拆分训练集、验证集和测试集。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 参数identifier为单一且不变的识别码，可以为索引id</span></span><br><span class="line"><span class="comment"># hash(np.int64(identifier)).digest()[-1]返回识别码的哈希摘要值的最后一个字节</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">validate_set_check</span><span class="params">(identifier, validate_ratio, test_ratio, hash)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">256</span> * test_ratio &lt;= hash(np.int64(identifier)).digest()[<span class="number">-1</span>] &lt; <span class="number">256</span> *      (validate_ratio+test_ratio)  </span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">test_set_check</span><span class="params">(identifier, test_ratio, hash)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> hash(np.int64(identifier)).digest()[<span class="number">-1</span>] &lt; <span class="number">256</span> * test_ratio    <span class="comment"># 记录满足条件的索引</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">split_train_test_by_id</span><span class="params">(data, validate_ratio, test_ratio, id_column, hash=hashlib.md5)</span>:</span></span><br><span class="line">    ids = data[id_column]	<span class="comment"># 确定识别码</span></span><br><span class="line">    in_validate_set = ids.apply(<span class="keyword">lambda</span> id_: validate_set_check(id_, validate_ratio, test_ratio，hash))</span><br><span class="line">    in_test_set = ids.apply(<span class="keyword">lambda</span> id_: test_set_check(id_, test_ratio, hash))</span><br><span class="line">    combine_set = np.bitwise_or(in_validate_set, in_test_set)</span><br><span class="line">    <span class="keyword">return</span> data.loc[~combine_set], data.loc[in_validate_set], data.loc[in_test_set]			                       </span><br><span class="line">housing_with_id = housing.reset_index()   <span class="comment"># housing数据增加一个索引列，放在数据的第一列</span></span><br><span class="line">train_set, validate_set, test_set = split_train_test_by_id(housing_with_id, <span class="number">0.2</span>, <span class="number">0.1</span>, <span class="string">"index"</span>)</span><br></pre></td></tr></table></figure>
+<h2 id="分成采样"><a href="#分成采样" class="headerlink" title="分成采样"></a>分成采样</h2><p>另外一种拆分方式：<strong>分成采样</strong></p>
+<p><strong>将人群分成均匀的子分组，称为分层</strong>，从每个分层去除合适数量的实例，以保证测试集对总人数有代表性。例如，美国人口的 51.3% 是女性，48.7% 是男性。所以在美国，严谨的调查需要保证样本也是这个比例：513 名女性，487 名男性作为数据样本。数据集中的每个分层都要有足够的实例位于你的数据中，这点很重要。否则，对分层重要性的评估就会有偏差。这意味着，<strong>你不能有过多的分层</strong>，<strong>且每个分层都要足够大</strong>。后面的代码通过将收入中位数除以 1.5（以限制收入分类的数量），创建了一个收入类别属性，<strong>用ceil对值舍入（以产生离散的分类），然后将所有大于 5的分类归入到分类5 </strong>：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 预处理，创建"income_cat"属性 </span></span><br><span class="line"><span class="comment"># 凡是会对原数组作出修改并返回一个新数组的，往往都有一个 inplace可选参数</span></span><br><span class="line"><span class="comment"># inplace=True,原数组名对应的内存值直接改变;inplace=False,原数组名对应的内存值并不改变，新的结果赋给一个新的数组.</span></span><br><span class="line">housing[<span class="string">"income_cat"</span>] = np.ceil(housing[<span class="string">"median_income"</span>] / <span class="number">1.5</span>)</span><br><span class="line">housing[<span class="string">"income_cat"</span>].where(housing[<span class="string">"income_cat"</span>] &lt; <span class="number">5</span>, <span class="number">5.0</span>, inplace=<span class="keyword">True</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 现在，就可以根据收入分类，进行分层采样。你可以使用 Scikit-Learn 的StratifiedShuffleSplit类</span></span><br><span class="line"><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> StratifiedShuffleSplit</span><br><span class="line"></span><br><span class="line"><span class="comment"># random_state为随机种子生成器，可以得到相同的随机结果</span></span><br><span class="line"><span class="comment"># n_splits是将训练数据分成train/test对的组数，这里汇总成一组数据</span></span><br><span class="line">split = StratifiedShuffleSplit(n_splits=<span class="number">1</span>, test_size=<span class="number">0.2</span>, random_state=<span class="number">42</span>)    </span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> train_index, test_index <span class="keyword">in</span> split.split(housing, housing[<span class="string">"income_cat"</span>]):</span><br><span class="line">    strat_train_set = housing.loc[train_index]</span><br><span class="line">    strat_test_set = housing.loc[test_index]</span><br><span class="line"></span><br><span class="line"><span class="comment"># 现在，你需要删除income_cat属性，使数据回到初始状态：    </span></span><br><span class="line"><span class="keyword">for</span> set <span class="keyword">in</span> (strat_train_set, strat_test_set):</span><br><span class="line">    set.drop([<span class="string">"income_cat"</span>], axis=<span class="number">1</span>, inplace=<span class="keyword">True</span>)</span><br></pre></td></tr></table></figure>
+<h1 id="数据预处理"><a href="#数据预处理" class="headerlink" title="数据预处理"></a>数据预处理</h1><h2 id="将原始数据映射到特征"><a href="#将原始数据映射到特征" class="headerlink" title="将原始数据映射到特征"></a>将原始数据映射到特征</h2><p>我们在进行机器学习的时候，采用的数据样本往往是<strong>矢量</strong>（特征矢量），而我们的<strong>原始数据</strong>并不是以矢量的形式呈现给我们的，这是便需要将数据映射到特征</p>
+<h3 id="整数和浮点数映射"><a href="#整数和浮点数映射" class="headerlink" title="整数和浮点数映射"></a>整数和浮点数映射</h3><p>直接映射便ok（虽然机器学习是<strong>根据浮点值进行的训练</strong>，但是不需要将整数6转换为6.0，这个过程是默认的）</p>
+<h3 id="字符串映射"><a href="#字符串映射" class="headerlink" title="字符串映射"></a>字符串映射</h3><p>好多时候，有的特征是字符串，比如此前训练的加利福尼亚房产数据集中的<strong>街区名称</strong>，机器学习是无法根据字符串来学习规律的，所以需要转换。但是存在一个问题，如果字符特征是’’一环’’ ‘’二环’’ ‘’三环’’…（代表某个城市的地理位置），那么对其进行数值转换的时候，是不可以编码为形如1，2，3，4…这样的数据的，因为其存在数据大小的问题，学习模型会把他们的大小关系作为特征而学习，所以我们需要引入<a href="https://www.cnblogs.com/king-lps/p/7846414.html" target="_blank" rel="noopener"><strong>独热编码</strong></a>,（具体解释见链接，解释的很好）.<strong>我们需要把这些文本标签转换为数字</strong>。Scikit-Learn 为这个任务提供了一个转换器LabelEncoder：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 简单来说 LabelEncoder 是对不连续的数字或者文本进行编号</span></span><br><span class="line"><span class="comment"># le.fit([1,5,67,100])</span></span><br><span class="line"><span class="comment"># le.transform([1,1,100,67,5])</span></span><br><span class="line"><span class="comment"># 输出： array([0,0,3,2,1])</span></span><br><span class="line"></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> sklearn.preprocessing <span class="keyword">import</span> LabelEncoder</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>encoder = LabelEncoder()</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>housing_cat = housing[<span class="string">"ocean_proximity"</span>]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>housing_cat_encoded = encoder.fit_transform(housing_cat)	<span class="comment"># 装换器</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>housing_cat_encoded</span><br><span class="line">array([<span class="number">1</span>, <span class="number">1</span>, <span class="number">4</span>, ..., <span class="number">1</span>, <span class="number">0</span>, <span class="number">3</span>])</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>译注:</p>
+<p>在原书中使用<code>LabelEncoder</code>转换器来转换文本特征列的方式是错误的，该转换器只能用来转换标签（正如其名）。在这里使用<code>LabelEncoder</code>没有出错的原因是该数据只有一列文本特征值，在有多个文本特征列的时候就会出错。应使用<code>factorize()</code>方法来进行操作：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt; housing_cat_encoded, housing_categories = housing_cat.factorize()</span><br><span class="line">&gt; housing_cat_encoded[:<span class="number">10</span>]</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>&gt;</p>
+<p>处理离散特征这还不够，Scikit-Learn 提供了一个编码器OneHotEncoder，用于将整书分类值转变为独热向量。注意fit_transform()用于 2D 数组，而housing_cat_encoded是一个 1D 数组，所以需要将其变形：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># reshape(-1,1)里面的-1代表将数据自动计算有多少行，但是列数明确设置为1</span></span><br><span class="line"><span class="comment"># reshape(-1)则是变形为1行和自动计算有多少列</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> sklearn.preprocessing <span class="keyword">import</span> OneHotEncoder</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>encoder = OneHotEncoder()</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>housing_cat_1hot = encoder.fit_transform(housing_cat_encoded.reshape(<span class="number">-1</span>,<span class="number">1</span>))</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>housing_cat_1hot</span><br><span class="line">&lt;<span class="number">16513</span>x5 sparse matrix of type <span class="string">'&lt;class '</span>numpy.float64<span class="string">'&gt;'</span></span><br><span class="line">    <span class="keyword">with</span> <span class="number">16513</span> stored elements <span class="keyword">in</span> Compressed Sparse Row format&gt;</span><br></pre></td></tr></table></figure>
+<p>注意输出结果是一个 SciPy 稀疏矩阵，而不是 NumPy 数组。当类别属性有数千个分类时，这样非常有用。经过独热编码，我们得到了一个有数千列的矩阵，这个矩阵每行只有一个 1，其余都是 0。使用大量内存来存储这些 0 非常浪费，所以稀疏矩阵只存储非零元素的位置。你可以像一个 2D 数据那样进行使用，但是如果你真的想将其转变成一个（密集的）NumPy 数组，只需调用toarray()方法：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>housing_cat_1hot.toarray()</span><br><span class="line">array([[ <span class="number">0.</span>,  <span class="number">1.</span>,  <span class="number">0.</span>,  <span class="number">0.</span>,  <span class="number">0.</span>],</span><br><span class="line">       [ <span class="number">0.</span>,  <span class="number">1.</span>,  <span class="number">0.</span>,  <span class="number">0.</span>,  <span class="number">0.</span>],</span><br><span class="line">       [ <span class="number">0.</span>,  <span class="number">0.</span>,  <span class="number">0.</span>,  <span class="number">0.</span>,  <span class="number">1.</span>],</span><br><span class="line">       ...,</span><br><span class="line">       [ <span class="number">0.</span>,  <span class="number">1.</span>,  <span class="number">0.</span>,  <span class="number">0.</span>,  <span class="number">0.</span>],</span><br><span class="line">       [ <span class="number">1.</span>,  <span class="number">0.</span>,  <span class="number">0.</span>,  <span class="number">0.</span>,  <span class="number">0.</span>],</span><br><span class="line">       [ <span class="number">0.</span>,  <span class="number">0.</span>,  <span class="number">0.</span>,  <span class="number">1.</span>,  <span class="number">0.</span>]])</span><br></pre></td></tr></table></figure>
+<p>使用类LabelBinarizer，我们可以用一步执行这两个转换（从文本分类到整数分类，再从整数分类到独热向量）：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> sklearn.preprocessing <span class="keyword">import</span> LabelBinarizer</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>encoder = LabelBinarizer()</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>housing_cat_1hot = encoder.fit_transform(housing_cat)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>housing_cat_1hot</span><br><span class="line">array([[<span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>],</span><br><span class="line">       [<span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>],</span><br><span class="line">       [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>],</span><br><span class="line">       ...,</span><br><span class="line">       [<span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>],</span><br><span class="line">       [<span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>],</span><br><span class="line">       [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>]])</span><br></pre></td></tr></table></figure>
+<p>注意默认返回的结果是一个密集 NumPy 数组。向构造器LabelBinarizer传递sparse_output=True，就可以得到一个稀疏矩阵。</p>
+<blockquote>
+<p>译注:</p>
+<p>在原书中使用<code>LabelBinarizer</code>的方式也是错误的，该类也应用于标签列的转换。正确做法是使用sklearn即将提供的<code>CategoricalEncoder</code>类。如果在你阅读此文时sklearn中尚未提供此类，用如下方式代替：（来自<a href="https://github.com/scikit-learn/scikit-learn/pull/9151" target="_blank" rel="noopener">Pull Request #9151）</a></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&gt; <span class="comment">#from sklearn.preprocessing import CategoricalEncoder # in future versions of Scikit-Learn</span></span><br><span class="line">&gt;</span><br><span class="line">&gt; cat_encoder = CategoricalEncoder()</span><br><span class="line">&gt; housing_cat_reshaped = housing_cat.values.reshape(<span class="number">-1</span>, <span class="number">1</span>)</span><br><span class="line">&gt; housing_cat_1hot = cat_encoder.fit_transform(housing_cat_reshaped)</span><br><span class="line">&gt; housing_cat_1hot</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>&gt;</p>
+<blockquote>
+</blockquote>
+<h2 id="寻找良好特征（的特点）"><a href="#寻找良好特征（的特点）" class="headerlink" title="寻找良好特征（的特点）"></a>寻找良好特征（的特点）</h2><p>当得到特征之后，还是要进行筛选的，因为有的特征没有参考价值，就像我们的在做合成特征的时候，正常的特征数据是人均几间房间，而有的人是几十间，这明显没有参考价值<br>良好特征的几点原则</p>
+<ul>
+<li><p>避免很少使用的离散特征值：如果只是出现了一两次的特征几乎是没有意义的</p>
+</li>
+<li><p>最好具有清晰明确的含义：特征的含义不仅仅是让机器学习的模型学习的，人也要知道其具体的含义，不然不利于分析数据（最好将数值很大的秒转换为天数，或者年，让人看起来直观一些）</p>
+</li>
+<li><p>将“神奇”的值与实际数据混为一谈：有些特征中会出现一些”神奇的数据”，当然这些数据并不是很少的特征，而是超出范围的异常值，比如特征应该是介于0——1之间的，但是因为这个数据是空缺的，而采用的默认数值-1，那么这样的数值就是”神奇”，解决办法是，将该特征转换为两个特征：</p>
+<ul>
+<li>一个特征只存储质正常范围的值，不含神奇值。</li>
+<li>一个特征存储布尔值，表示的信息为是否为空</li>
+</ul>
+</li>
+<li><p>考虑上游不稳定性：由经验可知，特征的定义不应随时间发生变化，代表城市名称的话，那么特征值始终都该是城市的名称，但是有的时候，上游模型将特征值处理完毕后，返还给下游模型的却变成了数值，这样是不好的，因为这种表示在未来运行其他模型时可能轻易发生变化，那么特征就乱套了</p>
+<p>​</p>
+</li>
+</ul>
+<h3 id="可视化数据寻找规律："><a href="#可视化数据寻找规律：" class="headerlink" title="可视化数据寻找规律："></a>可视化数据寻找规律：</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">housing.plot(kind=<span class="string">"scatter"</span>, x=<span class="string">"longitude"</span>, y=<span class="string">"latitude"</span>, alpha=<span class="number">0.4</span>,</span><br><span class="line">    s=housing[<span class="string">"population"</span>]/<span class="number">100</span>, label=<span class="string">"population"</span>,</span><br><span class="line">    c=<span class="string">"median_house_value"</span>, cmap=plt.get_cmap(<span class="string">"jet"</span>), colorbar=<span class="keyword">True</span>,</span><br><span class="line">)</span><br><span class="line">plt.legend()</span><br></pre></td></tr></table></figure>
+<p>每个圈的半径表示街区的人口（选项s），颜色代表价格（选项c）。我们用预先定义的名为jet的颜色图（选项cmap），它的范围是从蓝色（低价）到红色（高价）：</p>
+<p><img src="/2018/07/09/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（一）：一个完整的程序/02.png" alt=""></p>
+<h3 id="皮尔逊相关系数"><a href="#皮尔逊相关系数" class="headerlink" title="皮尔逊相关系数"></a>皮尔逊相关系数</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">corr_matrix = housing.corr()</span><br></pre></td></tr></table></figure>
+<h3 id="Pandas-的scatter-matrix函数"><a href="#Pandas-的scatter-matrix函数" class="headerlink" title="Pandas 的scatter_matrix函数"></a>Pandas 的scatter_matrix函数</h3><p>另一种检测属性间相关系数的方法是使用 Pandas 的scatter_matrix函数,它能画出每个数值属性对每个其它数值属性的图。因为现在共有 11 个数值属性，你可以得到11 ** 2 = 121张图。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pandas.tools.plotting <span class="keyword">import</span> scatter_matrix</span><br><span class="line"></span><br><span class="line">attributes = [<span class="string">"median_house_value"</span>, <span class="string">"median_income"</span>, <span class="string">"total_rooms"</span>,</span><br><span class="line">              <span class="string">"housing_median_age"</span>]</span><br><span class="line">scatter_matrix(housing[attributes], figsize=(<span class="number">12</span>, <span class="number">8</span>))</span><br></pre></td></tr></table></figure>
+<p>得到两个属性的散点图</p>
+<p><img src="/2018/07/09/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（一）：一个完整的程序/03.png" alt=""></p>
+<h2 id="清查数据"><a href="#清查数据" class="headerlink" title="清查数据"></a>清查数据</h2><p>截至目前，我们假定用于训练和测试的所有数据都是值得信赖的。在现实生活中，数据集中的很多样本是不可靠的，原因有以下一种或多种：</p>
+<ul>
+<li><strong>遗漏值。</strong> 例如，有人忘记为某个房屋的年龄输入值。(值会为-1，所以要分为两个特征，忘了的看上面)</li>
+<li><strong>重复样本。</strong> 例如，服务器错误地将同一条记录上传了两次。</li>
+<li><strong>不良标签。</strong> 例如，有人错误地将一颗橡树的图片标记为枫树。</li>
+<li><strong>不良特征值。</strong> 例如，有人输入了多余的位数，或者温度计被遗落在太阳底下。</li>
+</ul>
+<p>一旦检测到存在这些问题，通常需要将相应样本从数据集中移除，从而“修正”不良样本。要检测遗漏值或重复样本，可以编写一个简单的程序。检测不良特征值或标签可能会比较棘手，可采用可视化数据的方法。</p>
+<p><strong>对于处理特征丢失的问题</strong>。前面，你应该注意到了属性total_bedrooms有一些缺失值。有三个解决选项：</p>
+<ul>
+<li>去掉对应的街区；（数据大可用）</li>
+<li>去掉整个属性；</li>
+<li>进行赋值（0、平均值、中位数等等）。</li>
+</ul>
+<p>用DataFrame的dropna()，drop()，和fillna()方法，可以方便地实现：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">housing.dropna(subset=[<span class="string">"total_bedrooms"</span>])    <span class="comment"># 选项1</span></span><br><span class="line">housing.drop(<span class="string">"total_bedrooms"</span>, axis=<span class="number">1</span>)       <span class="comment"># 选项2    axis=0对行操作，axis=1对列操作</span></span><br><span class="line">median = housing[<span class="string">"total_bedrooms"</span>].median()</span><br><span class="line">housing[<span class="string">"total_bedrooms"</span>].fillna(median)     <span class="comment"># 选项3</span></span><br></pre></td></tr></table></figure>
+<p>如果选择选项 3，你需要计算训练集的中位数，用中位数填充训练集的缺失值，<strong>不要忘记保存该中位数</strong>。后面用<strong>测试集</strong>评估系统时，<strong>需要替换测试集中的缺失值</strong>，也可以用来实时替换新数据中的缺失值。</p>
+<p>Scikit-Learn 提供了一个方便的类来处理缺失值：Imputer。下面是其使用方法：首先，需要创建一个Imputer实例，指定用该属性的中位数替换它的每个缺失值：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.preprocessing <span class="keyword">import</span> Imputer</span><br><span class="line"></span><br><span class="line">imputer = Imputer(strategy=<span class="string">"median"</span>)    <span class="comment"># 进行中位数赋值</span></span><br></pre></td></tr></table></figure>
+<p><strong>因为只有数值属性才能算出中位数，我们需要创建一份不包括文本属性ocean_proximity的数据副本：</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">housing_num = housing.drop(<span class="string">"ocean_proximity"</span>, axis=<span class="number">1</span>) <span class="comment"># 去除ocean_proximity不为数值属性的特征</span></span><br></pre></td></tr></table></figure>
+<p>现在，就可以用fit()方法将imputer实例拟合到训练数据：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">imputer.fit(housing_num)</span><br></pre></td></tr></table></figure>
+<p>imputer计算出了每个属性的中位数，并将结果保存在了实例变量statistics_中。只有属性total_bedrooms有缺失值，但是我们<strong>确保一旦系统运行起来，新的数据中没有缺失值</strong>，所以<strong>安全的做法是将imputer应用到每个数值</strong>：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>imputer.statistics_    <span class="comment"># 实例变量statistics_和housing_num数值数据得到的中位数是一样的</span></span><br><span class="line">array([ <span class="number">-118.51</span> , <span class="number">34.26</span> , <span class="number">29.</span> , <span class="number">2119.</span> , <span class="number">433.</span> , <span class="number">1164.</span> , <span class="number">408.</span> , <span class="number">3.5414</span>])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>housing_num.median().values</span><br><span class="line">array([ <span class="number">-118.51</span> , <span class="number">34.26</span> , <span class="number">29.</span> , <span class="number">2119.</span> , <span class="number">433.</span> , <span class="number">1164.</span> , <span class="number">408.</span> , <span class="number">3.5414</span>])</span><br></pre></td></tr></table></figure>
+<p>现在，你就可以使用这个“训练过的”imputer来对训练集进行转换，通过将缺失值替换为中位数：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">X = imputer.transform(housing_num)</span><br></pre></td></tr></table></figure>
+<p>结果是一个普通的 Numpy 数组，包含有转换后的特征。如果你想将其放回到 PandasDataFrame中，也很简单：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">housing_tr = pd.DataFrame(X, columns=housing_num.columns) <span class="comment"># 得到处理缺失值后的DF数据</span></span><br></pre></td></tr></table></figure>
+<h2 id="整理数据："><a href="#整理数据：" class="headerlink" title="整理数据："></a>整理数据：</h2><h3 id="数据缩放"><a href="#数据缩放" class="headerlink" title="数据缩放"></a>数据缩放</h3><p>有两种常见的方法可以让所有的属性有相同的量度：<strong>线性函数归一化（Min-Max scaling）和标准化（standardization</strong>）。Scikit-Learn 提供了一个转换器MinMaxScaler来实现这个功能。它有一个超参数feature_range，可以让你改变范围，如果不希望范围是 0 到 1；Scikit-Learn 提供了一个转换器StandardScaler来进行标准化</p>
+<p>min-max方式,对应的方法为</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MinMaxScaler(self, feature_range=(<span class="number">0</span>, <span class="number">1</span>), copy=<span class="keyword">True</span>)</span><br></pre></td></tr></table></figure>
+<p>standardization 标准化数据,对应的方法为</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">StandardScaler(self, copy=<span class="keyword">True</span>, with_mean=<span class="keyword">True</span>, with_std=<span class="keyword">True</span>)</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>警告：与所有的转换一样，缩放器只能向训练集拟合，而不是向完整的数据集（包括测试集）。只有这样，你才能用缩放器转换训练集和测试集（和新数据）。</p>
+</blockquote>
+<h3 id="处理极端离群值"><a href="#处理极端离群值" class="headerlink" title="处理极端离群值"></a>处理极端离群值</h3><p>还是举加利福尼亚州住房数据集中的人均住房数的例子，有的极端值达到了50<br>对于这些极端值其实很好处理，无非几个办法</p>
+<ul>
+<li><strong>对数缩放</strong>  </li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">roomsPerPerson = log((totalRooms / population) + 1)</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>特征值限制到 某个上限或者下限</strong></li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">roomsPerPerson = min(totalRooms / population, <span class="number">4</span>)	<span class="comment"># 大于4.0的取4.0</span></span><br></pre></td></tr></table></figure>
+<h3 id="分箱"><a href="#分箱" class="headerlink" title="分箱"></a>分箱</h3><p><strong>分箱</strong>其实是一个形象化的说法，就是把数据分开来，装在一个个箱子里，这样一个箱子里的数据就是一家人了。<br>那有什么用呢？下面就举个栗子！</p>
+<p><img src="/2018/07/09/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（一）：一个完整的程序/04.png" alt=""></p>
+<p>在数据集中，<code>latitude</code> 是一个浮点值。不过，在我们的模型中将 <code>latitude</code> 表示为浮点特征没有意义。这是因为纬度和房屋价值之间不存在线性关系。例如，纬度 35 处的房屋并不比纬度 34 处的房屋贵 35/34（或更便宜）。但是，纬度或许能很好地预测房屋价值。</p>
+<p>我们现在拥有 11 个不同的布尔值特征（<code>LatitudeBin1</code>、<code>LatitudeBin2</code>、…、<code>LatitudeBin11</code>），而不是一个浮点特征。拥有 11 个不同的特征有点不方便，因此我们将它们统一成一个 11 元素矢量。这样做之后，我们可以将纬度 37.4 表示为：</p>
+<p>[0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0]</p>
+<p>分箱之后，我们的模型现在可以为每个纬度学习完全不同的权重。（是不是觉得有点像独热编码，没错，就是的）</p>
+<blockquote>
+<p>为了简单起见，我们在纬度样本中使用整数作为分箱边界。如果我们需要更精细的解决方案，我们可以每隔 1/10 个纬度拆分一次分箱边界。添加更多箱可让模型从纬度 37.4 处学习和维度 37.5 处不一样的行为，但前提是每 1/10 个纬度均有充足的样本可供学习。</p>
+<p>另一种方法是按<a href="https://wikipedia.org/wiki/Quantile" target="_blank" rel="noopener">分位数</a>分箱，这种方法可以确保每个桶内的样本数量是相等的。按分位数分箱完全无需担心离群值。</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string">分桶也称为分箱。</span></span><br><span class="line"><span class="string">例如，我们可以将 population 分为以下 3 个分桶：</span></span><br><span class="line"><span class="string">bucket_0 (&lt; 5000)：对应于人口分布较少的街区</span></span><br><span class="line"><span class="string">bucket_1 (5000 - 25000)：对应于人口分布适中的街区</span></span><br><span class="line"><span class="string">bucket_2 (&gt; 25000)：对应于人口分布较多的街区</span></span><br><span class="line"><span class="string">根据前面的分桶定义，以下 population 矢量：</span></span><br><span class="line"><span class="string">[[10001], [42004], [2500], [18000]]</span></span><br><span class="line"><span class="string">将变成以下经过分桶的特征矢量：</span></span><br><span class="line"><span class="string">[[1], [2], [0], [1]]</span></span><br><span class="line"><span class="string">这些特征值现在是分桶索引。请注意，这些索引被视为离散特征。通常情况下，这些特征将被进一步转换为上述独热表示法，但这是以透明方式实现的。</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">要为分桶特征定义特征列，我们可以使用 bucketized_column（而不是使用 numeric_column），该列将数字列作为输入，并使用 boundardies 参数中指定的分桶边界将其转换为分桶特征。以下代码为 households 和 longitude 定义了分桶特征列；get_quantile_based_boundaries 函数会根据分位数计算边界，以便每个分桶包含相同数量的元素</span></span><br><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_quantile_based_boundaries</span><span class="params">(feature_values, num_buckets)</span>:</span></span><br><span class="line">    boundaries = np.arange(<span class="number">1.0</span>, num_buckets) / num_buckets</span><br><span class="line">    quantiles = feature_values.quantile(boundaries)</span><br><span class="line">    <span class="keyword">return</span> [quantiles[q] <span class="keyword">for</span> q <span class="keyword">in</span> quantiles.keys()]</span><br><span class="line"></span><br><span class="line"><span class="comment"># Divide households into 7 buckets.</span></span><br><span class="line">households = tf.feature_column.numeric_column(<span class="string">"households"</span>)		<span class="comment"># 定义数值特征</span></span><br><span class="line"><span class="comment"># 分桶特征bucketized_column第一个参数用数字列 numeric_column得到的households，第二个参数用上面get_quantile_based_boundaries方法得到的分桶数据，返回的bucketized_households为可使用的分桶特征</span></span><br><span class="line">bucketized_households = tf.feature_column.bucketized_column(       </span><br><span class="line">    households,boundaries=get_quantile_based_boundaries(california_housing_dataframe[<span class="string">"households"</span>], <span class="number">7</span>))</span><br></pre></td></tr></table></figure>
+<h2 id="自定义转换器"><a href="#自定义转换器" class="headerlink" title="自定义转换器"></a>自定义转换器</h2><p>尽管 Scikit-Learn 提供了许多有用的转换器，你还是需要自己动手写转换器执行任务，比如自定义的清理操作，或属性组合。<strong>你需要让自制的转换器与 Scikit-Learn 组件（比如流水线）无缝衔接工作，因为 Scikit-Learn 是依赖鸭子类型的（而不是继承，忽略对象，只要行为像就行），你所需要做的是创建一个类并执行三个方法：fit()（返回self），transform()，和fit_transform()</strong>。<strong>通过添加TransformerMixin作为基类，可以很容易地得到最后一个。另外，如果你添加BaseEstimator作为基类（且构造器中避免使用args和kargs</strong>），<strong>你就能得到两个额外的方法（get_params()和set_params()），二者可以方便地进行超参数自动微调</strong>。例如，一个小转换器类添加了上面讨论的属性：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 添加一个特征组合的装换器</span></span><br><span class="line"><span class="keyword">from</span> sklearn.base <span class="keyword">import</span> BaseEstimator, TransformerMixin</span><br><span class="line">rooms_ix, bedrooms_ix, population_ix, household_ix = <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 这里的示例没有定义fit_transform()，可能是因为fit()没有做任何动作（我猜的</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CombinedAttributesAdder</span><span class="params">(BaseEstimator, TransformerMixin)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, add_bedrooms_per_room = True)</span>:</span> <span class="comment"># no *args or **kargs</span></span><br><span class="line">        self.add_bedrooms_per_room = add_bedrooms_per_room</span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">fit</span><span class="params">(self, X, y=None)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> self  <span class="comment"># nothing else to do</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">transform</span><span class="params">(self, X, y=None)</span>:</span></span><br><span class="line">        rooms_per_household = X[:, rooms_ix] / X[:, household_ix]  <span class="comment"># X[:,3]表示的是第4列所有数据</span></span><br><span class="line">        population_per_household = X[:, population_ix] / X[:, household_ix]</span><br><span class="line">        <span class="keyword">if</span> self.add_bedrooms_per_room:</span><br><span class="line">            bedrooms_per_room = X[:, bedrooms_ix] / X[:, rooms_ix]</span><br><span class="line">            <span class="keyword">return</span> np.c_[X, rooms_per_household, population_per_household, <span class="comment"># np.c_表示的是拼接数组。</span></span><br><span class="line">                         bedrooms_per_room]</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">return</span> np.c_[X, rooms_per_household, population_per_household]</span><br><span class="line"></span><br><span class="line">attr_adder = CombinedAttributesAdder(add_bedrooms_per_room=<span class="keyword">False</span>)</span><br><span class="line">housing_extra_attribs = attr_adder.transform(housing.values)    <span class="comment"># 返回一个加入新特征的数据</span></span><br></pre></td></tr></table></figure>
+<p>在这个例子中，转换器有一个超参数add_bedrooms_per_room，默认设为True（提供一个合理的默认值很有帮助）。这个超参数可以让你方便地发现添加了这个属性是否对机器学习算法有帮助。更一般地，你可以为每个不能完全确保的数据准备步骤添加一个超参数。数据准备步骤越自动化，可以自动化的操作组合就越多，越容易发现更好用的组合（并能节省大量时间）。</p>
+<p><strong>另外sklearn是不能直接处理DataFrames的，那么我们需要自定义一个处理的方法将之转化为numpy类型</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DataFrameSelector</span><span class="params">(BaseEstimator,TransformerMixin)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self,attribute_names)</span>:</span> <span class="comment">#可以为列表</span></span><br><span class="line">        self.attribute_names = attribute_names</span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">fit</span><span class="params">(self,X,y=None)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> self</span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">transform</span><span class="params">(self,X)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> X[self.attribute_names].values <span class="comment">#返回的为numpy array</span></span><br></pre></td></tr></table></figure>
+<h2 id="转换流水线"><a href="#转换流水线" class="headerlink" title="转换流水线"></a>转换流水线</h2><p>目前在数据预处理阶段，<strong>我们需要对缺失值进行处理、特征组合和特征缩放。每一步的执行都有着先后顺序，存在许多数据转换步骤，需要按一定的顺序执行。</strong>sklearn提供了Pipeline帮助顺序完成转换幸运的是，Scikit-Learn 提供了类Pipeline，来进行这一系列的转换。下面是一个数值属性的小流水线：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.pipeline <span class="keyword">import</span> Pipeline</span><br><span class="line"><span class="keyword">from</span> sklearn.preprocessing <span class="keyword">import</span> StandardScaler</span><br><span class="line"></span><br><span class="line">num_pipeline = Pipeline([</span><br><span class="line">        (<span class="string">'imputer'</span>, Imputer(strategy=<span class="string">"median"</span>)),    <span class="comment"># 处理缺失值</span></span><br><span class="line">        (<span class="string">'attribs_adder'</span>, CombinedAttributesAdder()),    <span class="comment"># 特征组合</span></span><br><span class="line">        (<span class="string">'std_scaler'</span>, StandardScaler()),    <span class="comment"># 特征缩放</span></span><br><span class="line">        ])</span><br><span class="line"></span><br><span class="line">housing_num_tr = num_pipeline.fit_transform(housing_num)</span><br></pre></td></tr></table></figure>
+<p><strong>Pipeline构造器需要一个定义步骤顺序的名字/估计器对的列表。除了最后一个估计器，其余都要是转换器（即，它们都要有fit_transform()方法）</strong>。名字可以随意起。</p>
+<p><strong>当你调用流水线的fit()方法，就会对所有转换器顺序调用fit_transform()方法，将每次调用的输出作为参数传递给下一个调用，一直到最后一个估计器，它只执行fit()方法。</strong></p>
+<p>估计器（Estimator）：很多时候可以直接理解成分类器，主要包含两个函数：fit()和predict()<br>转换器（Transformer）：转换器用于数据预处理和数据转换，主要是三个方法：fit（）,transform()和fit_transform()</p>
+<p>最后的估计器是一个StandardScaler，它是一个转换器，因此这个流水线有一个transform()方法，可以顺序对数据做所有转换（它还有一个fit_transform方法可以使用，就不必先调用fit()再进行transform()）。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">num_attribs = list(housing_num) <span class="comment"># 返回的为列名[col1,col2,....]</span></span><br><span class="line">cat_attribs = [<span class="string">"ocean_proximity"</span>]</span><br><span class="line"></span><br><span class="line">num_pipeline = Pipeline([ <span class="comment"># 数值类型</span></span><br><span class="line">        (<span class="string">'selector'</span>, DataFrameSelector(num_attribs)),	<span class="comment"># DataFrames转为numpy array</span></span><br><span class="line">        (<span class="string">'imputer'</span>, Imputer(strategy=<span class="string">"median"</span>)),	<span class="comment"># 缺失值处理</span></span><br><span class="line">        (<span class="string">'attribs_adder'</span>, CombinedAttributesAdder()),	<span class="comment"># 特征组合</span></span><br><span class="line">        (<span class="string">'std_scaler'</span>, StandardScaler()),	<span class="comment"># 缩放</span></span><br><span class="line">    ])</span><br><span class="line"></span><br><span class="line">cat_pipeline = Pipeline([ <span class="comment"># 标签类型</span></span><br><span class="line">        (<span class="string">'selector'</span>, DataFrameSelector(cat_attribs)), 	<span class="comment"># DataFrames转为numpy array</span></span><br><span class="line">        (<span class="string">'cat_encoder'</span>, CategoricalEncoder(encoding=<span class="string">"onehot-dense"</span>)),	</span><br><span class="line">    ])</span><br></pre></td></tr></table></figure>
+<p>上面定义的为分别处理数值类型和标签类型的转换流程，housing_num为DataFrame类型，list(DataFrame)的结果返回的为列名字。上面着两个流程还可以再整合一起。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.pipeline <span class="keyword">import</span> FeatureUnion</span><br><span class="line">full_pipeline = FeatureUnion(transformer_list=[</span><br><span class="line">        (<span class="string">"num_pipeline"</span>, num_pipeline),</span><br><span class="line">        (<span class="string">"cat_pipeline"</span>, cat_pipeline),</span><br><span class="line">    ])</span><br><span class="line">housing_prepared = full_pipeline.fit_transform(housing) <span class="comment"># 最终的结果</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>housing_prepared</span><br><span class="line">array([[ <span class="number">0.73225807</span>, <span class="number">-0.67331551</span>,  <span class="number">0.58426443</span>, ...,  <span class="number">0.</span>        ,</span><br><span class="line">         <span class="number">0.</span>        ,  <span class="number">0.</span>        ],</span><br><span class="line">       [<span class="number">-0.99102923</span>,  <span class="number">1.63234656</span>, <span class="number">-0.92655887</span>, ...,  <span class="number">0.</span>        ,</span><br><span class="line">         <span class="number">0.</span>        ,  <span class="number">0.</span>        ],</span><br><span class="line">       [...]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>housing_prepared.shape</span><br><span class="line">(<span class="number">16513</span>, <span class="number">17</span>)</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>译注:</p>
+<p>如果你在上面代码中的<code>cat_pipeline</code>流水线使用<code>LabelBinarizer</code>转换器会导致执行错误，解决方案是用上文提到的<code>CategoricalEncoder</code>转换器来代替：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&gt; cat_pipeline = Pipeline([</span><br><span class="line">&gt;         (<span class="string">'selector'</span>, DataFrameSelector(cat_attribs)),</span><br><span class="line">&gt;         (<span class="string">'cat_encoder'</span>, CategoricalEncoder(encoding=<span class="string">"onehot-dense"</span>)),</span><br><span class="line">&gt;     ])</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>&gt;</p>
+<blockquote>
+</blockquote>
+<p><strong>每个子流水线都以一个选择转换器开始：通过选择对应的属性（数值或分类）、丢弃其它的，来转换数据，并将输出DataFrame转变成一个 NumPy 数组。Scikit-Learn 没有工具来处理 PandasDataFrame，因此我们需要写一个简单的自定义转换器来做这项工作：</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.base <span class="keyword">import</span> BaseEstimator, TransformerMixin</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DataFrameSelector</span><span class="params">(BaseEstimator, TransformerMixin)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, attribute_names)</span>:</span></span><br><span class="line">        self.attribute_names = attribute_names</span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">fit</span><span class="params">(self, X, y=None)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> self</span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">transform</span><span class="params">(self, X)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> X[self.attribute_names].values</span><br></pre></td></tr></table></figure>
+<h1 id="训练模型"><a href="#训练模型" class="headerlink" title="训练模型"></a>训练模型</h1><p>我们先来训练一个线性回归模型：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.linear_model <span class="keyword">import</span> LinearRegression</span><br><span class="line"></span><br><span class="line">lin_reg = LinearRegression()</span><br><span class="line">lin_reg.fit(housing_prepared, housing_labels)    <span class="comment"># 利用预处理好的数据进行训练模型</span></span><br></pre></td></tr></table></figure>
+<p>完毕！你现在就有了一个可用的线性回归模型。用一些训练集中的实例做下验证：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>some_data = housing.iloc[:<span class="number">5</span>]    <span class="comment"># 前五个作为预测数据</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>some_labels = housing_labels.iloc[:<span class="number">5</span>]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>some_data_prepared = full_pipeline.transform(some_data)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>print(<span class="string">"Predictions:\t"</span>, lin_reg.predict(some_data_prepared))    <span class="comment"># 预测结果</span></span><br><span class="line">Predictions:     [ <span class="number">303104.</span>   <span class="number">44800.</span>  <span class="number">308928.</span>  <span class="number">294208.</span>  <span class="number">368704.</span>]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>print(<span class="string">"Labels:\t\t"</span>, list(some_labels))</span><br><span class="line">Labels:         [<span class="number">359400.0</span>, <span class="number">69700.0</span>, <span class="number">302100.0</span>, <span class="number">301300.0</span>, <span class="number">351900.0</span>]    <span class="comment"># 实际结果</span></span><br></pre></td></tr></table></figure>
+<p>行的通，尽管预测并不怎么准确（比如，第二个预测偏离了 50%！）。让我们使用 Scikit-Learn 的mean_squared_error函数，用全部训练集来计算下这个回归模型的 RMSE：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> mean_squared_error</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>housing_predictions = lin_reg.predict(housing_prepared)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>lin_mse = mean_squared_error(housing_labels, housing_predictions)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>lin_rmse = np.sqrt(lin_mse)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>lin_rmse</span><br><span class="line"><span class="number">68628.413493824875</span></span><br></pre></td></tr></table></figure>
+<p>OK，有总比没有强，但显然结果并不好，这是一个模型欠拟合训练数据的例子。当这种情况发生时，意味着特征没有提供足够多的信息来做出一个好的预测，或者模型并不强大，修复欠拟合的主要方法是选择一个更强大的模型，给训练算法提供更好的特征，或去掉模型上的限制，你可以尝试添加更多特征（比如，人口的对数值），但是首先让我们尝试一个更为复杂的模型，看看效果。训练一个决策树模型DecisionTreeRegressor。这是一个强大的模型，可以发现数据中复杂的非线性关系。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.tree <span class="keyword">import</span> DecisionTreeRegressor</span><br><span class="line"></span><br><span class="line">tree_reg = DecisionTreeRegressor()</span><br><span class="line">tree_reg.fit(housing_prepared, housing_labels)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>housing_predictions = tree_reg.predict(housing_prepared)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>tree_mse = mean_squared_error(housing_labels, housing_predictions)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>tree_rmse = np.sqrt(tree_mse)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>tree_rmse</span><br><span class="line"><span class="number">0.0</span></span><br></pre></td></tr></table></figure>
+<p>等一下，发生了什么？没有误差？这个模型可能是绝对完美的吗？当然，更大可能性是这个模型严重过拟合数据。如何确定呢？如前所述，直到你准备运行一个具备足够信心的模型，都不要碰测试集，因此你需要使用训练集的部分数据来做训练，用一部分来做模型验证。</p>
+<h2 id="用交叉验证做更佳的评估"><a href="#用交叉验证做更佳的评估" class="headerlink" title="用交叉验证做更佳的评估"></a>用交叉验证做更佳的评估</h2><p>使用 Scikit-Learn 的交叉验证功能。下面的代码采用了 <strong>K 折交叉验证（K-fold cross-validation）：它随机地将训练集分成十个不同的子集，成为“折”，然后训练评估决策树模型 10 次，每次选一个不用的折来做评估，用其它 9 个来做训练。结果是一个包含 10 个评分的数组：</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> cross_val_score</span><br><span class="line">scores = cross_val_score(tree_reg, housing_prepared, housing_labels,</span><br><span class="line">                         scoring=<span class="string">"neg_mean_squared_error"</span>, cv=<span class="number">10</span>)</span><br><span class="line">rmse_scores = np.sqrt(-scores)</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>警告：Scikit-Learn 交叉验证功能期望的是效用函数（越大越好）而不是损失函数（越低越好），因此得分函数实际上与 MSE 相反（即负值），这就是为什么前面的代码在计算平方根之前先计算-scores。</p>
+</blockquote>
+<p>来看下结果</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="function"><span class="keyword">def</span> <span class="title">display_scores</span><span class="params">(scores)</span>:</span></span><br><span class="line"><span class="meta">... </span>    print(<span class="string">"Scores:"</span>, scores)</span><br><span class="line"><span class="meta">... </span>    print(<span class="string">"Mean:"</span>, scores.mean())</span><br><span class="line"><span class="meta">... </span>    print(<span class="string">"Standard deviation:"</span>, scores.std())</span><br><span class="line">...</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>display_scores(tree_rmse_scores)</span><br><span class="line">Scores: [ <span class="number">74678.4916885</span>   <span class="number">64766.2398337</span>   <span class="number">69632.86942005</span>  <span class="number">69166.67693232</span></span><br><span class="line">          <span class="number">71486.76507766</span>  <span class="number">73321.65695983</span>  <span class="number">71860.04741226</span>  <span class="number">71086.32691692</span></span><br><span class="line">          <span class="number">76934.2726093</span>   <span class="number">69060.93319262</span>]</span><br><span class="line">Mean: <span class="number">71199.4280043</span></span><br><span class="line">Standard deviation: <span class="number">3202.70522793</span></span><br></pre></td></tr></table></figure>
+<p>现在决策树就不像前面看起来那么好了。实际上，它看起来比线性回归模型还糟！注意到交叉验证不仅可以让你得到模型性能的评估，还能测量评估的准确性（即，它的标准差）。决策树的评分大约是 71200，通常波动有 ±3200。如果只有一个验证集，就得不到这些信息。但是交叉验证的代价是训练了模型多次，不可能总是这样。</p>
+<p>让我们计算下线性回归模型的的相同分数，以做确保：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>lin_scores = cross_val_score(lin_reg, housing_prepared, housing_labels,</span><br><span class="line"><span class="meta">... </span>                             scoring=<span class="string">"neg_mean_squared_error"</span>, cv=<span class="number">10</span>)</span><br><span class="line">...</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>lin_rmse_scores = np.sqrt(-lin_scores)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>display_scores(lin_rmse_scores)</span><br><span class="line">Scores: [ <span class="number">70423.5893262</span>   <span class="number">65804.84913139</span>  <span class="number">66620.84314068</span>  <span class="number">72510.11362141</span></span><br><span class="line">          <span class="number">66414.74423281</span>  <span class="number">71958.89083606</span>  <span class="number">67624.90198297</span>  <span class="number">67825.36117664</span></span><br><span class="line">          <span class="number">72512.36533141</span>  <span class="number">68028.11688067</span>]</span><br><span class="line">Mean: <span class="number">68972.377566</span></span><br><span class="line">Standard deviation: <span class="number">2493.98819069</span></span><br></pre></td></tr></table></figure>
+<p>判断没错：决策树模型过拟合很严重，它的性能比线性回归模型还差</p>
+<p>现在再尝试最后一个模型：RandomForestRegressor（随机森林），随机森林是通过用特征的随机子集训练许多决策树。在其它多个模型之上建立模型成为集成学习（Ensemble Learning），它是推进 ML 算法的一种好方法。我们会跳过大部分的代码，因为代码本质上和其它模型一样：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> sklearn.ensemble <span class="keyword">import</span> RandomForestRegressor</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>forest_reg = RandomForestRegressor()</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>forest_reg.fit(housing_prepared, housing_labels)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>[...]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>forest_rmse</span><br><span class="line"><span class="number">22542.396440343684</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>display_scores(forest_rmse_scores)</span><br><span class="line">Scores: [ <span class="number">53789.2879722</span>   <span class="number">50256.19806622</span>  <span class="number">52521.55342602</span>  <span class="number">53237.44937943</span></span><br><span class="line">          <span class="number">52428.82176158</span>  <span class="number">55854.61222549</span>  <span class="number">52158.02291609</span>  <span class="number">50093.66125649</span></span><br><span class="line">          <span class="number">53240.80406125</span>  <span class="number">52761.50852822</span>]</span><br><span class="line">Mean: <span class="number">52634.1919593</span></span><br><span class="line">Standard deviation: <span class="number">1576.20472269</span></span><br></pre></td></tr></table></figure>
+<p>现在好多了：随机森林看起来很有希望。但是，训练集的评分仍然比验证集的评分低很多。解决过拟合可以通过简化模型，给模型加限制（即，正则化），或用更多的训练数据。在深入随机森林之前，你应该尝试下机器学习算法的其它类型模型（不同核心的支持向量机，神经网络，等等），不要在调节超参数上花费太多时间。目标是列出一个可能模型的列表（两到五个）。</p>
+<blockquote>
+<p>提示：你要保存每个试验过的模型，以便后续可以再用。要确保有超参数和训练参数，以及交叉验证评分，和实际的预测值。这可以让你比较不同类型模型的评分，还可以比较误差种类。你可以用 Python 的模块pickle，非常方便地保存 Scikit-Learn 模型，或使用sklearn.externals.joblib，后者序列化大 NumPy 数组更有效率：</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.externals <span class="keyword">import</span> joblib</span><br><span class="line"></span><br><span class="line">joblib.dump(my_model, <span class="string">"my_model.pkl"</span>)</span><br><span class="line"><span class="comment"># 然后</span></span><br><span class="line">my_model_loaded = joblib.load(<span class="string">"my_model.pkl"</span>)</span><br></pre></td></tr></table></figure>
+<h2 id="模型微调"><a href="#模型微调" class="headerlink" title="模型微调"></a>模型微调</h2><p><strong>网格搜索</strong>：使用 Scikit-Learn 的GridSearchCV来做这项搜索工作。<strong>你所需要做的是告诉GridSearchCV要试验有哪些超参数，要试验什么值，GridSearchCV就能用交叉验证试验所有可能超参数值的组合</strong>。例如，下面的代码搜索了RandomForestRegressor超参数值的最佳组合（很费时间）：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> GridSearchCV</span><br><span class="line"></span><br><span class="line">param_grid = [</span><br><span class="line">    &#123;<span class="string">'n_estimators'</span>: [<span class="number">3</span>, <span class="number">10</span>, <span class="number">30</span>], <span class="string">'max_features'</span>: [<span class="number">2</span>, <span class="number">4</span>, <span class="number">6</span>, <span class="number">8</span>]&#125;,</span><br><span class="line">    &#123;<span class="string">'bootstrap'</span>: [<span class="keyword">False</span>], <span class="string">'n_estimators'</span>: [<span class="number">3</span>, <span class="number">10</span>], <span class="string">'max_features'</span>: [<span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>]&#125;,</span><br><span class="line">  ]</span><br><span class="line"></span><br><span class="line">forest_reg = RandomForestRegressor()</span><br><span class="line"></span><br><span class="line">grid_search = GridSearchCV(forest_reg, param_grid, cv=<span class="number">5</span>,</span><br><span class="line">                           scoring=<span class="string">'neg_mean_squared_error'</span>)</span><br><span class="line"></span><br><span class="line">grid_search.fit(housing_prepared, housing_labels)</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>当你不能确定超参数该有什么值，一个简单的方法是尝试连续的 10 的幂（如果想要一个粒度更小的搜寻，可以用更小的数，就像在这个例子中对超参数n_estimators做的）。</p>
+</blockquote>
+<p>param_grid告诉 Scikit-Learn 首先评估所有的列在第一个dict中的n_estimators和max_features的3 × 4 = 12种组合（不用担心这些超参数的含义，会在第 7 章中解释）。然后尝试第二个dict中超参数的2 × 3 = 6种组合，这次会将超参数bootstrap设为False而不是True（后者是该超参数的默认值）。完成后，你就能获得参数的最佳组合，如下所示：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>grid_search.best_params_</span><br><span class="line">&#123;<span class="string">'max_features'</span>: <span class="number">6</span>, <span class="string">'n_estimators'</span>: <span class="number">30</span>&#125;</span><br></pre></td></tr></table></figure>
+<p>你还能直接得到最佳的估计器：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>grid_search.best_estimator_</span><br><span class="line">RandomForestRegressor(bootstrap=<span class="keyword">True</span>, criterion=<span class="string">'mse'</span>, max_depth=<span class="keyword">None</span>,</span><br><span class="line">           max_features=<span class="number">6</span>, max_leaf_nodes=<span class="keyword">None</span>, min_samples_leaf=<span class="number">1</span>,</span><br><span class="line">           min_samples_split=<span class="number">2</span>, min_weight_fraction_leaf=<span class="number">0.0</span>,</span><br><span class="line">           n_estimators=<span class="number">30</span>, n_jobs=<span class="number">1</span>, oob_score=<span class="keyword">False</span>, random_state=<span class="keyword">None</span>,</span><br><span class="line">           verbose=<span class="number">0</span>, warm_start=<span class="keyword">False</span>)</span><br></pre></td></tr></table></figure>
+<p>当然，也可以得到评估得分：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>cvres = grid_search.cv_results_</span><br><span class="line"><span class="meta">... </span><span class="keyword">for</span> mean_score, params <span class="keyword">in</span> zip(cvres[<span class="string">"mean_test_score"</span>], cvres[<span class="string">"params"</span>]):</span><br><span class="line"><span class="meta">... </span>    print(np.sqrt(-mean_score), params)</span><br><span class="line">...</span><br><span class="line"><span class="number">64912.0351358</span> &#123;<span class="string">'max_features'</span>: <span class="number">2</span>, <span class="string">'n_estimators'</span>: <span class="number">3</span>&#125;</span><br><span class="line"><span class="number">55535.2786524</span> &#123;<span class="string">'max_features'</span>: <span class="number">2</span>, <span class="string">'n_estimators'</span>: <span class="number">10</span>&#125;</span><br><span class="line"><span class="number">52940.2696165</span> &#123;<span class="string">'max_features'</span>: <span class="number">2</span>, <span class="string">'n_estimators'</span>: <span class="number">30</span>&#125;</span><br><span class="line"><span class="number">60384.0908354</span> &#123;<span class="string">'max_features'</span>: <span class="number">4</span>, <span class="string">'n_estimators'</span>: <span class="number">3</span>&#125;</span><br><span class="line"><span class="number">52709.9199934</span> &#123;<span class="string">'max_features'</span>: <span class="number">4</span>, <span class="string">'n_estimators'</span>: <span class="number">10</span>&#125;</span><br><span class="line"><span class="number">50503.5985321</span> &#123;<span class="string">'max_features'</span>: <span class="number">4</span>, <span class="string">'n_estimators'</span>: <span class="number">30</span>&#125;</span><br><span class="line"><span class="number">59058.1153485</span> &#123;<span class="string">'max_features'</span>: <span class="number">6</span>, <span class="string">'n_estimators'</span>: <span class="number">3</span>&#125;</span><br><span class="line"><span class="number">52172.0292957</span> &#123;<span class="string">'max_features'</span>: <span class="number">6</span>, <span class="string">'n_estimators'</span>: <span class="number">10</span>&#125;</span><br><span class="line"><span class="number">49958.9555932</span> &#123;<span class="string">'max_features'</span>: <span class="number">6</span>, <span class="string">'n_estimators'</span>: <span class="number">30</span>&#125;</span><br><span class="line"><span class="number">59122.260006</span> &#123;<span class="string">'max_features'</span>: <span class="number">8</span>, <span class="string">'n_estimators'</span>: <span class="number">3</span>&#125;</span><br><span class="line"><span class="number">52441.5896087</span> &#123;<span class="string">'max_features'</span>: <span class="number">8</span>, <span class="string">'n_estimators'</span>: <span class="number">10</span>&#125;</span><br><span class="line"><span class="number">50041.4899416</span> &#123;<span class="string">'max_features'</span>: <span class="number">8</span>, <span class="string">'n_estimators'</span>: <span class="number">30</span>&#125;</span><br><span class="line"><span class="number">62371.1221202</span> &#123;<span class="string">'bootstrap'</span>: <span class="keyword">False</span>, <span class="string">'max_features'</span>: <span class="number">2</span>, <span class="string">'n_estimators'</span>: <span class="number">3</span>&#125;</span><br><span class="line"><span class="number">54572.2557534</span> &#123;<span class="string">'bootstrap'</span>: <span class="keyword">False</span>, <span class="string">'max_features'</span>: <span class="number">2</span>, <span class="string">'n_estimators'</span>: <span class="number">10</span>&#125;</span><br><span class="line"><span class="number">59634.0533132</span> &#123;<span class="string">'bootstrap'</span>: <span class="keyword">False</span>, <span class="string">'max_features'</span>: <span class="number">3</span>, <span class="string">'n_estimators'</span>: <span class="number">3</span>&#125;</span><br><span class="line"><span class="number">52456.0883904</span> &#123;<span class="string">'bootstrap'</span>: <span class="keyword">False</span>, <span class="string">'max_features'</span>: <span class="number">3</span>, <span class="string">'n_estimators'</span>: <span class="number">10</span>&#125;</span><br><span class="line"><span class="number">58825.665239</span> &#123;<span class="string">'bootstrap'</span>: <span class="keyword">False</span>, <span class="string">'max_features'</span>: <span class="number">4</span>, <span class="string">'n_estimators'</span>: <span class="number">3</span>&#125;</span><br><span class="line"><span class="number">52012.9945396</span> &#123;<span class="string">'bootstrap'</span>: <span class="keyword">False</span>, <span class="string">'max_features'</span>: <span class="number">4</span>, <span class="string">'n_estimators'</span>: <span class="number">10</span>&#125;</span><br></pre></td></tr></table></figure>
+<p>在这个例子中，我们通过设定超参数max_features为 6，n_estimators为 30，得到了最佳方案。对这个组合，RMSE 的值是 49959，这比之前使用默认的超参数的值（52634）要稍微好一些。祝贺你，你成功地微调了最佳模型！</p>
+<p><strong>随机搜索：</strong>当探索相对较少的组合时，就像前面的例子，网格搜索还可以。但是当超参数的搜索空间很大时，最好使用RandomizedSearchCV。这个类的使用方法和类GridSearchCV很相似，但它不是尝试所有可能的组合，而是通过选择每个超参数的一个随机值的特定数量的随机组合。这个方法有两个优点：</p>
+<ul>
+<li>如果你让随机搜索运行，比如 1000 次，它会探索每个超参数的 1000 个不同的值（而不是像网格搜索那样，只搜索每个超参数的几个值）</li>
+<li>你可以方便地通过设定搜索次数，控制超参数搜索的计算量。</li>
+</ul>
+<h2 id="分析最佳模型和它们的误差"><a href="#分析最佳模型和它们的误差" class="headerlink" title="分析最佳模型和它们的误差"></a>分析最佳模型和它们的误差</h2><p>通过<strong>分析最佳模型</strong>，常常可以获得对问题更深的了解。比如，RandomForestRegressor可以指出<strong>每个属性对于做出准确预测的相对重要性</strong>：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; feature_importances = grid_search.best_estimator_.feature_importances_</span><br><span class="line">&gt;&gt;&gt; feature_importances</span><br><span class="line">array([  7.14156423e-02,   6.76139189e-02,   4.44260894e-02,</span><br><span class="line">         1.66308583e-02,   1.66076861e-02,   1.82402545e-02,</span><br><span class="line">         1.63458761e-02,   3.26497987e-01,   6.04365775e-02,</span><br><span class="line">         1.13055290e-01,   7.79324766e-02,   1.12166442e-02,</span><br><span class="line">         1.53344918e-01,   8.41308969e-05,   2.68483884e-03,</span><br><span class="line">         3.46681181e-03])</span><br></pre></td></tr></table></figure>
+<p>将重要性分数和属性名放到一起：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>extra_attribs = [<span class="string">"rooms_per_hhold"</span>, <span class="string">"pop_per_hhold"</span>, <span class="string">"bedrooms_per_room"</span>]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>cat_one_hot_attribs = list(encoder.classes_)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>attributes = num_attribs + extra_attribs + cat_one_hot_attribs</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>sorted(zip(feature_importances,attributes), reverse=<span class="keyword">True</span>)</span><br><span class="line">[(<span class="number">0.32649798665134971</span>, <span class="string">'median_income'</span>),</span><br><span class="line"> (<span class="number">0.15334491760305854</span>, <span class="string">'INLAND'</span>),</span><br><span class="line"> (<span class="number">0.11305529021187399</span>, <span class="string">'pop_per_hhold'</span>),</span><br><span class="line"> (<span class="number">0.07793247662544775</span>, <span class="string">'bedrooms_per_room'</span>),</span><br><span class="line"> (<span class="number">0.071415642259275158</span>, <span class="string">'longitude'</span>),</span><br><span class="line"> (<span class="number">0.067613918945568688</span>, <span class="string">'latitude'</span>),</span><br><span class="line"> (<span class="number">0.060436577499703222</span>, <span class="string">'rooms_per_hhold'</span>),</span><br><span class="line"> (<span class="number">0.04442608939578685</span>, <span class="string">'housing_median_age'</span>),</span><br><span class="line"> (<span class="number">0.018240254462909437</span>, <span class="string">'population'</span>),</span><br><span class="line"> (<span class="number">0.01663085833886218</span>, <span class="string">'total_rooms'</span>),</span><br><span class="line"> (<span class="number">0.016607686091288865</span>, <span class="string">'total_bedrooms'</span>),</span><br><span class="line"> (<span class="number">0.016345876147580776</span>, <span class="string">'households'</span>),</span><br><span class="line"> (<span class="number">0.011216644219017424</span>, <span class="string">'&lt;1H OCEAN'</span>),</span><br><span class="line"> (<span class="number">0.0034668118081117387</span>, <span class="string">'NEAR OCEAN'</span>),</span><br><span class="line"> (<span class="number">0.0026848388432755429</span>, <span class="string">'NEAR BAY'</span>),</span><br><span class="line"> (<span class="number">8.4130896890070617e-05</span>, <span class="string">'ISLAND'</span>)]</span><br></pre></td></tr></table></figure>
+<p>有了这个信息，你就可以丢弃一些不那么重要的特征（比如，显然只要一个分类ocean_proximity就够了，所以可以丢弃掉其它的）。你还应该看一下系统犯的误差，搞清为什么会有些误差，以及如何改正问题（添加更多的特征，或相反，去掉没有什么信息的特征，清洗异常值等等）。</p>
+<h1 id="模型评估"><a href="#模型评估" class="headerlink" title="模型评估"></a>模型评估</h1><p>调节完系统之后，你终于有了一个性能足够好的系统。现在就可以用测试集评估最后的模型了。这个过程没有什么特殊的：从测试集得到预测值和标签，运行full_pipeline转换数据（调用transform()，而不是fit_transform()！），再用测试集评估最终模型：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">final_model = grid_search.best_estimator_</span><br><span class="line"></span><br><span class="line">X_test = strat_test_set.drop(<span class="string">"median_house_value"</span>, axis=<span class="number">1</span>)</span><br><span class="line">y_test = strat_test_set[<span class="string">"median_house_value"</span>].copy()</span><br><span class="line"></span><br><span class="line">X_test_prepared = full_pipeline.transform(X_test)</span><br><span class="line"></span><br><span class="line">final_predictions = final_model.predict(X_test_prepared)</span><br><span class="line"></span><br><span class="line">final_mse = mean_squared_error(y_test, final_predictions)</span><br><span class="line">final_rmse = np.sqrt(final_mse)   <span class="comment"># =&gt; evaluates to 48,209.6</span></span><br></pre></td></tr></table></figure>
+<p>评估结果通常要比交叉验证的效果差一点，如果你之前做过很多超参数微调（因为你的系统在验证集上微调，得到了不错的性能，通常不会在未知的数据集上有同样好的效果）。这个例子不属于这种情况，但是当发生这种情况时，你一定要忍住不要调节超参数，使测试集的效果变好；这样的提升不能推广到新数据上。</p>
+
+      
+    </div>
+    
+    
+    
+    
+    
+	<div>
+    	  <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------<i class="fa fa-heart"></i>Thanks for Reading!<i class="fa fa-heart"></i>-------------</div>
+    
+</div>
+	</div>
+    
+    
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/拆分数据/" rel="tag"><i class="fa fa-tag"></i> 拆分数据</a>
+          
+            <a href="/tags/机器学习/" rel="tag"><i class="fa fa-tag"></i> 机器学习</a>
+          
+            <a href="/tags/数据预处理/" rel="tag"><i class="fa fa-tag"></i> 数据预处理</a>
+          
+            <a href="/tags/K折交叉验证/" rel="tag"><i class="fa fa-tag"></i> K折交叉验证</a>
+          
+            <a href="/tags/格子搜索/" rel="tag"><i class="fa fa-tag"></i> 格子搜索</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/07/04/python编程进阶/python编程进阶（13）：兼容、缓存、上下文/" rel="next" title="python编程进阶（13）：兼容、缓存、上下文">
+                <i class="fa fa-chevron-left"></i> python编程进阶（13）：兼容、缓存、上下文
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/07/11/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（二）：分类/" rel="prev" title="Sklearn 与 TensorFlow 机器学习实用指南（二）：分类">
+                Sklearn 与 TensorFlow 机器学习实用指南（二）：分类 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="Mosbyllc" />
+            
+              <p class="site-author-name" itemprop="name">Mosbyllc</p>
+              <p class="site-description motion-element" itemprop="description">Sometimes thing have to fall apart to make way for better things.</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">60</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">73</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/kugua233" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="http://weibo.com/Mosbyllc" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://segmentfault.com/u/kugua233" target="_blank" title="SegmentFault">
+                      
+                        <i class="fa fa-fw fa-strikethrough"></i>SegmentFault</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:1499913789@qq.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Recommended reading
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://plushunter.github.io/" title="Free Will" target="_blank">Free Will</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#拆分数据集"><span class="nav-number">1.</span> <span class="nav-text">拆分数据集</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#训练集-测试集"><span class="nav-number">1.1.</span> <span class="nav-text">训练集+测试集</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#训练集-验证集-测试集"><span class="nav-number">1.2.</span> <span class="nav-text">训练集+验证集+测试集</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分成采样"><span class="nav-number">1.3.</span> <span class="nav-text">分成采样</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#数据预处理"><span class="nav-number">2.</span> <span class="nav-text">数据预处理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#将原始数据映射到特征"><span class="nav-number">2.1.</span> <span class="nav-text">将原始数据映射到特征</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#整数和浮点数映射"><span class="nav-number">2.1.1.</span> <span class="nav-text">整数和浮点数映射</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#字符串映射"><span class="nav-number">2.1.2.</span> <span class="nav-text">字符串映射</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#寻找良好特征（的特点）"><span class="nav-number">2.2.</span> <span class="nav-text">寻找良好特征（的特点）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#可视化数据寻找规律："><span class="nav-number">2.2.1.</span> <span class="nav-text">可视化数据寻找规律：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#皮尔逊相关系数"><span class="nav-number">2.2.2.</span> <span class="nav-text">皮尔逊相关系数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Pandas-的scatter-matrix函数"><span class="nav-number">2.2.3.</span> <span class="nav-text">Pandas 的scatter_matrix函数</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#清查数据"><span class="nav-number">2.3.</span> <span class="nav-text">清查数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#整理数据："><span class="nav-number">2.4.</span> <span class="nav-text">整理数据：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#数据缩放"><span class="nav-number">2.4.1.</span> <span class="nav-text">数据缩放</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#处理极端离群值"><span class="nav-number">2.4.2.</span> <span class="nav-text">处理极端离群值</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#分箱"><span class="nav-number">2.4.3.</span> <span class="nav-text">分箱</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#自定义转换器"><span class="nav-number">2.5.</span> <span class="nav-text">自定义转换器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#转换流水线"><span class="nav-number">2.6.</span> <span class="nav-text">转换流水线</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#训练模型"><span class="nav-number">3.</span> <span class="nav-text">训练模型</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#用交叉验证做更佳的评估"><span class="nav-number">3.1.</span> <span class="nav-text">用交叉验证做更佳的评估</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#模型微调"><span class="nav-number">3.2.</span> <span class="nav-text">模型微调</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分析最佳模型和它们的误差"><span class="nav-number">3.3.</span> <span class="nav-text">分析最佳模型和它们的误差</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#模型评估"><span class="nav-number">4.</span> <span class="nav-text">模型评估</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-star"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mosbyllc</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+  
+
+  
+
+</body>
+</html>

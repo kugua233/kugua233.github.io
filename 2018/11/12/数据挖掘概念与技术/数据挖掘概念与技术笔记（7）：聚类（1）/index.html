@@ -1,0 +1,1381 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16.ico?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="聚类,k均值,k中心点,层次聚类,BIRCH聚类,Chameleon变色龙聚类," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Mosbyllc" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="下图简单地总结了一些聚类方法的简单划分   基于划分的聚类聚类分析最简单、最基本的版本是基于划分的聚类，它把对象组织成多个互斥的组或簇。为了使得问题说明简洁，我们假定簇个数作为背景知识给定，这个参数是划分方法的起点。 k-均值（k-mean） ：一种基于形心的技术k均值算法非常简单，它用簇$C_i$的形心代表该簇。每次确定K个类别中心，然后将各个结点归属到与之距离最近的中心点所在的Cluster">
+<meta name="keywords" content="聚类,k均值,k中心点,层次聚类,BIRCH聚类,Chameleon变色龙聚类">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数据挖掘概念与技术笔记（7）：聚类（1）">
+<meta property="og:url" content="http://yoursite.com/2018/11/12/数据挖掘概念与技术/数据挖掘概念与技术笔记（7）：聚类（1）/index.html">
+<meta property="og:site_name" content="Mosbyllc">
+<meta property="og:description" content="下图简单地总结了一些聚类方法的简单划分   基于划分的聚类聚类分析最简单、最基本的版本是基于划分的聚类，它把对象组织成多个互斥的组或簇。为了使得问题说明简洁，我们假定簇个数作为背景知识给定，这个参数是划分方法的起点。 k-均值（k-mean） ：一种基于形心的技术k均值算法非常简单，它用簇$C_i$的形心代表该簇。每次确定K个类别中心，然后将各个结点归属到与之距离最近的中心点所在的Cluster">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/2018/11/12/数据挖掘概念与技术/数据挖掘概念与技术笔记（7）：聚类（1）/01.png">
+<meta property="og:image" content="http://yoursite.com/2018/11/12/数据挖掘概念与技术/数据挖掘概念与技术笔记（7）：聚类（1）/02.png">
+<meta property="og:image" content="http://yoursite.com/2018/11/12/数据挖掘概念与技术/数据挖掘概念与技术笔记（7）：聚类（1）/03.png">
+<meta property="og:image" content="http://yoursite.com/2018/11/12/数据挖掘概念与技术/数据挖掘概念与技术笔记（7）：聚类（1）/04.png">
+<meta property="og:image" content="http://yoursite.com/2018/11/12/数据挖掘概念与技术/数据挖掘概念与技术笔记（7）：聚类（1）/05.png">
+<meta property="og:image" content="http://yoursite.com/2018/11/12/数据挖掘概念与技术/数据挖掘概念与技术笔记（7）：聚类（1）/06.png">
+<meta property="og:image" content="http://yoursite.com/2018/11/12/数据挖掘概念与技术/数据挖掘概念与技术笔记（7）：聚类（1）/07.png">
+<meta property="og:image" content="http://yoursite.com/2018/11/12/数据挖掘概念与技术/数据挖掘概念与技术笔记（7）：聚类（1）/09.png">
+<meta property="og:image" content="http://yoursite.com/2018/11/12/数据挖掘概念与技术/数据挖掘概念与技术笔记（7）：聚类（1）/10.png">
+<meta property="og:image" content="http://yoursite.com/2018/11/12/数据挖掘概念与技术/数据挖掘概念与技术笔记（7）：聚类（1）/11.png">
+<meta property="og:image" content="http://yoursite.com/2018/11/12/数据挖掘概念与技术/数据挖掘概念与技术笔记（7）：聚类（1）/12.png">
+<meta property="og:image" content="http://yoursite.com/2018/11/12/数据挖掘概念与技术/数据挖掘概念与技术笔记（7）：聚类（1）/13.png">
+<meta property="og:image" content="http://yoursite.com/2018/11/12/数据挖掘概念与技术/数据挖掘概念与技术笔记（7）：聚类（1）/14.png">
+<meta property="og:image" content="http://yoursite.com/2018/11/12/数据挖掘概念与技术/数据挖掘概念与技术笔记（7）：聚类（1）/15.png">
+<meta property="og:image" content="http://yoursite.com/2018/11/12/数据挖掘概念与技术/数据挖掘概念与技术笔记（7）：聚类（1）/16.png">
+<meta property="og:image" content="http://yoursite.com/2018/11/12/数据挖掘概念与技术/数据挖掘概念与技术笔记（7）：聚类（1）/17.png">
+<meta property="og:image" content="http://yoursite.com/2018/11/12/数据挖掘概念与技术/数据挖掘概念与技术笔记（7）：聚类（1）/18.png">
+<meta property="og:updated_time" content="2019-12-28T14:11:32.380Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="数据挖掘概念与技术笔记（7）：聚类（1）">
+<meta name="twitter:description" content="下图简单地总结了一些聚类方法的简单划分   基于划分的聚类聚类分析最简单、最基本的版本是基于划分的聚类，它把对象组织成多个互斥的组或簇。为了使得问题说明简洁，我们假定簇个数作为背景知识给定，这个参数是划分方法的起点。 k-均值（k-mean） ：一种基于形心的技术k均值算法非常简单，它用簇$C_i$的形心代表该簇。每次确定K个类别中心，然后将各个结点归属到与之距离最近的中心点所在的Cluster">
+<meta name="twitter:image" content="http://yoursite.com/2018/11/12/数据挖掘概念与技术/数据挖掘概念与技术笔记（7）：聚类（1）/01.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"right","display":"always","offset":12,"b2t":true,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/11/12/数据挖掘概念与技术/数据挖掘概念与技术笔记（7）：聚类（1）/"/>
+
+
+
+
+
+  <title>数据挖掘概念与技术笔记（7）：聚类（1） | Mosbyllc</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Mosbyllc</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+<link href="https://cdn.bootcss.com/KaTeX/0.7.1/katex.min.css" rel="stylesheet">
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/12/数据挖掘概念与技术/数据挖掘概念与技术笔记（7）：聚类（1）/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mosbyllc">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Mosbyllc">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">数据挖掘概念与技术笔记（7）：聚类（1）</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-12T17:06:14+08:00">
+                2018-11-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/数据挖掘/" itemprop="url" rel="index">
+                    <span itemprop="name">数据挖掘</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  4,799
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  17
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p> 下图简单地总结了一些聚类方法的简单划分 </p>
+<p><img src="/2018/11/12/数据挖掘概念与技术/数据挖掘概念与技术笔记（7）：聚类（1）/01.png" alt=""></p>
+<h2 id="基于划分的聚类"><a href="#基于划分的聚类" class="headerlink" title="基于划分的聚类"></a>基于划分的聚类</h2><p>聚类分析最简单、最基本的版本是基于划分的聚类，它把对象组织成多个互斥的组或簇。为了使得问题说明简洁，我们假定簇个数作为背景知识给定，这个参数是划分方法的起点。</p>
+<h3 id="k-均值（k-mean）-：一种基于形心的技术"><a href="#k-均值（k-mean）-：一种基于形心的技术" class="headerlink" title="k-均值（k-mean） ：一种基于形心的技术"></a>k-均值（k-mean） ：一种基于形心的技术</h3><p><strong>k均值算法非常简单，它用簇$C_i$的形心代表该簇。每次确定K个类别中心，然后将各个结点归属到与之距离最近的中心点所在的Cluster，然后将类别中心更新为属于各Cluster的所有样本的均值</strong>，反复迭代，直至类别中心不再发生变化或变化小于某阈值。 下面给出该算法的伪代码</p>
+<p><img src="/2018/11/12/数据挖掘概念与技术/数据挖掘概念与技术笔记（7）：聚类（1）/02.png" alt=""></p>
+<ul>
+<li>优点：<ul>
+<li>是解决聚类问题的一种经典算法，简单、快速</li>
+<li>对处理大数据集，该算法保持可伸缩性和高效率</li>
+</ul>
+</li>
+<li>缺点：<ul>
+<li>必须事先给出K，而且对初值敏感，对于不同的初始值，结果可能不同</li>
+<li>只能发现球状Cluster，不适合于发现非凸形状的簇或者大小差别很大的簇</li>
+<li>对噪声和孤立点数据敏感，如簇中含有异常点，将导致均值偏离严重</li>
+</ul>
+</li>
+</ul>
+<p>如何确定k类</p>
+<p><a href="https://www.cnblogs.com/yan2015/p/5239970.html" target="_blank" rel="noopener">https://www.cnblogs.com/yan2015/p/5239970.html</a></p>
+<h3 id="k-中心点（k-mediods）：一种基于代表对象的技术"><a href="#k-中心点（k-mediods）：一种基于代表对象的技术" class="headerlink" title="k-中心点（k-mediods）：一种基于代表对象的技术"></a>k-中心点（k-mediods）：一种基于代表对象的技术</h3><p>k-均值算法对离群点敏感，因为这种对象远离大多数数据，因此分配到一个簇时，它们可能严重地扭曲簇的均值。因此，提出了k-中心点算法，<strong>它挑选实际对象代表簇，每个簇使用一个代表对象。这个代表对象选择的规则是：选择簇内一个点到其他点的距离之和的最小代价值，作为新的中心点</strong>。</p>
+<p>K-中心聚类算法计算的是某点到其它所有点的距离之和最小的点，通过距离之和最短的计算方式可以减少某些孤立数据对聚类过程的影响 。下面给出算法的伪代码</p>
+<p><img src="/2018/11/12/数据挖掘概念与技术/数据挖掘概念与技术笔记（7）：聚类（1）/03.png" alt=""></p>
+<h2 id="基于层次的聚类"><a href="#基于层次的聚类" class="headerlink" title="基于层次的聚类"></a>基于层次的聚类</h2><p>尽管基于划分的聚类算法能够实现把数据集划分成指定数量的簇，但是在某些情况下，需要把数据集划分成不同层上的簇。<strong>层次聚类方法将数据组成层次结构或簇的”树”</strong></p>
+<p><strong>基于层次的聚类算法（Hierarchical Clustering）可以</strong>是凝聚的（Agglomerative）或者分裂的（Divisive），取决于层次的划分是“自底向上”还是“自顶向下”。</p>
+<ul>
+<li>自顶向下： 它把所有对象至于一个簇中开始，该簇是层次结构的根。然后，它把根上的簇划分为多个较小的子簇，并且递归地把这次簇划分成更小的簇，直到满足终止条件。常见的自顶向下的算法有K-means层次聚类算法。</li>
+<li>自底向上：把数据集中的每个对象最为一个簇开始，迭代地把簇合并成为更大的簇，直到最终形成一个大簇，或者满足某个终止条件。基于自底向上算法有凝聚算法、BIRCH算法、CURE算法、变色龙算法等。</li>
+</ul>
+<h3 id="自顶向下算法"><a href="#自顶向下算法" class="headerlink" title="自顶向下算法"></a>自顶向下算法</h3><h4 id="Hierarchical-K-means算法"><a href="#Hierarchical-K-means算法" class="headerlink" title="Hierarchical K-means算法"></a>Hierarchical K-means算法</h4><p>Hierarchical K-means算法是“自顶向下”的层次聚类算法，用到了基于划分的聚类算法那K-means，算法思路如下：</p>
+<ol>
+<li>首先，把原始数据集放到一个簇C，这个簇形成了层次结构的最顶层；</li>
+<li>使用K-means算法把簇C划分成指定的K个子簇$C_i，i=1,2,…,k$，形成一个新的层；</li>
+<li>对于步骤2所生成的K个簇，递归使用K-means算法划分成更小的子簇，直到每个簇不能再划分（只包含一个数据对象）或者满足设定的终止条件。</li>
+</ol>
+<p>如下图，展示了一组数据进行了二次K-means算法的过程</p>
+<p><img src="/2018/11/12/数据挖掘概念与技术/数据挖掘概念与技术笔记（7）：聚类（1）/04.png" alt=""></p>
+<p> Hierarchical K-means算法一个很大的问题是，一旦两个点在最开始被划分到了不同的簇，即使这两个点距离很近，在后面的过程中也不会被聚类到一起。 </p>
+<p><img src="/2018/11/12/数据挖掘概念与技术/数据挖掘概念与技术笔记（7）：聚类（1）/05.png" alt=""></p>
+<p>对于以上的例子，红色椭圆框中的对象聚类成一个簇可能是更优的聚类结果，但是由于橙色对象和绿色对象在第一次K-means就被划分到不同的簇，之后也不再可能被聚类到同一个簇。</p>
+<h3 id="自底向上算法"><a href="#自底向上算法" class="headerlink" title="自底向上算法"></a>自底向上算法</h3><h4 id="Agglomerative-Clustering算法"><a href="#Agglomerative-Clustering算法" class="headerlink" title="Agglomerative Clustering算法"></a>Agglomerative Clustering算法</h4><p>相比于Hierarchical K-means算法存在的问题，Agglomerative Clustering算法能够保证距离近的对象能够被聚类到一个簇中，该算法采用的“自底向上”聚类的思路。</p>
+<p> 算法思路，对于数据集$D，D=x_1,x_2,…,x_n$：</p>
+<ol>
+<li>将数据集中的每个对象生成一个簇，得到簇列表$C，C=c_1,c_2,…,c_n$<ul>
+<li>a) 每个簇只包含一个数据对象：$c_i=x_i$；</li>
+</ul>
+</li>
+<li>重复如下步骤，直到C中只有一个簇：<ul>
+<li>a) 从C中的簇中找到两个“距离”最近的两个簇：$\min D(ci,cj)$；</li>
+<li>b) 合并簇$c_i$和$c_j$，形成新的簇$c_{ij}；</li>
+<li>c) 从C中删除簇$c_i%和$c_j$，添加簇$c_{ij}</li>
+</ul>
+</li>
+</ol>
+<h5 id="簇间距离计算"><a href="#簇间距离计算" class="headerlink" title="簇间距离计算"></a>簇间距离计算</h5><p>在上面描述的算法中涉及到计算两个簇之间的距离，对于簇$C_1$和$C_2$，计算$minD(C1,C2)$，有以下几种计算方式：</p>
+<p> <strong>最小距离：</strong> </p>
+<script type="math/tex; mode=display">
+\min\ dist_{min}(C_i,C_j)=\min \mathop{\min} \limits_{p\in C_i,q\in C_j}\{|p-q|\}</script><p><img src="/2018/11/12/数据挖掘概念与技术/数据挖掘概念与技术笔记（7）：聚类（1）/06.png" alt=""></p>
+<p>两个簇之间最近的两个点的距离作为簇之间的距离，该方式的缺陷是受噪点影响大，容易产生长条状的簇。</p>
+<p><strong>最大距离：</strong></p>
+<script type="math/tex; mode=display">
+\min\ dist_{max}(C_i,C_j)=\min \mathop{\max} \limits_{p\in C_i,q\in C_j}\{|p-q|\}</script><p><img src="/2018/11/12/数据挖掘概念与技术/数据挖掘概念与技术笔记（7）：聚类（1）/07.png" alt=""></p>
+<p>两个簇之间最远的两个点的距离作为簇之间的距离，采用该距离计算方式得到的聚类比较紧凑。</p>
+<p><strong>均值距离：</strong> $m_i$和$m_j$为簇内所有点的均值坐标</p>
+<script type="math/tex; mode=display">
+\min\ dist_{mean}(C_i,C_j)=\min |m_i-m_j|</script><p> <strong>平均距离：</strong> </p>
+<script type="math/tex; mode=display">
+\min\ dist_{avg}(C_i,C_j)=\min\ \frac{1}{n_in_j}\mathop{\sum}\limits_{p\in C_i,q\in C_j}\{|p-q|\}</script><h5 id="一个例子"><a href="#一个例子" class="headerlink" title="一个例子"></a>一个例子</h5><p><img src="/2018/11/12/数据挖掘概念与技术/数据挖掘概念与技术笔记（7）：聚类（1）/09.png" alt=""></p>
+<p>Agglomerative聚类算法的优点是能够根据需要在不同的尺度上展示对应的聚类结果，缺点同Hierarchical K-means算法一样，一旦两个距离相近的点被划分到不同的簇，之后也不再可能被聚类到同一个簇，即无法撤销先前步骤的工作。另外，Agglomerative性能较低，并且因为聚类层次信息需要存储在内存中，内存消耗大，不适用于大量级的数据聚类，下面介绍一种针对大数据量级的聚类算法BIRCH。</p>
+<h4 id="BIRCH算法：使用聚类特征树"><a href="#BIRCH算法：使用聚类特征树" class="headerlink" title="BIRCH算法：使用聚类特征树"></a>BIRCH算法：使用聚类特征树</h4><p><strong>BIRCH算法利用了一个树结构来帮助实现快速的聚类，这个数结构类似于平衡B+树，一般将它称之为聚类特征树(Clustering Feature Tree，简称CF Tree)。</strong>这颗树的<strong>每一个节点是由若干个聚类特征(Clustering Feature，简称CF)组成</strong>。从下图可以看看聚类特征树是什么样子的：<strong>每个节点包括叶子节点都有若干个CF，而内部节点的CF有指向孩子节点的指针，所有的叶子节点用一个双向链表链接起来</strong>。</p>
+<p><img src="/2018/11/12/数据挖掘概念与技术/数据挖掘概念与技术笔记（7）：聚类（1）/10.png" alt=""></p>
+<p> <strong>在聚类特征树中，一个聚类特征CF是这样定义的：</strong>每一个CF是一个三元组，可以用（N，LS，SS）表示，其中<strong>N代表了这个CF中拥有的样本点的数量；LS代表了这个CF中拥有的样本点各特征维度的和向量，SS代表了这个CF中拥有的样本点各特征维度的平方和</strong>。 聚类特征本质上是定簇的统计汇总。使用聚类特征，我们可以很容易地推导出簇的许多有用的统计量，例如簇的形心$x_0$、半径R和直径D分别是 </p>
+<script type="math/tex; mode=display">
+x_0=\frac{\sum_{i=1}^nx_i}{n}=\frac{LS}{n}</script><script type="math/tex; mode=display">
+R=\sqrt{\frac{\sum_{i=1}^n(x_i-x_0)^2}{n}}</script><script type="math/tex; mode=display">
+D=\sqrt{\frac{\sum_{i=1}^n\sum_{j=1}^n(x_i-x_j)^2}{n(n-1)}}=\sqrt{\frac{2nSS-2LS^2}{n(n-1)}}</script><p>其中，R是成员对象到形心的平均距离，D是簇中逐对对象的平均距离。<strong>R和D都反映了形心周围簇的紧凑程度</strong>。</p>
+<p>此外，<strong>聚类特征是可加的</strong>，也就是说，对于两个不相交的簇$C_1$和$C_2$，其聚类特征分别是$CF_1[n_1,LS_1,SS_1]$和$CF_2 [n_2,LS_2,SS_2]，合并后的簇的聚类特征是 </p>
+<script type="math/tex; mode=display">
+CF_1+CF_2=[n_1+n_2,LS_1+LS_2,SS_1+SS_2]</script><p>对于CF Tree，一般有几个重要参数，<strong>第一个参数是每个内部节点的最大CF数B</strong>，<strong>第二个参数是每个叶子节点的最大CF数L</strong>，<strong>第三个参数是针对叶子节点中某个CF中的样本点来说的，它是叶节点每个CF的最大样本半径阈值T</strong>，也就是说，在<strong>这个CF中的所有样本点一定要在半径小于T的一个超球体内</strong>。对于图中的CF Tree，<strong>限定了B=7， L=5， 也就是说内部节点最多有7个CF，而叶子节点最多有5个CF</strong>。</p>
+<p><strong>将所有的训练集样本建立了CF Tree，一个基本的BIRCH算法就完成了，对应的输出就是若干个CF节点，每个节点里的样本点就是一个聚类的簇。也就是说BIRCH算法的主要过程，就是建立CF Tree的过程。</strong></p>
+<h5 id="聚类特征树CF-Tree的生成"><a href="#聚类特征树CF-Tree的生成" class="headerlink" title="聚类特征树CF Tree的生成"></a>聚类特征树CF Tree的生成</h5><p>下面看看怎么生成CF Tree。<strong>先定义好CF Tree的参数： 即内部节点的最大CF数B， 叶子节点的最大CF数L， 叶节点每个CF的最大样本半径阈值T。</strong></p>
+<p><strong>开始时CF Tree是空的，</strong>没有任何样本，我们<strong>从训练集读入第一个样本点，将它放入一个新的CF三元组A</strong>，这个三元组的N=1，将这个新的CF放入根节点，<strong>此时的CF Tree如下图：</strong></p>
+<p><img src="/2018/11/12/数据挖掘概念与技术/数据挖掘概念与技术笔记（7）：聚类（1）/11.png" alt=""></p>
+<p> <strong>现在继续读入第二个样本点，发现这个样本点和第一个样本点A在半径为T的超球体范围内，即他们属于一个CF，将第二个点也加入CF A,此时需要更新A的三元组的值。</strong>此时A的三元组中N=2。此时的CF Tree如下图： </p>
+<p><img src="/2018/11/12/数据挖掘概念与技术/数据挖掘概念与技术笔记（7）：聚类（1）/12.png" alt=""></p>
+<p> <strong>此时读取第三个节点，结果发现这个节点不能融入刚才前面的节点形成的超球体内，</strong>也就是说，<strong>需要一个新的CF三元组B来容纳这个新的值。此时根节点有两个CF三元组A和B</strong>，此时的CF Tree如下图： </p>
+<p><img src="/2018/11/12/数据挖掘概念与技术/数据挖掘概念与技术笔记（7）：聚类（1）/13.png" alt=""></p>
+<p> <strong>当来到第四个样本点时，发现和B在半径小于T的超球体，这样更新后的CF Tree如下图：</strong> </p>
+<p><img src="/2018/11/12/数据挖掘概念与技术/数据挖掘概念与技术笔记（7）：聚类（1）/14.png" alt=""></p>
+<p>那个什么时候CF Tree的节点需要分裂呢？假设现在的CF Tree 如下图， 叶子节点LN1有三个CF， LN2和LN3各有两个CF。<strong>叶子节点的最大CF数L=3</strong>。此时一个新的样本点来了，发现它离LN1节点最近，因此开始判断它是否在sc1,sc2,sc3这3个CF对应的超球体之内，但是很不幸，它不在，因此它需要建立一个新的CF，即sc8来容纳它。<strong>问题是我们的L=3，也就是说LN1的CF个数已经达到最大值了，不能再创建新的CF了，怎么办？此时就要将LN1叶子节点一分为二了</strong>。</p>
+<p><strong>将LN1里所有CF元组中，找到两个最远的CF做这两个新叶子节点的种子CF，然后将LN1节点里所有CF sc1, sc2, sc3，以及新样本点的新元组sc8划分到两个新的叶子节点上。</strong>将LN1节点划分后的CF Tree如下图：</p>
+<p><img src="/2018/11/12/数据挖掘概念与技术/数据挖掘概念与技术笔记（7）：聚类（1）/15.png" alt=""></p>
+<p> <strong>如果内部节点的最大CF数B=3，则此时叶子节点一分为二会导致根节点的最大CF数超了，也就是说，根节点现在也要分裂</strong>，分裂的方法和叶子节点分裂一样，分裂后的CF Tree如下图： </p>
+<p><img src="/2018/11/12/数据挖掘概念与技术/数据挖掘概念与技术笔记（7）：聚类（1）/16.png" alt=""></p>
+<p><strong>有了上面这一系列的图，相信大家对于CF Tree的插入就没有什么问题了，总结下CF Tree的插入：</strong></p>
+<ul>
+<li>1、<strong>从根节点向下寻找</strong>和新样本距离最近的叶子节点和叶子节点里最近的CF节点（判断新节点与NLN1和NLN2谁近一些，然后继续往下）</li>
+<li>2、如果新样本加入后，这个CF节点对应的超球体半径仍然满足小于阈值T，则更新路径上所有的CF三元组，插入结束。否则转入3.</li>
+<li>3、如果当前叶子节点的CF节点个数小于阈值L，则创建一个新的CF节点，放入新样本，将新的CF节点放入这个叶子节点，更新路径上所有的CF三元组，插入结束。否则转入4。</li>
+<li>4、将当前叶子节点划分为两个新叶子节点，选择旧叶子节点中所有CF元组里超球体距离最远的两个CF元组，分布作为两个新叶子节点的第一个CF节点。将其他元组和新样本元组按照距离远近原则放入对应的叶子节点。依次向上检查父节点是否也要分裂，如果需要按和叶子节点分裂方式相同。</li>
+</ul>
+<p>当然，真实的BIRCH算法除了建立CF Tree来聚类，其实还有一些可选的算法步骤的，<strong>现在我们就来看看 BIRCH算法的流程。</strong></p>
+<ul>
+<li>1） 将所有的样本依次读入，在内存中建立一颗CF Tree, 建立的方法参考上一节。</li>
+<li>2）（可选）将第一步建立的CF Tree进行筛选，去除一些异常CF节点，这些节点一般里面的样本点很少。对于一些超球体距离非常近的元组进行合并</li>
+<li>3）（可选）利用其它的一些聚类算法比如K-Means对所有的CF元组进行聚类，得到一颗比较好的CF Tree.这一步的主要目的是消除由于样本读入顺序导致的不合理的树结构，以及一些由于节点CF个数限制导致的树结构分裂。</li>
+<li>4）（可选）利用第三步生成的CF Tree的所有CF节点的质心，作为初始质心点，对所有的样本点按距离远近进行聚类。这样进一步减少了由于CF Tree的一些限制导致的聚类不合理的情况。</li>
+</ul>
+<p><strong>从上面可以看出，BIRCH算法的关键就是步骤1，也就是CF Tree的生成，其他步骤都是为了优化最后的聚类结果。</strong></p>
+<p><strong>优点</strong></p>
+<ul>
+<li>1) 节约内存，所有的样本都在磁盘上，CF Tree仅仅存了CF节点和对应的指针。</li>
+<li>2) 聚类速度快，只需要一遍扫描训练集就可以建立CF Tree，CF Tree的增删改都很快。</li>
+<li>3) 可以识别噪音点，还可以对数据集进行初步分类的预处理</li>
+</ul>
+<p><strong>缺点</strong></p>
+<ul>
+<li>1) 由于CF Tree对每个节点的CF个数有限制，导致聚类的结果可能和真实的类别分布不同.</li>
+<li>2) 对高维特征的数据聚类效果不好。此时可以选择Mini Batch K-Means</li>
+<li>3) 如果数据集的分布簇不是类似于超球体，或者说不是凸的，则聚类效果不好。</li>
+</ul>
+<h4 id="CURE算法"><a href="#CURE算法" class="headerlink" title="CURE算法"></a>CURE算法</h4><p>CURE（Clustering Using Representatives）是一种针对大型数据库的高效的聚类算法。基于划分的传统的聚类算法得到的是球状的，相等大小的聚类，对异常数据比较脆弱。CURE采用了用多个点代表一个簇的方法，可以较好的处理以上问题。并且在处理大数据量的时候采用了随机取样，分区的方法，来提高其效率，使得其可以高效的处理大量数据。</p>
+<p>我们先看一下基于划分聚类算法的缺陷：</p>
+<p><img src="/2018/11/12/数据挖掘概念与技术/数据挖掘概念与技术笔记（7）：聚类（1）/17.png" alt=""></p>
+<p>如上图所示，基于划分的聚类算法比如Hierarchical K-means聚类算法，不能够很好地区分尺寸差距大的簇，原因是K-means算法基于“质心”加一定“半径”对数据进行划分，导致最后聚类的簇近似“圆形”。</p>
+<p><strong>CURE算法核心的思想是使用一定数量的“分散的”点（scattered points）来代表一个簇（cluster）</strong>，而不像是其他层次聚类算法中，只使用一个点，使得CURE算法有如下优势：</p>
+<ul>
+<li>准确地识别任意形状的簇；</li>
+<li>准确地识别尺寸差距大的簇；</li>
+<li>很好地处理“噪点”</li>
+</ul>
+<p>所以，CURE算法很好地解决了上面提到的聚类结果的缺陷，CURE算法主流程如下：</p>
+<p><strong>Pass 1</strong></p>
+<ul>
+<li>1、从总数据中随机选取一个样本；</li>
+<li>2、利用层次聚类算法把这个样本聚类，形成最初的簇$C_i,(i=1,2,…,k)$；</li>
+<li>3、选取“代表点”（representative pionts）;</li>
+</ul>
+<p>①对于每个簇，选取代表点（比如4个），这些点尽量分散;</p>
+<p>②按照固定的比例α（比如20%），把每个样本点向簇的“质心”收缩，生成代表点</p>
+<script type="math/tex; mode=display">
+\{p'_{i1},p'_{i2},p'_{i3},p'_{i4}\}</script><p><strong>Pass 2</strong></p>
+<ul>
+<li>重新扫描所有的数据， 对于点p，找到距离p最近的簇，把它放到 “最近的簇”。简单来讲，<strong>是点p到簇$C_i$的距离为点p到簇$C_i$的四个“代表点 中最近的点之间的距离</strong>。</li>
+</ul>
+<p>收缩系数α的取值不同，聚类结果也相应不同。当α趋于0时，所有的“代表点”都汇聚到质心，算法退化为基于“质心”的聚类；当α趋于1时，“代表点”完全没有收缩，算法退化为基于“全连接”的聚类，因此α值需要要根据数据特征灵活选取，才能得到更好的聚类结果</p>
+<h4 id="Chameleon变色龙算法：使用动态建模"><a href="#Chameleon变色龙算法：使用动态建模" class="headerlink" title="Chameleon变色龙算法：使用动态建模"></a>Chameleon变色龙算法：使用动态建模</h4><p>Chameleon（变色龙）是一种层次聚类算法，它采用动态建模来确定一对簇之间的相似度。在Chameleon中，簇的相似性依据以下两点评估：1）簇中对象的连接情况 ；2）簇的邻近性。也就是说，如果两个簇的互连性都很高并且它们之间又靠得很近就将其合并。</p>
+<p><img src="/2018/11/12/数据挖掘概念与技术/数据挖掘概念与技术笔记（7）：聚类（1）/18.png" alt=""></p>
+<p>整体算法流程：</p>
+<p>1、创建KNN图，每个节点将其最相似的k个节点用一条边连接起来；</p>
+<p>2、使用最大流算法或者最小割算法，将kNN图分隔成小图； 也就是说簇C被划分为子簇CiCi和$C_j$，使得把C二分成$C_i$和$C_j$而被切断的边的权重之和最小。</p>
+<p>3、将小簇进行和并，找对最大的度量值$RC<em>RI^\alpha$的两个簇，合并条件是$RC</em>RI^\alpha$大于某个阈值，否则结束合并。RC和RI的一个基本思想是，点之间的链接越多，这些点越可能连接成一个簇，C表示一个簇，是点的集合，|C|是集合的大小，即点的个数, $EC(A,B)$表示两个簇之间的边的数量。</p>
+<p><strong>相似互连度</strong>$RI(C_i,C_j)$</p>
+<script type="math/tex; mode=display">
+RI(C_i,C_j)=\frac{|EC_{\{C_i,C_j\}}|}{\frac{1}{2}(|EC_{C_i}|+|EC_{C_j}|)}</script><p> 相对接近度$RC(C_i,C_j)$</p>
+<script type="math/tex; mode=display">
+RC(C_i,C_j)=\frac{\overline S_{EC_{\{C_i,C_j\}}}}{\frac{|C_i|}{|C_i|+|C_j|} \overline S_{EC_{C_j}}+ \frac{|C_i|}{|C_i|+|C_j|} \overline S_{EC_{C_j}}  }</script><p> 其中，$\overline S_{EC_{\{C_i,C_j\}}}$是连接$C_i$顶点和$C_j$顶点的边的平均权重，$\overline S_{EC_{C_i}}$或$\overline S_{EC_{C_j}}$是最小二分簇$C_i$（或$C_j$）的边的平均权重。 </p>
+
+      
+    </div>
+    
+    
+    
+    
+    
+	<div>
+    	  <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------<i class="fa fa-heart"></i>Thanks for Reading!<i class="fa fa-heart"></i>-------------</div>
+    
+</div>
+	</div>
+    
+    
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/聚类/" rel="tag"><i class="fa fa-tag"></i> 聚类</a>
+          
+            <a href="/tags/k均值/" rel="tag"><i class="fa fa-tag"></i> k均值</a>
+          
+            <a href="/tags/k中心点/" rel="tag"><i class="fa fa-tag"></i> k中心点</a>
+          
+            <a href="/tags/层次聚类/" rel="tag"><i class="fa fa-tag"></i> 层次聚类</a>
+          
+            <a href="/tags/BIRCH聚类/" rel="tag"><i class="fa fa-tag"></i> BIRCH聚类</a>
+          
+            <a href="/tags/Chameleon变色龙聚类/" rel="tag"><i class="fa fa-tag"></i> Chameleon变色龙聚类</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/11/09/数据挖掘概念与技术/数据挖掘概念与技术笔记（6）：高级分类方法/" rel="next" title="数据挖掘概念与技术笔记（6）：高级分类方法">
+                <i class="fa fa-chevron-left"></i> 数据挖掘概念与技术笔记（6）：高级分类方法
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/11/14/数据挖掘概念与技术/数据挖掘概念与技术笔记（8）：聚类（2）/" rel="prev" title="数据挖掘概念与技术笔记（8）：聚类（2）">
+                数据挖掘概念与技术笔记（8）：聚类（2） <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="Mosbyllc" />
+            
+              <p class="site-author-name" itemprop="name">Mosbyllc</p>
+              <p class="site-description motion-element" itemprop="description">Sometimes thing have to fall apart to make way for better things.</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">60</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">73</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/kugua233" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="http://weibo.com/Mosbyllc" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://segmentfault.com/u/kugua233" target="_blank" title="SegmentFault">
+                      
+                        <i class="fa fa-fw fa-strikethrough"></i>SegmentFault</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:1499913789@qq.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Recommended reading
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://plushunter.github.io/" title="Free Will" target="_blank">Free Will</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#基于划分的聚类"><span class="nav-number">1.</span> <span class="nav-text">基于划分的聚类</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#k-均值（k-mean）-：一种基于形心的技术"><span class="nav-number">1.1.</span> <span class="nav-text">k-均值（k-mean） ：一种基于形心的技术</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#k-中心点（k-mediods）：一种基于代表对象的技术"><span class="nav-number">1.2.</span> <span class="nav-text">k-中心点（k-mediods）：一种基于代表对象的技术</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基于层次的聚类"><span class="nav-number">2.</span> <span class="nav-text">基于层次的聚类</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#自顶向下算法"><span class="nav-number">2.1.</span> <span class="nav-text">自顶向下算法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Hierarchical-K-means算法"><span class="nav-number">2.1.1.</span> <span class="nav-text">Hierarchical K-means算法</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#自底向上算法"><span class="nav-number">2.2.</span> <span class="nav-text">自底向上算法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Agglomerative-Clustering算法"><span class="nav-number">2.2.1.</span> <span class="nav-text">Agglomerative Clustering算法</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#簇间距离计算"><span class="nav-number">2.2.1.1.</span> <span class="nav-text">簇间距离计算</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#一个例子"><span class="nav-number">2.2.1.2.</span> <span class="nav-text">一个例子</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#BIRCH算法：使用聚类特征树"><span class="nav-number">2.2.2.</span> <span class="nav-text">BIRCH算法：使用聚类特征树</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#聚类特征树CF-Tree的生成"><span class="nav-number">2.2.2.1.</span> <span class="nav-text">聚类特征树CF Tree的生成</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#CURE算法"><span class="nav-number">2.2.3.</span> <span class="nav-text">CURE算法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Chameleon变色龙算法：使用动态建模"><span class="nav-number">2.2.4.</span> <span class="nav-text">Chameleon变色龙算法：使用动态建模</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-star"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mosbyllc</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+  
+
+  
+
+</body>
+</html>

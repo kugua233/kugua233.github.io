@@ -1,0 +1,1486 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16.ico?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="机器学习,线性回归,逻辑回归,softmax,正则化," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Mosbyllc" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="线性回归：线性回归模型 \hat{y} = h _{\theta} (\mathbf{x})= \theta^T  \cdot \mathbf{x} = \theta _{0} + \theta _{1}x _{1}+\theta _{2}x _{2}+\dots+\theta _{n}x _{n} x 为每个样例中特征值的向量形式，包括 $x_1$ 到 $x_n$  ，而且$x_0$ 恒为1。矩">
+<meta name="keywords" content="机器学习,线性回归,逻辑回归,softmax,正则化">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Sklearn 与 TensorFlow 机器学习实用指南（三）：回归">
+<meta property="og:url" content="http://yoursite.com/2018/07/14/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（三）：回归/index.html">
+<meta property="og:site_name" content="Mosbyllc">
+<meta property="og:description" content="线性回归：线性回归模型 \hat{y} = h _{\theta} (\mathbf{x})= \theta^T  \cdot \mathbf{x} = \theta _{0} + \theta _{1}x _{1}+\theta _{2}x _{2}+\dots+\theta _{n}x _{n} x 为每个样例中特征值的向量形式，包括 $x_1$ 到 $x_n$  ，而且$x_0$ 恒为1。矩">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/2018/07/14/Sklearn%20与%20TensorFlow%20机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（三）：回归/01.png">
+<meta property="og:image" content="http://yoursite.com/2018/07/14/Sklearn%20与%20TensorFlow%20机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（三）：回归/02.jpg">
+<meta property="og:image" content="http://yoursite.com/2018/07/14/Sklearn%20与%20TensorFlow%20机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（三）：回归/03.jpg">
+<meta property="og:image" content="http://yoursite.com/2018/07/14/Sklearn%20与%20TensorFlow%20机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（三）：回归/04.jpg">
+<meta property="og:image" content="http://yoursite.com/2018/07/14/Sklearn%20与%20TensorFlow%20机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（三）：回归/05.jpg">
+<meta property="og:image" content="http://yoursite.com/2018/07/14/Sklearn%20与%20TensorFlow%20机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（三）：回归/06.jpg">
+<meta property="og:image" content="http://yoursite.com/2018/07/14/Sklearn%20与%20TensorFlow%20机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（三）：回归/07.jpg">
+<meta property="og:image" content="http://yoursite.com/2018/07/14/Sklearn%20与%20TensorFlow%20机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（三）：回归/08.png">
+<meta property="og:image" content="http://yoursite.com/2018/07/14/Sklearn%20与%20TensorFlow%20机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（三）：回归/09.jpg">
+<meta property="og:image" content="http://yoursite.com/2018/07/14/Sklearn%20与%20TensorFlow%20机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（三）：回归/10.jpg">
+<meta property="og:image" content="http://yoursite.com/2018/07/14/Sklearn%20与%20TensorFlow%20机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（三）：回归/11.jpg">
+<meta property="og:image" content="http://yoursite.com/2018/07/14/Sklearn%20与%20TensorFlow%20机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（三）：回归/20.png">
+<meta property="og:image" content="http://yoursite.com/2018/07/14/Sklearn%20与%20TensorFlow%20机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（三）：回归/22.jpg">
+<meta property="og:image" content="http://yoursite.com/2018/07/14/Sklearn%20与%20TensorFlow%20机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（三）：回归/21.jpg">
+<meta property="og:image" content="http://yoursite.com/2018/07/14/Sklearn%20与%20TensorFlow%20机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（三）：回归/12.png">
+<meta property="og:image" content="http://yoursite.com/2018/07/14/Sklearn%20与%20TensorFlow%20机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（三）：回归/13.png">
+<meta property="og:image" content="http://yoursite.com/2018/07/14/Sklearn%20与%20TensorFlow%20机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（三）：回归/14.png">
+<meta property="og:image" content="http://yoursite.com/2018/07/14/Sklearn%20与%20TensorFlow%20机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（三）：回归/15.png">
+<meta property="og:image" content="http://yoursite.com/2018/07/14/Sklearn%20与%20TensorFlow%20机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（三）：回归/16.png">
+<meta property="og:image" content="http://yoursite.com/2018/07/14/Sklearn%20与%20TensorFlow%20机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（三）：回归/17.png">
+<meta property="og:image" content="http://yoursite.com/2018/07/14/Sklearn%20与%20TensorFlow%20机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（三）：回归/18.png">
+<meta property="og:image" content="http://yoursite.com/2018/07/14/Sklearn%20与%20TensorFlow%20机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（三）：回归/19.png">
+<meta property="og:updated_time" content="2018-07-18T14:39:10.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Sklearn 与 TensorFlow 机器学习实用指南（三）：回归">
+<meta name="twitter:description" content="线性回归：线性回归模型 \hat{y} = h _{\theta} (\mathbf{x})= \theta^T  \cdot \mathbf{x} = \theta _{0} + \theta _{1}x _{1}+\theta _{2}x _{2}+\dots+\theta _{n}x _{n} x 为每个样例中特征值的向量形式，包括 $x_1$ 到 $x_n$  ，而且$x_0$ 恒为1。矩">
+<meta name="twitter:image" content="http://yoursite.com/2018/07/14/Sklearn%20与%20TensorFlow%20机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（三）：回归/01.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"right","display":"always","offset":12,"b2t":true,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/07/14/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（三）：回归/"/>
+
+
+
+
+
+  <title>Sklearn 与 TensorFlow 机器学习实用指南（三）：回归 | Mosbyllc</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Mosbyllc</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+<link href="https://cdn.bootcss.com/KaTeX/0.7.1/katex.min.css" rel="stylesheet">
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/14/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（三）：回归/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mosbyllc">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Mosbyllc">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Sklearn 与 TensorFlow 机器学习实用指南（三）：回归</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-14T10:36:11+08:00">
+                2018-07-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Sklearn-与-TensorFlow-机器学习实用指南/" itemprop="url" rel="index">
+                    <span itemprop="name">Sklearn 与 TensorFlow 机器学习实用指南</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  10,121
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  38
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="线性回归："><a href="#线性回归：" class="headerlink" title="线性回归："></a>线性回归：</h1><h2 id="线性回归模型"><a href="#线性回归模型" class="headerlink" title="线性回归模型"></a>线性回归模型</h2><script type="math/tex; mode=display">
+\hat{y} = h _{\theta} (\mathbf{x})= \theta^T  \cdot \mathbf{x} = \theta _{0} + \theta _{1}x _{1}+\theta _{2}x _{2}+\dots+\theta _{n}x _{n}</script><ul>
+<li><strong>x</strong> 为每个样例中特征值的向量形式，包括 $x_1$ 到 $x_n$  ，而且$x_0$ 恒为1。<strong>矩阵点乘，相同规模对应相乘</strong>。</li>
+</ul>
+<h2 id="损失函数"><a href="#损失函数" class="headerlink" title="损失函数"></a>损失函数</h2><script type="math/tex; mode=display">
+MSE (\mathbf{X},h _{\theta}) = \frac{1}{m} \sum\limits_{i=1}^m{\left(\theta^T \cdot \mathbf{x}^{(i)}-y^{(i)}\right)}^2</script><h2 id="矩阵形式"><a href="#矩阵形式" class="headerlink" title="矩阵形式"></a>矩阵形式</h2><p>一行为一个实例</p>
+<script type="math/tex; mode=display">
+\left(\begin{matrix}
+    1&        x_{1}^{\left(1\right)}&        x_{1}^{\left(2\right)}&        ···&        x_{1}^{\left(n\right)}\\
+    1&        x_{2}^{\left(1\right)}&        x_{2}^{\left(2\right)}&        ···&        x_{2}^{\left(n\right)}\\
+    ···&        ···&        ···&        &        \\
+    1&        x_{m}^{\left(1\right)}&        x_{m}^{\left(2\right)}&        ···&        x_{m}^{\left(n\right)}\\
+\end{matrix}\right)</script><p>优化线性回归损失函数的两种方法：1）最小二乘法原理的正态方程 2）梯度下降</p>
+<h2 id="正态方程"><a href="#正态方程" class="headerlink" title="正态方程"></a>正态方程</h2><script type="math/tex; mode=display">
+\frac{\partial }{\partial \theta}MSE(\theta) = \frac{1}{m}(2X^TX\theta-2X^Ty)</script><script type="math/tex; mode=display">
+\hat{\theta} = ({\mathbf{X}}^T\cdot\mathbf{X})^{-1}\cdot{\mathbf{X}}^T\cdot\mathbf{y}</script><p><img src="/2018/07/14/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（三）：回归/01.png" alt=""></p>
+<blockquote>
+<p>这里的$X^TX$要满足满秩矩阵，然而，现实大多数任务不会满足这个条件。好像只有线性回归能用正态方程求解。优点是一次计算；缺点是矩阵的逆计算慢，尤其是特征数量很多的情况下就更糟糕了，但是一旦你得到了线性回归模型（通过解正态方程或者其他的算法），进行预测是非常快的。</p>
+</blockquote>
+<h2 id="梯度下降"><a href="#梯度下降" class="headerlink" title="梯度下降"></a>梯度下降</h2><h3 id="批量梯度下降"><a href="#批量梯度下降" class="headerlink" title="批量梯度下降"></a>批量梯度下降</h3><p><strong>批量梯度下降：使用梯度下降的过程中，你需要计算每一个</strong>θj 下代价函数的梯度<br>代价函数的偏导数: 利用公式2对θj求导，其余 θ看做常数。</p>
+<script type="math/tex; mode=display">
+\frac{\partial }{\partial \theta_j}MSE(\theta)=\frac{2}{m} \sum\limits_{i=1}^m{\left(\theta^T \cdot \mathbf{x}^{(i)}-y^{(i)}\right)}{x_j}^{(i)}</script><p>更新：</p>
+<script type="math/tex; mode=display">
+\theta :=\theta_j-\lambda\frac{\partial }{\partial \theta_j}MSE(\theta)</script><p>为了避免单独计算每一个梯度，你也可以使用下面的公式来一起计算它们。梯度向量记为$\nabla_{\theta}MSE(\theta) $ ，其包含了代价函数所有的偏导数(每个模型参数只出现一次)。利用正态方程最后的推导即可）</p>
+<p><img src="/2018/07/14/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（三）：回归/02.jpg" alt=""></p>
+<blockquote>
+<p><strong>在这个方程中每一步计算时都包含了整个训练集X ，这也是为什么这个算法称为批量梯度下降：</strong>每一次训练过程都使用所有的的训练数据。因此，在大数据集上，其会变得相当的慢（但是我们接下来将会介绍更快的梯度下降算法）。然而，梯度下降的运算规模和特征的数量成正比。训练一个数千数量特征的线性回归模型使用梯度下降要比使用正态方程快的多.</p>
+</blockquote>
+<p>更新：</p>
+<script type="math/tex; mode=display">
+\theta^{(next\ step)}=\theta - \eta\nabla_{\theta}MSE(\theta)</script><p>我们来看一下这个算法的应用：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line">eta = <span class="number">0.03</span></span><br><span class="line">n_iterations = <span class="number">15000</span></span><br><span class="line">m = <span class="number">100</span>    <span class="comment"># 样本数目，</span></span><br><span class="line"></span><br><span class="line">X = <span class="number">2</span> * np.random.rand(<span class="number">100</span>, <span class="number">1</span>)    <span class="comment"># 产生100行1列的0~2的数值</span></span><br><span class="line">y = <span class="number">4</span> + <span class="number">3</span> * X + np.random.randn(<span class="number">100</span>, <span class="number">1</span>)</span><br><span class="line"><span class="comment"># np.c_表示按列操作拼接，np.r_表示按行操作拼接</span></span><br><span class="line">X_b = np.c_[np.ones((<span class="number">100</span>, <span class="number">1</span>)), X]     <span class="comment"># x0 = 1</span></span><br><span class="line">theta = np.random.randn(<span class="number">2</span>, <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> iteration <span class="keyword">in</span> range(n_iterations):</span><br><span class="line">    gradients = <span class="number">2</span>/m * X_b.T.dot(X_b.dot(theta) - y)</span><br><span class="line">    theta = theta - eta * gradients    <span class="comment"># 最后输出的是所有系数矩阵</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>theta</span><br><span class="line">array([[<span class="number">4.11509616</span>],[<span class="number">2.87011339</span>]])	<span class="comment"># 理论θ_0=4, θ_3, 由于噪声会有点误差</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>梯度下降的一些要点：</p>
+<ul>
+<li>应该确保所有的特征有着相近的尺度范围（例如：使用Scikit_Learn的 StandardScaler类）</li>
+<li>学习率$\lambda $ 要自适应</li>
+</ul>
+</blockquote>
+<h3 id="随机梯度下降"><a href="#随机梯度下降" class="headerlink" title="随机梯度下降"></a>随机梯度下降</h3><p>批量梯度下降的最要问题是计算每一步的梯度时都需要使用整个训练集，这导致在规模较大的数据集上，其会变得非常的慢。<strong>与其完全相反的随机梯度下降，在每一步的梯度计算上只随机选取训练集中的一个样例</strong>。</p>
+<p><strong>虽然随机性可以很好的跳过局部最优值，但同时它却不能达到最小值。解决这个难题的一个办法是逐渐降低学习率。</strong>开始时，走的每一步较大（这有助于快速前进同时跳过局部最小值），然后变得越来越小，从而使算法到达全局最小值。 <strong>这个过程被称为模拟退火</strong></p>
+<p><img src="/2018/07/14/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（三）：回归/03.jpg" alt=""></p>
+<p>下面的代码使用一个简单的learning schedule来实现<strong>随机梯度下降</strong>：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">n_epochs = <span class="number">50</span> </span><br><span class="line">t0, t1 = <span class="number">5</span>, <span class="number">50</span>  <span class="comment">#learning_schedule的超参数</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">learning_schedule</span><span class="params">(t)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> t0 / (t + t1)</span><br><span class="line">    </span><br><span class="line"><span class="comment"># np.random.randn返回2行1列符合标准正态分布的数；</span></span><br><span class="line"><span class="comment"># np.random.rand返回[0,1）的随机数；</span></span><br><span class="line"><span class="comment"># randint返回范围内的整数</span></span><br><span class="line">theta = np.random.randn(<span class="number">2</span>,<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> epoch <span class="keyword">in</span> range(n_epochs):</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(m):</span><br><span class="line">        random_index = np.random.randint(m)    <span class="comment"># m个样本随机选一个样本</span></span><br><span class="line">        xi = X_b[random_index:random_index+<span class="number">1</span>]</span><br><span class="line">        yi = y[random_index:random_index+<span class="number">1</span>]</span><br><span class="line">        gradients = <span class="number">2</span> * xi.T.dot(xi.dot(theta)-yi)	<span class="comment"># 单个个体视为批量</span></span><br><span class="line">        eta = learning_schedule(epoch * m + i)    <span class="comment"># 根据迭代情况调整学习速率</span></span><br><span class="line">        theta = theta - eta * gradiens</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>theta</span><br><span class="line">array([[<span class="number">3.96100095</span>],[<span class="number">3.0580351</span> ]])</span><br></pre></td></tr></table></figure>
+<p>通过使用Scikit-Learn完成<strong>线性回归的随机梯度下降，你需要使用SGDRegressor类，这个类默认优化的是均方差代价函数</strong>。下面的代码迭代了50代，其学习率eta为0.1，<strong>使用默认的learning schedule(与前面的不一样)</strong>，同时也没有添加任何正则项（penalty = None）：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 因为这个函数需要的y是一个行向量，所以压扁;</span></span><br><span class="line"><span class="comment"># 另外，numpy.flatten() 与 numpy.ravel()将多维数组降位一维，前者会进行拷贝处理</span></span><br><span class="line"><span class="keyword">from</span> sklearn.linear_model <span class="keyword">import</span> SGDRegressor</span><br><span class="line">sgd_reg = SGDRregressor(n_iter=<span class="number">50</span>, penalty=<span class="keyword">None</span>, eta=<span class="number">0.1</span>)</span><br><span class="line">sgd_reg.fit(X,y.ravel())</span><br></pre></td></tr></table></figure>
+<p>结果很接近正态方程的解</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>sgd_reg.intercept_, sgd_reg.coef_</span><br><span class="line">(array([<span class="number">4.18380366</span>]),array([<span class="number">2.74205299</span>]))</span><br></pre></td></tr></table></figure>
+<h3 id="小批量梯度下降"><a href="#小批量梯度下降" class="headerlink" title="小批量梯度下降"></a>小批量梯度下降</h3><p><strong>小批量梯度下降中，它则使用一个随机的小型实例集，小批量梯度下降在参数空间上的表现比随机梯度下降要好的多，尤其在有大量的小型实例集时，主要利用了矩阵运算的硬件优化</strong></p>
+<p>也看一下这个算法的应用</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">theta_path_mgd = []</span><br><span class="line"></span><br><span class="line">n_iterations = <span class="number">50</span></span><br><span class="line">minibatch_size = <span class="number">20</span></span><br><span class="line"></span><br><span class="line">np.random.seed(<span class="number">42</span>)</span><br><span class="line">theta = np.random.randn(<span class="number">2</span>,<span class="number">1</span>)  <span class="comment"># random initialization</span></span><br><span class="line"></span><br><span class="line">t0, t1 = <span class="number">200</span>, <span class="number">1000</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">learning_schedule</span><span class="params">(t)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> t0 / (t + t1)</span><br><span class="line"></span><br><span class="line">t = <span class="number">0</span></span><br><span class="line"><span class="keyword">for</span> epoch <span class="keyword">in</span> range(n_iterations):</span><br><span class="line">    shuffled_indices = np.random.permutation(m)</span><br><span class="line">    X_b_shuffled = X_b[shuffled_indices]	<span class="comment"># 打乱所有样本顺序</span></span><br><span class="line">    y_shuffled = y[shuffled_indices]</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">0</span>, m, minibatch_size):</span><br><span class="line">        t += <span class="number">1</span></span><br><span class="line">        xi = X_b_shuffled[i:i+minibatch_size]</span><br><span class="line">        yi = y_shuffled[i:i+minibatch_size]</span><br><span class="line">        gradients = <span class="number">2</span>/minibatch_size * xi.T.dot(xi.dot(theta) - yi)</span><br><span class="line">        eta = learning_schedule(t)</span><br><span class="line">        theta = theta - eta * gradients</span><br><span class="line">        theta_path_mgd.append(theta)</span><br></pre></td></tr></table></figure>
+<p><img src="/2018/07/14/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（三）：回归/04.jpg" alt=""></p>
+<h1 id="多项式回归"><a href="#多项式回归" class="headerlink" title="多项式回归"></a>多项式回归</h1><p>如果你的数据实际上比简单的直线更复杂呢？ 令人惊讶的是，<strong>你依然可以使用线性模型来拟合非线性数据</strong>。 <strong>一个简单的方法是对每个特征进行加权后作为新的特征，然后训练一个线性模型在这个扩展的特征集。 这种方法称为多项式回归。</strong></p>
+<p>于是，<strong>我们使用Scikit-Learning的PolynomialFeatures类进行训练数据集的转换，让训练集中每个特征的平方（2次多项式）作为新特征（在这种情况下，仅存在一个特征）</strong>：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> sklearn.preprocessing <span class="keyword">import</span> PolynomialFeatures</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>poly_features = PolynomialFeatures(degree=<span class="number">2</span>,include_bias=<span class="keyword">False</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>X_poly = poly_features.fit_transform(X)    <span class="comment"># 转换特征，包含原始特征和二次项特征</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>X[<span class="number">0</span>]</span><br><span class="line">array([<span class="number">-0.75275929</span>])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>X_poly[<span class="number">0</span>]</span><br><span class="line">array([<span class="number">-0.75275929</span>, <span class="number">0.56664654</span>])</span><br></pre></td></tr></table></figure>
+<p>现在包含原始特X并加上了这个特征的平方X^2。<strong>现在你可以在这个扩展训练集上使用LinearRegression模型进行拟合</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>lin_reg = LinearRegression()</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>lin_reg.fit(X_poly, y)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>lin_reg.intercept_, lin_reg.coef_</span><br><span class="line">(array([ <span class="number">1.78134581</span>]), array([[ <span class="number">0.93366893</span>, <span class="number">0.56456263</span>]]))</span><br><span class="line"><span class="comment"># 模型预测函数y=0.56*x_1^2+0.93*x_1+1.78</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>请注意，当存在多个特征时，多项式回归能够找出特征之间的关系（这是普通线性回归模型无法做到的）。 这是因为LinearRegression会自动添加当前阶数下特征的所有组合。例如，如果有两个特征a,b，使用3阶（degree=3）的LinearRegression时，不仅仅只有a2,a3,b2,同时也会有它们的其他组合项ab,a2b,ab2。</p>
+</blockquote>
+<h1 id="学习曲线"><a href="#学习曲线" class="headerlink" title="学习曲线"></a>学习曲线</h1><p>我们可以使用交叉验证来估计一个模型的泛化能力。<strong>如果一个模型在训练集上表现良好，通过交叉验证指标却得出其泛化能力很差，那么你的模型就是过拟合了。如果在这两方面都表现不好，那么它就是欠拟合了</strong>。这种方法可以告诉我们，你的模型是太复杂了还是太简单了。</p>
+<p><strong>另一种方法是观察学习曲线：画出模型在训练集上的表现，同时画出以训练集规模为自变量的训练集函数。为了得到图像，需要在训练集的不同规模子集上进行多次训练</strong>。下面的代码定义了一个函数，用来画出给定训练集后的模型学习曲线：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> mean_squared_error</span><br><span class="line"><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> train_test_split</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">plot_learning_curves</span><span class="params">(model, X, y)</span>:</span></span><br><span class="line">    X_train, X_val, y_train, y_val = train_test_split(X, y, test_size=<span class="number">0.2</span>)</span><br><span class="line">    train_errors, val_errors = [], []</span><br><span class="line">    <span class="keyword">for</span> m <span class="keyword">in</span> range(<span class="number">1</span>, len(X_train)):    <span class="comment"># 根据样本规模画出模型的表现</span></span><br><span class="line">        model.fit(X_train[:m], y_train[:m])</span><br><span class="line">        y_train_predict = model.predict(X_train[:m])</span><br><span class="line">        y_val_predict = model.predict(X_val)</span><br><span class="line">        train_errors.append(mean_squared_error(y_train_predict, y_train[:m]))</span><br><span class="line">        val_errors.append(mean_squared_error(y_val_predict, y_val))</span><br><span class="line">plt.plot(np.sqrt(train_errors), <span class="string">"r-+"</span>, linewidth=<span class="number">2</span>, label=<span class="string">"train"</span>)    <span class="comment"># 训练损失</span></span><br><span class="line">plt.plot(np.sqrt(val_errors), <span class="string">"b-"</span>, linewidth=<span class="number">3</span>, label=<span class="string">"val"</span>)    <span class="comment"># 验证损失</span></span><br></pre></td></tr></table></figure>
+<p>我们一起看一下简单线性回归模型的学习曲线</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">lin_reg = LinearRegression()</span><br><span class="line">plot_learning_curves(lin_reg, X, y)</span><br></pre></td></tr></table></figure>
+<p><img src="/2018/07/14/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（三）：回归/05.jpg" alt=""></p>
+<p><strong>上面的曲线表现了一个典型的欠拟合模型，两条曲线都到达高原地带并趋于稳定，并且最后两条曲线非常接近，同时误差值非常大。</strong></p>
+<blockquote>
+<p>如果你的模型在训练集上是欠拟合的，添加更多的样例是没用的。你需要使用一个更复杂的模型或者找到更好的特征。</p>
+</blockquote>
+<p>现在让我们看一个在相同数据上10阶多项式模型拟合的学习曲线</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.pipeline <span class="keyword">import</span> Pipeline</span><br><span class="line"></span><br><span class="line">polynomial_regression = Pipeline((</span><br><span class="line">    (<span class="string">"poly_features"</span>, PolynomialFeatures(degree=<span class="number">10</span>, include_bias=<span class="keyword">False</span>)),</span><br><span class="line">    (<span class="string">"sgd_reg"</span>, LinearRegression()),</span><br><span class="line">))</span><br><span class="line"></span><br><span class="line">plot_learning_curves(polynomial_regression, X, y)</span><br></pre></td></tr></table></figure>
+<p><img src="/2018/07/14/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（三）：回归/06.jpg" alt=""></p>
+<ul>
+<li>在训练集上，误差要比线性回归模型低的多。</li>
+<li>图中的两条曲线之间有间隔，这意味模型在训练集上的表现要比验证集上好的多，这也是模型过拟合的显著特点。当然，如果你使用了更大的训练数据，这两条曲线最后会非常的接近。</li>
+</ul>
+<blockquote>
+<p>改善模型过拟合的一种方法是提供更多的训练数据，直到训练误差和验证误差相等</p>
+</blockquote>
+<p>在统计和机器学习领域有个重要的理论：一个模型的泛化误差由三个不同误差的和决定：</p>
+<ul>
+<li>偏差：泛化误差的这部分误差是由于错误的假设决定的。例如实际是一个二次模型，你却假设了一个线性模型。一个高偏差的模型最容易出现欠拟合。</li>
+<li>方差：这部分误差是由于模型对训练数据的微小变化较为敏感，一个多自由度的模型更容易有高的方差（例如一个高阶多项式模型），因此会导致模型过拟合。</li>
+<li>不可约误差：这部分误差是由于数据本身的噪声决定的。降低这部分误差的唯一方法就是进行数据清洗（例如：修复数据源，修复坏的传感器，识别和剔除异常值）。</li>
+</ul>
+<p>下图依次为欠拟合，过拟合，较合适。</p>
+<p><img src="/2018/07/14/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（三）：回归/07.jpg" alt=""></p>
+<h1 id="正则化"><a href="#正则化" class="headerlink" title="正则化"></a>正则化</h1><h2 id="范数"><a href="#范数" class="headerlink" title="范数"></a>范数</h2><p>器学习中有几个常用的范数，分别是：</p>
+<ul>
+<li>$L_1$−范数：$\Vert x\Vert_1 =\sum_{i=1}^n\vert x_i\vert$ </li>
+<li>$L_2$−范数：$\Vert x\Vert_ 2=(\sum_{i=1}^n\vert x_i^2\vert)^{\frac{1}{2}}$ </li>
+<li>$L_p$−范数：$\Vert x\Vert_p =(\sum_{i=1}^n\vert x_i^p\vert)^{\frac{1}{p}}$ </li>
+<li>$L_∞$−范数：$\Vert x\Vert_∞=lim_{p→∞}(\sum_{i=1}^n\vert x_i^p\vert)^{\frac{1}{p}}$</li>
+</ul>
+<h2 id="岭回归-Ridge"><a href="#岭回归-Ridge" class="headerlink" title="岭回归(Ridge)"></a>岭回归(Ridge)</h2><p>岭回归（也称为Tikhonov正则化）是线性回归的正则化版，是L2正则的基础，注意到这个正则项只有在训练过程中才会被加到代价函数。当得到完成训练的模型后，我们应该使用没有正则化的测量方法去评价模型的表现。</p>
+<blockquote>
+<p><strong>一般情况下，训练过程使用的代价函数和测试过程使用的评价函数不一样样的。除了正则化，还有一个不同：训练时的代价函数应该在优化过程中易于求导，而在测试过程中，评价函数更应该接近最后的客观表现</strong>。一个好的例子：在分类训练中我们使用对数损失（马上我们会讨论它）作为代价函数，但是我们却使用精确率/召回率来作为它的评价函数。</p>
+</blockquote>
+<p>岭回归代价函数:</p>
+<script type="math/tex; mode=display">
+J(\theta)=MSE(\theta)+\alpha\frac{1}{2}\sum\limits_{i=1}^n\theta_i^2</script><p><strong>超参数α 决定了你想正则化这个模型的强度,正则化强度越大，模型会越简单。如果α=0 那此时的岭回归便变为了线性回归。如果α 非常的大，所有的权重最后都接近与零，最后结果将是一条穿过数据平均值的水平直线</strong></p>
+<p>值得注意的是偏差 $\theta_0$是没有被正则化的（累加运算的开始是 i=1而不是i=0）。如我定义<strong>$w$</strong>作为特征的权重向量($\theta_1$到$\theta_n$)，那么正则项可以简写成$\frac{1}{2} (\Vert w\Vert_2)^2$, 其中$\Vert \cdot \Vert_2$ 表示权重向量的L2范数。对于梯度下降来说仅仅在均方差梯度向量加上一项$\alpha w$ ,加上$\alpha\theta$是$1/2∗\alpha∗\theta^2$求偏导的结果</p>
+<blockquote>
+<p>在使用岭回归前，对<strong>数据进行放缩（可以使用StandardScaler）是非常重要的</strong>,算法对于输入特征的数值尺度（scale）非常敏感。<strong>大多数的正则化模型都是这样的</strong>。</p>
+</blockquote>
+<p>对线性回归来说，对于岭回归，我们可以使用封闭方程去计算，也可以使用梯度下降去处理.</p>
+<p>岭回归的封闭方程的解</p>
+<p>令</p>
+<script type="math/tex; mode=display">
+MES(\theta)=(X\theta-y)^T(X\theta-y)+\lambda \theta^T\theta</script><script type="math/tex; mode=display">
+\frac{\partial }{\partial \theta}MSE(\theta) =X^TX\theta-X^Ty +\alpha\theta=0</script><p>求出</p>
+<script type="math/tex; mode=display">
+\hat{\theta} =({\mathbf{X}}^T\cdot\mathbf{X}+\alpha\mathbf{I})^{-1}\cdot{\mathbf{X}}^T\cdot\mathbf{y}</script><blockquote>
+<p> 矩阵$I$是是一个除了左上角有一个0的n×n的<strong>单位矩阵</strong>，这个0代表偏差项。偏差$\theta_0$不被正则化的。</p>
+</blockquote>
+<p>下面是如何使用 Scikit-Learn 来进行封闭方程的求解（使用 Cholesky 法进行矩阵分解对上面公式进行变形）:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> sklearn.linear_model <span class="keyword">import</span> Ridge</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>ridge_reg = Ridge(alpha=<span class="number">1</span>, solver=<span class="string">"cholesky"</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>ridge_reg.fit(X, y)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>ridge_reg.predict([[<span class="number">1.5</span>]])</span><br><span class="line">array([[ <span class="number">1.55071465</span>]]</span><br></pre></td></tr></table></figure>
+<p>使用随机梯度法进行求解：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>sgd_reg = SGDRegressor(penalty=<span class="string">"l2"</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>sgd_reg.fit(X, y.ravel())</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>sgd_reg.predict([[<span class="number">1.5</span>]])</span><br><span class="line">array([[ <span class="number">1.13500145</span>]])</span><br></pre></td></tr></table></figure>
+<p><code>penalty</code>参数指的是正则项的惩罚类型。指定“l2”表明你要在损失函数上添加一项：权重向量 L2范数平方的一半，这就是简单的岭回归。</p>
+<h2 id="Lasso-回归"><a href="#Lasso-回归" class="headerlink" title="Lasso 回归"></a>Lasso 回归</h2><p>Lasso 回归（也称 Least Absolute Shrinkage，或者 Selection Operator Regression）是另一种正则化版的线性回归：L1正则的基础，就像岭回归那样，它也在损失函数上添加了一个正则化项，但是它使用权重向量的L1范数而不是权重向量L2范数的一半。</p>
+<p>Lasso回归的代价函数:</p>
+<script type="math/tex; mode=display">
+J(\theta)=MSE(\theta)+\alpha\sum\limits_{i=1}^n\left|\theta_i \right|</script><blockquote>
+<p><strong>Lasso回归的一个重要特征是它倾向于完全消除最不重要的特征的权重（即将它们设置为零）</strong></p>
+</blockquote>
+<p>下面是一个使用Lasso类的小Scikit-Learn示例。你也可以使用SGDRegressor(penalty=”l1”)来代替它</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> sklearn.linear_model <span class="keyword">import</span> Lasso</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>lasso_reg = Lasso(alpha=<span class="number">0.1</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>lasso_reg.fit(X, y)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>lasso_reg.predict([[<span class="number">1.5</span>]])</span><br><span class="line">array([ <span class="number">1.53788174</span>]</span><br></pre></td></tr></table></figure>
+<h2 id="弹性网络-ElasticNet"><a href="#弹性网络-ElasticNet" class="headerlink" title="弹性网络(ElasticNet)"></a>弹性网络(ElasticNet)</h2><p><strong>弹性网络介于Ridge回归和Lasso回归之间。它的正则项是Ridge回归和Lasso回归正则项的简单混合，同时你可以控制它们的混合率r，当r=0时，弹性网络就是Ridge回归，当r=1时，其就是Lasso回归</strong></p>
+<p>弹性网络代价函数：</p>
+<script type="math/tex; mode=display">
+J(\theta)=MSE(\theta)+r\alpha\sum\limits_{i=1}^n\left|\theta_i \right|+\frac{1-r}{2}\alpha\sum\limits_{i=1}^n\theta_i^2</script><p>那么我们该如何选择线性回归，岭回归，Lasso回归，弹性网络呢？一般来说有一点正则项的表现更好，因此通常你应该避免使用简单的线性回归。<strong>岭回归是一个很好的首选项，但是如果你的特征仅有少数是真正有用的，你应该选择Lasso和弹性网络</strong>。就像我们讨论的那样，它两能够将无用特征的权重降为零。<strong>一般来说，弹性网络的表现要比Lasso好，因为当特征数量比样例的数量大的时候，或者特征之间有很强的相关性时，Lasso可能会表现的不规律</strong>。下面是一个使用Scikit-Learn 弹性网络ElasticNet（l1_ratio指的就是混合率r）的简单样例:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> sklearn.linear_model <span class="keyword">import</span> ElasticNet</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>elastic_net = ElasticNet(alpha=<span class="number">0.1</span>, l1_ratio=<span class="number">0.5</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>elastic_net.fit(X, y)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>elastic_net.predict([[<span class="number">1.5</span>]])</span><br><span class="line">array([ <span class="number">1.54333232</span>])</span><br></pre></td></tr></table></figure>
+<h2 id="正则化的作用"><a href="#正则化的作用" class="headerlink" title="正则化的作用"></a>正则化的作用</h2><p>那为什么正则化能起作用呢？首先L0范数（元素非零个数，严格上来说不能算是范数）和L1范数都可以实现权重稀疏。<strong>L1范数和L0范数可以实现稀疏，</strong>L1范数是L0范数的最优凸近似，<strong>L1因具有比L0更好的优化求解特性而被广泛应用</strong>。L1会趋向于产生少量的特征，而其他的特征都是0，<strong>而L2会选择更多的特征，这些特征都会接近于0</strong>。</p>
+<p>L1范数的主要作用的实现稀疏特征，那么L2范数可以起什么样作用呢？</p>
+<p>执行 L2 正则化对模型具有以下影响</p>
+<ul>
+<li>使权重的平均值接近于 0，且呈正态（钟形曲线或高斯曲线）分布。</li>
+</ul>
+<ul>
+<li>使权重值接近于 0（但并非正好为 0）</li>
+</ul>
+<p><strong>L2 正则化可能会导致对于某些信息缺乏的特征，模型会学到适中的权重。L2 正则化降低较大权重的程度高于降低较小权重的程度。随着权重越来越接近于 0.0，L2 将权重“推”向 0.0 的力度越来越弱。L2 正则化会使相似度高(存在噪点)两个特征的权重几乎相同。按照我自己的理解，不同的权重会有不同程度的拟合效果，权重较小，低阶的w控制曲线的整体走势，权重较大，高阶的w控制曲线的局部形态，以此类推。这样看来L2正则项的作用就很明显了，要改变预测曲线的整体细节走势肯地会造成损失函数的不满，但是把曲线的形态熨平似乎并没有什么不妥，会降低过拟合的风险。</strong></p>
+<p>L2除了能防止过拟合，提升模型的泛化能力。还有另外的一点好处：优化计算。  从优化或者数值计算的角度来说，L2范数有助于处理 condition number不好的情况下矩阵求逆很困难的问题。conditionnumber是一个矩阵（或者它所描述的线性系统）的稳定性或者敏感度的度量，如果一个矩阵的condition number在1附近，那么它就是well-conditioned的，如果远大于1，那么它就是ill-conditioned的，如果一个系统是ill-conditioned的，它的输出结果就不要太相信了。</p>
+<p>然而，如果当我们的样本X的数目比每个样本的维度还要小的时候，矩阵XTX将会不是满秩的，也就是XTX会变得不可逆，所以w*就没办法直接计算出来了。或者更确切地说，将会有无穷多个解（因为我们方程组的个数小于未知数的个数）。也就是说，我们的数据不足以确定一个解，如果我们从所有可行解里随机选一个的话，很可能并不是真正好的解，总而言之，我们过拟合了。</p>
+<p>但如果加上L2规则项，就变成了下面这种情况，就可以直接求逆了：</p>
+<script type="math/tex; mode=display">
+\hat{\theta} =({\mathbf{X}}^T\cdot\mathbf{X}+\alpha\mathbf{I})^{-1}\cdot{\mathbf{X}}^T\cdot\mathbf{y}</script><p> 这里面，专业点的描述是：要得到这个解，我们通常并不直接求矩阵的逆，而是通过解线性方程组的方式（例如高斯消元法）来计算。考虑没有规则项的时候，也就是λ=0的情况，如果矩阵XTX的 condition number 很大的话，解线性方程组就会在数值上相当不稳定，而这个规则项的引入则可以改善condition number。</p>
+<h1 id="早期停止法（Early-Stopping）"><a href="#早期停止法（Early-Stopping）" class="headerlink" title="早期停止法（Early Stopping）"></a>早期停止法（Early Stopping）</h1><p>随着训练的进行，算法一直学习，它在训练集上的预测误差（RMSE）自然而然的下降。然而一段时间后，验证误差停止下降，并开始上升。这意味着模型在训练集上开始出现过拟合。一旦验证错误达到最小值，便提早停止训练.</p>
+<p>随机梯度和小批量梯度下降不是平滑曲线，你可能很难知道它是否达到最小值。 一种解决方案是，只有<strong>在验证误差高于最小值一段时间后（你确信该模型不会变得更好了），才停止</strong>，<strong>之后将模型参数回滚到验证误差最小值</strong>。</p>
+<p><img src="/2018/07/14/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（三）：回归/08.png" alt=""></p>
+<p>下面是一个早期停止法的基础应用</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.base <span class="keyword">import</span> clone</span><br><span class="line">sgd_reg = SGDRegressor(n_iter=<span class="number">1</span>, warm_start=<span class="keyword">True</span>, penalty=<span class="keyword">None</span>,learning_rate=<span class="string">"constant"</span>, eta0=<span class="number">0.0005</span>)</span><br><span class="line"></span><br><span class="line">minimum_val_error = float(<span class="string">"inf"</span>)</span><br><span class="line">best_epoch = <span class="keyword">None</span></span><br><span class="line">best_model = <span class="keyword">None</span></span><br><span class="line"><span class="keyword">for</span> epoch <span class="keyword">in</span> range(<span class="number">1000</span>):</span><br><span class="line">    sgd_reg.fit(X_train_poly_scaled, y_train)    <span class="comment"># 训练多项式的新特征，拟合非线性</span></span><br><span class="line">    y_val_predict = sgd_reg.predict(X_val_poly_scaled)</span><br><span class="line">    val_error = mean_squared_error(y_val_predict, y_val)</span><br><span class="line">    <span class="keyword">if</span> val_error &lt; minimum_val_error:</span><br><span class="line">        minimum_val_error = val_error</span><br><span class="line">        best_epoch = epoch</span><br><span class="line">        best_model = clone(sgd_reg)</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>注意：当warm_start=True时，调用fit()方法后，训练会从停下来的地方继续，而不是从头重新开始</p>
+</blockquote>
+<h1 id="逻辑回归"><a href="#逻辑回归" class="headerlink" title="逻辑回归"></a>逻辑回归</h1><p><strong>逻辑回归</strong>会生成一个<strong>介于 0 到 1 之间（不包括 0 和 1）的概率值</strong>，而不是确切地预测结果是 0 还是 1。以用于检测垃圾邮件的逻辑回归模型为例。如果此模型推断某一特定电子邮件的值为 0.932，则意味着该电子邮件是垃圾邮件的概率为 93.2%。<strong>更准确地说，这意味着在无限训练样本的极限情况下，模型预测其值为 0.932 的这组样本实际上有 93.2% 是垃圾邮件，其余的 6.8% 不是垃圾邮件。</strong></p>
+<p>逻辑回归模型的概率估计（向量形式）：</p>
+<script type="math/tex; mode=display">
+\hat{p}=h_\theta(\mathbf{x})=\sigma(\theta^T  \cdot \mathbf{x})</script><p>Logistic函数（也称为logit），用σ() 表示，其是一个sigmoid函数（图像呈S型），它的输出是一个介于0和1之间的数字<br>逻辑函数(S函数)</p>
+<script type="math/tex; mode=display">
+\sigma(t)=\frac{1}{1+exp(-t)}</script><p>Logistic函数（也称为logit），用σ() 表示，其是一个sigmoid函数（图像呈S型），它的输出是一个介于0和1之间的数字<br>逻辑函数(S函数)</p>
+<p><img src="/2018/07/14/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（三）：回归/09.jpg" alt=""></p>
+<p>逻辑回归预测模型(σ() 概率输出以0.5作为二分类门槛):</p>
+<p><img src="/2018/07/14/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（三）：回归/10.jpg" alt=""></p>
+<p>单个样例的代价函数:</p>
+<p><img src="/2018/07/14/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（三）：回归/11.jpg" alt=""></p>
+<p><strong>这个代价函数是合理的，因为当t接近0时，-log(t)变得非常大，所以如果模型估计一个正例概率接近于0，那么代价函数将会很大，同时如果模型估计一个负例的概率接近1，那么代价函数同样会很大。 另一方面，当t接近于1时， -log(t)接近0，所以如果模型估计一个正例概率接近于0，那么代价函数接近于0，同时如果模型估计一个负例的概率接近0，那么代价函数同样会接近于0， 这正是我们想的.（简单来说,y=1时，概率p越接近1损失越小；相反y=0时，概率p越接近0时损失越小）</strong></p>
+<p>整个训练集的代价函数只是所有训练实例的平均值。可以用一个表达式（你可以很容易证明）来统一表示，称为对数损失</p>
+<p><strong>逻辑回归的代价函数（对数损失）：</strong></p>
+<script type="math/tex; mode=display">
+J(\theta)=-\frac{1}{m}\sum\limits_{i=1}^m\left[y^{(i)}log\left(\hat{p}^{(i)}\right)+\left(1-y^{(i)}\right)log\left(1-\hat{p}^{(i)}\right)\right]</script><p>但是这个代价函数对于求解最小化代价函数的θ 是没有公式解的（<strong>没有等价的正态方程</strong>）。 <strong>但好消息是，这个代价函数是凸的，所以梯度下降</strong>（或任何其他优化算法）一定能够找到全局最小值（如果学习速率不是太大，并且你等待足够长的时间）。下面公式给出了代价函数关于第j个模型参数θj 的偏导数。</p>
+<p><img src="/2018/07/14/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（三）：回归/20.png" alt=""></p>
+<p><img src="/2018/07/14/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（三）：回归/22.jpg" alt=""></p>
+<p><img src="/2018/07/14/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（三）：回归/21.jpg" alt=""></p>
+<p>逻辑回归代价函数的偏导数:</p>
+<script type="math/tex; mode=display">
+\frac{\partial}{\partial \theta_j}J(\theta_j)=\frac{1}{m} \sum\limits_{i=1}^m{\left(\sigma\left(\theta^T \cdot \mathbf{x}^{(i)}\right)-y^{(i)}\right)}{x_j}^{(i)}</script><p>这个公式首先计算每个样例的预测误差，然后误差项乘以第j项特征值，最后求出所有训练样例的平均值。 一旦你有了包含所有的偏导数的梯度向量，你便可以在梯度向量上使用批量梯度下降算法。 也就是说：你已经知道如何训练Logistic回归模型。 对于随机梯度下降，你当然只需要每一次使用一个实例，对于小批量梯度下降，你将每一次使用一个小型实例集。</p>
+<h1 id="决策边界"><a href="#决策边界" class="headerlink" title="决策边界"></a>决策边界</h1><p>我们使用鸢尾花数据集来分析Logistic回归。 这是一个著名的数据集，其中包含150朵三种不同的鸢尾花的萼片和花瓣的长度和宽度。这三种鸢尾花为：Setosa，Versicolor，Virginica</p>
+<p><img src="/2018/07/14/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（三）：回归/12.png" alt=""></p>
+<p>让我们尝试建立一个分类器，仅仅<strong>使用花瓣的宽度特征来**</strong>识别Virginica**，首先让我们加载数据：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> sklearn <span class="keyword">import</span> datasets</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>iris = datasets.load_iris()</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>list(iris.keys())</span><br><span class="line">[<span class="string">'data'</span>, <span class="string">'target_names'</span>, <span class="string">'feature_names'</span>, <span class="string">'target'</span>, <span class="string">'DESCR'</span>]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>X = iris[<span class="string">"data"</span>][:, <span class="number">3</span>:] <span class="comment"># petal width</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>y = (iris[<span class="string">"target"</span>] == <span class="number">2</span>).astype(np.int)</span><br></pre></td></tr></table></figure>
+<p>接下来，我们训练一个逻辑回归模型：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.linear_model <span class="keyword">import</span> LogisticRegression</span><br><span class="line"></span><br><span class="line">log_reg = LogisticRegression()</span><br><span class="line">log_reg.fit(X, y) <span class="comment"># 训练模型</span></span><br></pre></td></tr></table></figure>
+<p>我们来看看模型估计的花瓣宽度从0到3厘米的概率估计</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">X_new = np.linspace(<span class="number">0</span>, <span class="number">3</span>, <span class="number">1000</span>).reshape(<span class="number">-1</span>, <span class="number">1</span>)    <span class="comment"># 构造花瓣宽度从0到3厘米的所有特征</span></span><br><span class="line">y_proba = log_reg.predict_proba(X_new)    <span class="comment"># 预测概率</span></span><br><span class="line">plt.plot(X_new, y_proba[:, <span class="number">1</span>], <span class="string">"g-"</span>, label=<span class="string">"Iris-Virginica"</span>)</span><br><span class="line">plt.plot(X_new, y_proba[:, <span class="number">0</span>], <span class="string">"b--"</span>, label=<span class="string">"Not Iris-Virginica"</span></span><br></pre></td></tr></table></figure>
+<p><img src="/2018/07/14/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（三）：回归/13.png" alt=""></p>
+<p>Virginica花的花瓣宽度（用三角形表示）在1.4厘米到2.5厘米之间，而其他种类的花（由正方形表示）通常具有较小的花瓣宽度，范围从0.1厘米到1.8厘米。注意，它们之间会有一些重叠。在大约2厘米以上时，分类器非常肯定这朵花是Virginica花（分类器此时输出一个非常高的概率值），而在1厘米以下时，它非常肯定这朵花不是Virginica花（不是Virginica花有非常高的概率）。在这两个极端之间，分类器是不确定的。但是，如果你使用它进行预测（使用predict()方法而不是predict_proba()方法），它将返回一个最可能的结果。<strong>因此，在1.6厘米左右存在一个决策边界，这时两类情况出现的概率都等于50％</strong>：如果花瓣宽度大于1.6厘米，则分类器将预测该花是Virginica，否则预测它不是（即使它有可能错了）：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>log_reg.predict([[<span class="number">1.7</span>], [<span class="number">1.5</span>]])</span><br><span class="line">array([<span class="number">1</span>, <span class="number">0</span>])</span><br></pre></td></tr></table></figure>
+<p>下图的线性决策边界表示相同的数据集，<strong>但是这次使用了两个特征进行判断：花瓣的宽度和长度</strong>。 一旦训练完毕，Logistic回归分类器就可以根据这两个特征来估计一朵花是Virginica的可能性。 <strong>虚线表示这时两类情况出现的概率都等于50％：这是模型的决策边界。</strong> <strong>请注意，它是一个线性边界。每条平行线都代表一个分类标准下的两两个不同类的概率，从15％（左下角）到90％（右上角）。</strong>越过右上角分界线的点都有超过90％的概率是Virginica花</p>
+<p><img src="/2018/07/14/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（三）：回归/14.png" alt=""></p>
+<p>就像其他线性模型，逻辑回归模型也可以ℓ1或者ℓ2 惩罚使用进行正则化。Scikit-Learn默认添加了ℓ2 惩罚</p>
+<blockquote>
+<p>在Scikit-Learn的LogisticRegression模型中控制正则化强度的超参数不是α （与其他线性模型一样），而是是它的逆：C. C的值越大，模型正则化强度越低</p>
+</blockquote>
+<h1 id="Softmax回归"><a href="#Softmax回归" class="headerlink" title="Softmax回归"></a>Softmax回归</h1><p>Logistic回归模型可以直接推广到支持多类别分类，不必组合和训练多个二分类器， 其称为Softmax回归或多类别Logistic回归.</p>
+<p>这个想法很简单：<strong>当给定一个实例x 时，Softmax回归模型首先计算k类的分数sk(x) ，然后将分数应用在Softmax函数（也称为归一化指数）上，估计出每类的概率</strong>。 计算sk(x) 的公式看起来很熟悉，因为它就像线性回归预测的公式一样</p>
+<blockquote>
+<p>k类的Softmax得分: $s_k(x)=θ^T⋅x$</p>
+</blockquote>
+<p>注意，每个类都有自己独一无二的参数向量θk 。 所有这些向量通常作为行放在参数矩阵Θ 中</p>
+<p><strong>一旦你计算了样例x 的每一类的得分，你便可以通过Softmax函数估计出样例属于第k类的概率p^k ：通过计算e的sk(x) 次方，然后对它们进行归一化（除以所有分子的总和）</strong>。</p>
+<p><img src="/2018/07/14/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（三）：回归/15.png" alt=""></p>
+<p>和Logistic回归分类器一样，Softmax回归分类器将估计概率最高（它只是得分最高的类）的那类作为预测结果，如公式4-21所示</p>
+<p><img src="/2018/07/14/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（三）：回归/16.png" alt=""></p>
+<blockquote>
+<p>Softmax回归分类器一次只能预测一个类（即它是多类的，但不是多输出的），因此它只能用于判断互斥的类别，如不同类型的植物。 你不能用它来识别一张照片中的多个人。</p>
+</blockquote>
+<p>现在我们知道这个模型如何估计概率并进行预测，接下来将介绍如何训练。<strong>我们的目标是建立一个模型在目标类别上有着较高的概率（因此其他类别的概率较低），最小化公式4-22可以达到这个目标，其表示了当前模型的代价函数，称为交叉熵，当模型对目标类得出了一个较低的概率，其会惩罚这个模型。 交叉熵通常用于衡量待测类别与目标类别的匹配程度（我们将在后面的章节中多次使用它）</strong></p>
+<p><img src="/2018/07/14/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（三）：回归/17.png" alt=""></p>
+<h1 id="交叉熵"><a href="#交叉熵" class="headerlink" title="交叉熵"></a>交叉熵</h1><p>熵的本质是香农信息量$log\frac{1}{p}$的期望。<strong>信息熵</strong>代表的是随机变量或整个系统的不确定性，熵越大，随机变量或系统的不确定性就越大。在给定的真实分布下，使用非真实分布所指定的策略消除系统的不确定性所需要付出的努力的大小（猜题次数、编码长度等），就是用<strong>交叉熵</strong>来衡量的。</p>
+<p>现有关于样本集的2个概率分布p和q，其中p为真实分布，q非真实分布。按照真实分布p来衡量识别一个样本的所需要的编码长度的期望(即平均编码长度)为$H(p)=\sum \limits_{i=1}^n p(i)\cdot log\frac{1}{p(i)}$ 。如果使用错误分布q来表示来自真实分布p的平均编码长度，则应该是$H(p,q)=\sum\limits_{i=1}^n p(i)\cdot log\frac{1}{q(i)}$ 。因为用q来编码的样本来自分布p，所以期望H(p,q)中概率是p(i)。<strong>H(p,q)我们称之为“交叉熵”</strong>。<strong>当q为真实分布p时，交叉熵达到最小值1，否则将会大于1</strong>。我们将由q得到的平均编码长度比由p得到的平均编码长度多出的bit数称为“<strong>相对熵</strong>”：$D(p\Vert q)=H(p,q)-H(p)=\sum\limits_{i=1}^n p(i)\cdot log\frac{p(i)}{q(i)}$  ,其又被称为KL散度(Kullback–Leibler divergence，KLD)。<strong>它表示两个概率分布的差异性</strong>：差异越大则相对熵越大，差异越小则相对熵越小，特别地，若2者相同则熵为0。</p>
+<p>另外，<strong>通常“相对熵”也可称为“交叉熵”</strong>，因为真实分布p是固定的，D(p||q)由H(p,q)决定。<strong>所以他们得到的相对效果是一样程度的</strong>。当然也有特殊情况，彼时两者须区别对待。</p>
+<p><img src="/2018/07/14/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（三）：回归/18.png" alt=""></p>
+<p><strong>上面这个公式由公式4-22求导得到，过程和逻辑回归损失函数一样，只不过将每个类别都纳入计算而已，当k=2则计算正负两类，与逻辑回归一模一样。现在你可以计算每一类的梯度向量，然后使用梯度下降（或者其他的优化算法）找到使得代价函数达到最小值的参数矩阵Θ</strong>。</p>
+<p>让我们使用Softmax回归对三种鸢尾花进行分类。当你使用LogisticRregression对模型进行训练时，<strong>Scikit_Learn默认使用的是一对多模型，但是你可以设置multi_class参数为“multinomial”来把它改变为Softmax回归。你还必须指定一个支持Softmax回归的求解器，例如“lbfgs”求解器</strong>（有关更多详细信息，请参阅Scikit-Learn的文档）。<strong>其默认使用ℓ12 正则化，你可以使用超参数C控制它。</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">X = iris[<span class="string">"data"</span>][:, (<span class="number">2</span>, <span class="number">3</span>)] <span class="comment"># petal length, petal width</span></span><br><span class="line">y = iris[<span class="string">"target"</span>]</span><br><span class="line"></span><br><span class="line">softmax_reg = LogisticRegression(multi_class=<span class="string">"multinomial"</span>,solver=<span class="string">"lbfgs"</span>, C=<span class="number">10</span>)</span><br><span class="line">softmax_reg.fit(X, y)</span><br></pre></td></tr></table></figure>
+<p>所以下次你发现一个花瓣长为5厘米，宽为2厘米的鸢尾花时，你可以问你的模型你它是哪一类鸢尾花，它会回答94.2％是Virginica花（第二类），或者5.8％是其他鸢尾花</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>softmax_reg.predict([[<span class="number">5</span>, <span class="number">2</span>]])</span><br><span class="line">array([<span class="number">2</span>])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>softmax_reg.predict_proba([[<span class="number">5</span>, <span class="number">2</span>]])</span><br><span class="line">array([[ <span class="number">6.33134078e-07</span>, <span class="number">5.75276067e-02</span>, <span class="number">9.42471760e-01</span>]])是</span><br></pre></td></tr></table></figure>
+<p><img src="/2018/07/14/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（三）：回归/19.png" alt=""></p>
+<p>图4-25用不同背景色表示了结果的决策边界。注意，任何两个类之间的决策边界是线性的。 该图的曲线表示Versicolor类的概率（例如，用0.450标记的曲线表示45％的概率边界）。注意模型也可以预测一个概率低于50％的类。 例如，在所有决策边界相遇的地方，所有类的估计概率相等，分别为33％。</p>
+<h1 id="练习题"><a href="#练习题" class="headerlink" title="练习题"></a>练习题</h1><ol>
+<li>如果你有一个数百万特征的训练集，你应该选择哪种线性回归训练算法？</li>
+<li>假设你训练集中特征的数值尺度（scale）有着非常大的差异，哪种算法会受到影响？有多大的影响？对于这些影响你可以做什么？</li>
+<li>训练 Logistic 回归模型时，梯度下降是否会陷入局部最低点？</li>
+<li>在有足够的训练时间下，是否所有的梯度下降都会得到相同的模型参数？</li>
+<li>假设你使用批量梯度下降法，画出每一代的验证误差。当你发现验证误差一直增大，接下来会发生什么？你怎么解决这个问题？</li>
+<li>当验证误差升高时，立即停止小批量梯度下降是否是一个好主意？</li>
+<li>哪个梯度下降算法（在我们讨论的那些算法中）可以最快到达解的附近？哪个的确实会收敛？怎么使其他算法也收敛？</li>
+<li>假设你使用多项式回归，画出学习曲线，在图上发现学习误差和验证误差之间有着很大的间隙。这表示发生了什么？有哪三种方法可以解决这个问题？</li>
+<li>假设你使用岭回归，并发现训练误差和验证误差都很高，并且几乎相等。你的模型表现是高偏差还是高方差？这时你应该增大正则化参数$\alpha$ 还是降低它？</li>
+<li>你为什么要这样做：</li>
+</ol>
+<ul>
+<li>使用岭回归代替线性回归？</li>
+<li>Lasso 回归代替岭回归？</li>
+<li>弹性网络代替 Lasso 回归？</li>
+</ul>
+<ol>
+<li>假设你想判断一副图片是室内还是室外，白天还是晚上。你应该选择二个逻辑回归分类器，还是一个 Softmax 分类器？</li>
+</ol>
+<hr>
+<p>1、如果您拥有具有数百万个功能的训练集，则可以使用随机梯度下降或小批量梯度下降，如果计算内存足够的话，则可使用批量梯度下降。 但是你不能使用正态方程，因为计算复杂度随着特征数量的增长而快速增长（超过二次方），求矩阵特征的逆非常花时间。</p>
+<p>2、如果训练集中的特征具有非常不同的比例，则损失函数将具有细长碗的形状，因此梯度下降优化将花费很长时间来收敛。 要解决此问题，您应该在训练模型之前缩放数据。 另外，正态方程在没有缩放的情况下可以正常工作。</p>
+<p>3、在训练Logistic回归模型时，梯度下降不会陷入在局部最小值，因为它的损失函数是凸函数的。</p>
+<p>4、如果优化问题是凸函数的（例如线性回归或逻辑回归），并且假设学习速率不是太高，则所有梯度下降算法将接近全局最优并最终产生相当类似的模型。 但是，除非你逐渐降低学习率，否则随机梯度下降和小批量GD将永远不会真正收敛; 相反，他们将继续围绕全局最佳状态来回跳跃。 这意味着即使你让它们运行很长时间，这些Gradient Descent算法也会产生略微不同的模型。</p>
+<p>5、如果验证误差在每个时期之后一直上升，则一种可能性是学习速率太高并且算法发散。如果训练误差也会增加，那么这显然是问题，你应该降低学习率。 但是，如果训练错误没有增加，那么您的模型将过度拟合训练集，您应该停止训练。</p>
+<p>6、由于随机性，随机梯度下降和小批量梯度下降都不能保证在每次训练迭代中都取得进展。 因此，如果在验证损失增加时立即停止训练，你可能会在达到最佳值之前过早停止。 更好的选择是定期保存模型，当它长时间没有改进时（意味着它可能永远不会超过记录），你可以恢复到最佳保存模型。</p>
+<p>7、随机梯度下降具有最快的训练迭代，因为它一次只考虑一个训练实例，因此它通常是第一个到达全局最优值（或具有非常小的小批量大小的Minibatch GD）附近。 但是，如果有足够的训练时间，只有批量梯度下降实际上会收敛。 如上所述，除非你逐渐降低学习速度，否则随机指标GD和小批量GD将在最佳状态下反弹。</p>
+<p>8、如果验证误差远远高于训练误差，则可能是因为你的模型过度拟合了训练集。 尝试解决此问题的一种方法是降低多项式度：具有较少自由度的模型不太可能过度拟合。 你可以尝试的另一件事是加入正则项，例如，通过在成本函数中添加ℓ2惩罚（岭）或ℓ1惩罚（Lasso）。 这也会降低模型的自由度。 最后，你还可以尝试增加训练集的大小。</p>
+<p>9、如果训练误差和验证误差几乎相等且相当高，则模型可能欠拟合训练集，这意味着它具有高偏差。 你应该尝试减少正则化超参数α。</p>
+<p>10、</p>
+<ul>
+<li>具有一些正则化的模型通常比没有任何正则化的模型表现更好，因此通常应该优先选择岭回归而不是简单的线性回归。</li>
+<li>Lasso回归使用ℓ1惩罚，这往往会将权重降低到恰好为零。 这导致稀疏模型，除了最重要的权重之外，所有权重都为零。 这是一种自动执行特征选择的方法，如果你怀疑只有少数特征真正重要，这是很好的。 当你不确定时，你应该更偏向岭回归。</li>
+<li>弹性网络常比Lasso更受欢迎，因为Lasso在某些情况下可能表现不稳定（当有些特征强烈相关或者特征数量比训练样本数量还要多）。 但是，它确实添加了一个额外的超参数来调整。 如果你想要具有稳定行为的Lasso，你可以使用弹性网络，并设置比率r接近1。</li>
+</ul>
+<p>11、如果你想将图片分类为室外/室内和白天/夜晚，因为这些不是专属类别（即，所有四种组合都是可能的），你应该训练两个Logistic回归分类器。</p>
+
+      
+    </div>
+    
+    
+    
+    
+    
+	<div>
+    	  <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------<i class="fa fa-heart"></i>Thanks for Reading!<i class="fa fa-heart"></i>-------------</div>
+    
+</div>
+	</div>
+    
+    
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/机器学习/" rel="tag"><i class="fa fa-tag"></i> 机器学习</a>
+          
+            <a href="/tags/线性回归/" rel="tag"><i class="fa fa-tag"></i> 线性回归</a>
+          
+            <a href="/tags/逻辑回归/" rel="tag"><i class="fa fa-tag"></i> 逻辑回归</a>
+          
+            <a href="/tags/softmax/" rel="tag"><i class="fa fa-tag"></i> softmax</a>
+          
+            <a href="/tags/正则化/" rel="tag"><i class="fa fa-tag"></i> 正则化</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/07/11/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（二）：分类/" rel="next" title="Sklearn 与 TensorFlow 机器学习实用指南（二）：分类">
+                <i class="fa fa-chevron-left"></i> Sklearn 与 TensorFlow 机器学习实用指南（二）：分类
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/07/18/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（四）：支持向量机/" rel="prev" title="Sklearn 与 TensorFlow 机器学习实用指南（四）：支持向量机">
+                Sklearn 与 TensorFlow 机器学习实用指南（四）：支持向量机 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="Mosbyllc" />
+            
+              <p class="site-author-name" itemprop="name">Mosbyllc</p>
+              <p class="site-description motion-element" itemprop="description">Sometimes thing have to fall apart to make way for better things.</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">60</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">73</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/kugua233" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="http://weibo.com/Mosbyllc" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://segmentfault.com/u/kugua233" target="_blank" title="SegmentFault">
+                      
+                        <i class="fa fa-fw fa-strikethrough"></i>SegmentFault</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:1499913789@qq.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Recommended reading
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://plushunter.github.io/" title="Free Will" target="_blank">Free Will</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#线性回归："><span class="nav-number">1.</span> <span class="nav-text">线性回归：</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#线性回归模型"><span class="nav-number">1.1.</span> <span class="nav-text">线性回归模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#损失函数"><span class="nav-number">1.2.</span> <span class="nav-text">损失函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#矩阵形式"><span class="nav-number">1.3.</span> <span class="nav-text">矩阵形式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#正态方程"><span class="nav-number">1.4.</span> <span class="nav-text">正态方程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#梯度下降"><span class="nav-number">1.5.</span> <span class="nav-text">梯度下降</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#批量梯度下降"><span class="nav-number">1.5.1.</span> <span class="nav-text">批量梯度下降</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#随机梯度下降"><span class="nav-number">1.5.2.</span> <span class="nav-text">随机梯度下降</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#小批量梯度下降"><span class="nav-number">1.5.3.</span> <span class="nav-text">小批量梯度下降</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#多项式回归"><span class="nav-number">2.</span> <span class="nav-text">多项式回归</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#学习曲线"><span class="nav-number">3.</span> <span class="nav-text">学习曲线</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#正则化"><span class="nav-number">4.</span> <span class="nav-text">正则化</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#范数"><span class="nav-number">4.1.</span> <span class="nav-text">范数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#岭回归-Ridge"><span class="nav-number">4.2.</span> <span class="nav-text">岭回归(Ridge)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Lasso-回归"><span class="nav-number">4.3.</span> <span class="nav-text">Lasso 回归</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#弹性网络-ElasticNet"><span class="nav-number">4.4.</span> <span class="nav-text">弹性网络(ElasticNet)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#正则化的作用"><span class="nav-number">4.5.</span> <span class="nav-text">正则化的作用</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#早期停止法（Early-Stopping）"><span class="nav-number">5.</span> <span class="nav-text">早期停止法（Early Stopping）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#逻辑回归"><span class="nav-number">6.</span> <span class="nav-text">逻辑回归</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#决策边界"><span class="nav-number">7.</span> <span class="nav-text">决策边界</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Softmax回归"><span class="nav-number">8.</span> <span class="nav-text">Softmax回归</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#交叉熵"><span class="nav-number">9.</span> <span class="nav-text">交叉熵</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#练习题"><span class="nav-number">10.</span> <span class="nav-text">练习题</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-star"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mosbyllc</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+  
+
+  
+
+</body>
+</html>

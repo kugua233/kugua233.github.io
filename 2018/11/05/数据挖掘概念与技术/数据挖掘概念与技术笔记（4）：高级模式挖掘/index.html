@@ -1,0 +1,1269 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16.ico?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="多层挖掘模式,多维模式挖掘,稀有模式和负模式挖掘,基于约束模式挖掘,巨型模式挖掘," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Mosbyllc" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="于大量的研究、问题的多方面扩展和广泛的应用研究。频繁模式挖掘已经远远超过了事务数据。这里，我们介绍其他多种挖掘模式类型的方法，包括多层模式、多维模式、稀有模式、负模式、受约束的频繁模式和巨型模式挖掘。书上的内容都是比较浅显，更多的是介绍性的东西，可能需要到实际工作上才能理解更深一些。 挖掘多层关联规则对于许多应用，在较高的抽象层（抽象的大类，例如电脑，而不是具体某种品牌和型号的电脑）发现的强关联规">
+<meta name="keywords" content="多层挖掘模式,多维模式挖掘,稀有模式和负模式挖掘,基于约束模式挖掘,巨型模式挖掘">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数据挖掘概念与技术笔记（4）：高级模式挖掘">
+<meta property="og:url" content="http://yoursite.com/2018/11/05/数据挖掘概念与技术/数据挖掘概念与技术笔记（4）：高级模式挖掘/index.html">
+<meta property="og:site_name" content="Mosbyllc">
+<meta property="og:description" content="于大量的研究、问题的多方面扩展和广泛的应用研究。频繁模式挖掘已经远远超过了事务数据。这里，我们介绍其他多种挖掘模式类型的方法，包括多层模式、多维模式、稀有模式、负模式、受约束的频繁模式和巨型模式挖掘。书上的内容都是比较浅显，更多的是介绍性的东西，可能需要到实际工作上才能理解更深一些。 挖掘多层关联规则对于许多应用，在较高的抽象层（抽象的大类，例如电脑，而不是具体某种品牌和型号的电脑）发现的强关联规">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/2018/11/05/数据挖掘概念与技术/数据挖掘概念与技术笔记（4）：高级模式挖掘/01.png">
+<meta property="og:updated_time" content="2019-12-28T12:45:54.662Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="数据挖掘概念与技术笔记（4）：高级模式挖掘">
+<meta name="twitter:description" content="于大量的研究、问题的多方面扩展和广泛的应用研究。频繁模式挖掘已经远远超过了事务数据。这里，我们介绍其他多种挖掘模式类型的方法，包括多层模式、多维模式、稀有模式、负模式、受约束的频繁模式和巨型模式挖掘。书上的内容都是比较浅显，更多的是介绍性的东西，可能需要到实际工作上才能理解更深一些。 挖掘多层关联规则对于许多应用，在较高的抽象层（抽象的大类，例如电脑，而不是具体某种品牌和型号的电脑）发现的强关联规">
+<meta name="twitter:image" content="http://yoursite.com/2018/11/05/数据挖掘概念与技术/数据挖掘概念与技术笔记（4）：高级模式挖掘/01.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"right","display":"always","offset":12,"b2t":true,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/11/05/数据挖掘概念与技术/数据挖掘概念与技术笔记（4）：高级模式挖掘/"/>
+
+
+
+
+
+  <title>数据挖掘概念与技术笔记（4）：高级模式挖掘 | Mosbyllc</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Mosbyllc</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+<link href="https://cdn.bootcss.com/KaTeX/0.7.1/katex.min.css" rel="stylesheet">
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/05/数据挖掘概念与技术/数据挖掘概念与技术笔记（4）：高级模式挖掘/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mosbyllc">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Mosbyllc">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">数据挖掘概念与技术笔记（4）：高级模式挖掘</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-05T17:06:14+08:00">
+                2018-11-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/数据挖掘/" itemprop="url" rel="index">
+                    <span itemprop="name">数据挖掘</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  3,378
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  12
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>于大量的研究、问题的多方面扩展和广泛的应用研究。频繁模式挖掘已经远远超过了事务数据。<strong>这里，我们介绍其他多种挖掘模式类型的方法，包括多层模式、多维模式、稀有模式、负模式、受约束的频繁模式和巨型模式挖掘</strong>。书上的内容都是比较浅显，更多的是介绍性的东西，可能需要到实际工作上才能理解更深一些。</p>
+<h2 id="挖掘多层关联规则"><a href="#挖掘多层关联规则" class="headerlink" title="挖掘多层关联规则"></a>挖掘多层关联规则</h2><p>对于许多应用，在较高的抽象层（抽象的大类，例如电脑，而不是具体某种品牌和型号的电脑）发现的强关联规则，可能有很高的支持度，但可能是常识性知识。我们希望往下钻，在更细节的层次发现新颖的模式。另外一方面，在较低或原始抽象层，可能有太多的零散模式，其中一些只不过是较高层模式的平方特化。</p>
+<p>在这种较低层或原始层数据中很难发现有趣的规则模式，例如，“Dell Studio XPS 16 Notebook”和“Logitech VX Nano Cordless Laser Mouse”每个都在很少一部分事务中出现，则可能很难找到涉及它们的强关联规则。少数人同时购买它们，使得该商品集不太可能满足最小支持度。然而，我们预料，在这些商品的泛化抽象之间，如在”Dell Notebook” 和”Cordless Mouse”之间，可望更容易发现强规则。这种在多个抽象层的数据上挖掘产生的规则称为多层关联规则，一般采用如下自顶向下的方法：</p>
+<ul>
+<li><strong>对于所有层使用一致的支持度（称作一致支持度）</strong>：在每一层挖掘时，使用相同的最小支持度阈值</li>
+</ul>
+<p>然<strong>而，一致支持度方法有一些困难。较低层次抽象的项不大可能象较高层次抽象的项出现得那么频繁。如果最小支持度阈值设置太高，可能丢掉出现在较低抽象层中有意义的关联规则。如果阈值设置太低，可能会产生出现在较高抽象层的无兴趣的关联规则。这导致了下面的方法</strong>：</p>
+<ul>
+<li>在较低层使用递减的支持度（称作递减支持度）：每个抽象层有它自己的最小支持度阈值。抽象层越低，对应的阈值越小。</li>
+<li>使用基于项或基于分组的最小支持度：例如，用户可以根据产品价格或者根据感兴趣的商品设置最小支持度，对如”价格超过1000美元的照相机”或”平板电脑” 设置特别低的支持度，以便特别关注这类商品的关联模式</li>
+</ul>
+<p>为了从具有不同支持度阈值的组中挖掘混合项模式，通常在挖掘中取所有组的最低支持度阈值。这将避免过滤掉有价值的模式，该模式包含来自具有最低支持度阈值组的项。同时，每组的最小支持阈值应该保持，以免从每个组产生无趣的项集。</p>
+<h3 id="检查多层关联规则冗余性"><a href="#检查多层关联规则冗余性" class="headerlink" title="检查多层关联规则冗余性"></a>检查多层关联规则冗余性</h3><p>挖掘多层关联规则一个严重的副作用是，由于项之间的“祖先”关系，可能产生一些多个抽象层上的冗余的规则，例如：”desktop computer”是”IBM desktop computer”的祖先，有以下规则：</p>
+<p><img src="/2018/11/05/数据挖掘概念与技术/数据挖掘概念与技术笔记（4）：高级模式挖掘/01.png" alt=""></p>
+<p>如果后一个具有较小一般性的规则不提供新的信息，应当删除它。让我们看看如何来确定。规则 R1 是规则 R2 的祖先，如果R1能够通过将R2中的项，用它在概念分层（分配比率）中的祖先替换得到，则可以将R2删除。</p>
+<p>以上诉规则例子：假定规则(6.9)具有 70%置信度，8%支持度，<strong>并且大约四分之一的”desktop computer”销售是”IBM desktop computer”</strong>。可以期望规则(6.10)具有大约 70%的置信度（由于所有的”IBM desktop computer”样本也是” desktop computer”样本）和 2%（即，8%×1/4）的支持度。也就是说，根据实际销量的分层可以通过R1推到出R2的规则与规则(6.10)相差无几，则R2规则是冗余的。</p>
+<h2 id="挖掘多维关联规则"><a href="#挖掘多维关联规则" class="headerlink" title="挖掘多维关联规则"></a>挖掘多维关联规则</h2><p>本节，你将学习挖掘多维关联规则的方法。<strong>多维关联规则是涉及多个属性或谓词的规则</strong>（例如，关于顾客的 buys 和顾客的 age 的规则）。<strong>我们把规则中每个不同的谓词称作维</strong>。例如：</p>
+<script type="math/tex; mode=display">
+age(X, "20...29") \land buys(X, "laptop")⇒buys(X, "HP\ printer")</script><p>其中，数据库属性可能是分类属性和量化属性（数值），对于量化属性，挖掘多维相关规则的计数可以分为两种基本方法：</p>
+<ul>
+<li>第一种方法：使用预定义的概念分层对量化属性离散化，例如，income 的概念分层可以用于以区间值，如“0…20K”代替</li>
+<li>第二种方法：根据数据的分布，将量化属性离散化或聚类到“箱”</li>
+</ul>
+<p>正如前面讨论的，我们可以把量化属性离散化为多个区间，而后在关联挖掘时把它们看做是分类属性。然而，这种简单的离散化可能导致产生大量的规则，其中许多规则可能没什么用。这里我们介绍三种方法，帮助克服这一困难，以便发现新颖的关联关系：</p>
+<ul>
+<li>1、数据立方体方法</li>
+<li>2、基于聚类的方法</li>
+<li>3、揭示异常行为的统计学方法</li>
+</ul>
+<h2 id="挖掘稀有模式和负模式"><a href="#挖掘稀有模式和负模式" class="headerlink" title="挖掘稀有模式和负模式"></a>挖掘稀有模式和负模式</h2><p>迄今为止，介绍的都是挖掘频繁模式，然而，有时令人感兴趣的不是频繁模式，而是发现<strong>稀有的模式</strong>（例如钻石表的销售是稀有的），或发现反映项之间的<strong>负相关的模式</strong>（例如发现顾客频繁地购买经典可口可乐或无糖可乐，但不可能一起都买）。</p>
+<ul>
+<li><strong>稀有模式</strong>：是指其支持度低于（或远低于）用户指定的最小支持度阈值的模式。然而，由于大多数项集的出现频度通常都低于甚至远低于最小支持度阈值，因此实践中允许用户指定稀有模式的其他条件是可取的。</li>
+<li><strong>负相关模式</strong>：如果项集X和Y 都是频繁的，但很少一起出现$(sup(X \cup Y) &lt; sup(X) \times sup(Y))$ ，则项集X和Y是负相关的，并且$X\cup Y$ 是负相关模式.如果$(sup(X \cup Y) \ll sup(X) \times sup(Y))$， 则项集X和Y是强负相关的，并且$X\cup Y$是强负相关模式。 </li>
+</ul>
+<p><strong>然而，上面这个公式度量不是零不变的，只能有效地解决非零事务的数据</strong>。如果数据库存在大量的零事务，则应该使用零不变度量Kulczynski，下面给出具体定义：</p>
+<p><strong>零不变负相关模式</strong>：假设项集X和Y都是频繁的，即$sup(X)\geq min_sup$ ，$sup(Y)\geq min_sup$ ， 其中$min_sup$是最小支持度阈值。如果有$(P(X|Y)+P(Y|X))/2&lt;\epsilon$，其中$\epsilon$是负模式阈值，则$X\cup Y$是负相关模式。 </p>
+<h2 id="基于约束的频繁模式挖掘"><a href="#基于约束的频繁模式挖掘" class="headerlink" title="基于约束的频繁模式挖掘"></a>基于约束的频繁模式挖掘</h2><p><strong>作为限制搜索空间的约束条件</strong>，这种策略称为基于约束的挖掘。</p>
+<p><strong>元规则</strong>就是挖掘用户感兴趣的规则的<strong>语法形式</strong>，例如：</p>
+<script type="math/tex; mode=display">
+P_1(X,Y)\land P_2(X,W) \Rightarrow buys(X, "officesoftware")</script><p>其中，P1和P2是谓词变量，在挖掘过程中被例示为给定数据库的属性；X是变量，代表顾客；Y和W是分别赋给P1和P2的属性值。</p>
+<p>对于规则约束，如何使用规则约束对搜索空间进行剪枝？主要有两种方法：1、对模式空间剪枝；2、数据空间剪枝</p>
+<h3 id="对模式空间剪枝"><a href="#对模式空间剪枝" class="headerlink" title="对模式空间剪枝"></a>对模式空间剪枝</h3><p>根据约束如何与模式挖掘过程配合，模式剪枝约束可以分为五类：1）反单调的；2）单调的；3）简洁的；4）可转变的；5）不可转变的（这个不重要）</p>
+<ul>
+<li>反单调的：规则约束$”sum(I.price)\leq 100”$，如果一个候选项集中的商品价格和大于 100 美元，则该项集可以由搜索空间剪去，因为向该项集中进一步添加项将会使它更贵，因此不可能满足限制。换一句话说，如果一个项集不满足该规则限制，它的任何超集也不可能满足该规则限制。如果一个规则具有这一性质，则称它是反单调的。 </li>
+<li>单调的：规则约束$”sum(I.price)\geq 100”$，集合中的单价和大于 100，进一步添加更多的项到此项集将增加价格，并且总是满足该限制。因此，在项集 I 上进一步检查该限制是多余的。换言之，如果一个项集满足这个规则限制，它的所有超集也满足。如果一个规则具有这一性质，则称它是单调的。 </li>
+<li>简洁：对于这类约束，我们可以枚举并且仅仅列出所有确保满足该限制的集合。因为有一个精确“公式”，产生满足简洁限制的所有集合，在挖掘过程中不必迭代地检验规则限制 </li>
+<li>可转变的约束：有些限制不属于以上三类。然而，如果项集中的项以特定的次序排列，则对于频繁项集挖掘过程，限制可能成为单调的或反单调的。例如，限制“avg(I.price)”既不是反单调的，也不是单调的。然而，如果事务中的项以单价的递增序添加到项集中，则该限制就成了反单调的。类似的，如果是递减顺序添加则是单调的。 </li>
+</ul>
+<h3 id="对数据空间剪枝"><a href="#对数据空间剪枝" class="headerlink" title="对数据空间剪枝"></a>对数据空间剪枝</h3><p>第二种对基于约束的频繁模式挖掘的搜索空间进行剪枝的方法是对数据空间剪枝。这种策略是剪掉对其后挖掘过程中可满足模式的产生没有贡献的数据片段。例如，对于约束是数据简洁的，如果一个挖掘查询要求被挖掘模式必须包含数码相机，则可以在挖掘过程开始减剪掉所有不包含数码相机的事务。对于约束的反单调的，基于当前模式，如果一个数据项不满足数据反单调约束，则可以剪掉它，因为在剩下的挖掘过程中，它不能对当前模式的超模式的产生有任何贡献。</p>
+<h2 id="巨型模式"><a href="#巨型模式" class="headerlink" title="巨型模式"></a>巨型模式</h2><p>对于数据库有数百或者数千维的数据，用已介绍方法来挖掘高维数据是非常低效的，一种是使用垂直格式数据，之前已经介绍过了。另外一种新的方向是用模型融合，用于巨型模式，即非常长的模式(例如蛋白质的DNA长序列)。这种方法在模式搜索空间中跳跃，得到巨型频繁模式完全集的一个很好的近似解。</p>
+<p>对于Apriori和FP-growth算法，会不可避免产生大量中型模式，使得它不可能达到巨型模式。因此提出了模式融合，它融合了少量较短的频繁模式，形成巨型模式候选。</p>
+<p>书上提到了<strong>核模式</strong>的概念，这里没怎么看懂，觉得是<strong>核模式代表了一定的鲁棒性</strong>。但是书上也直接给出了推论，巨型模式比较短模式有更多的核模式，更鲁棒。也就是说，如果从该模式中去掉少量项，则结果模式会有类似的支集。巨型模式较低层的核模式叫做<strong>核后代</strong>。<strong>所以基于这个特性，模式融合可以融合少量较短的频繁模式</strong>。这也是它为什么被称为模式融合的原因 ，因此巨型模式可以通过合并其核模式的真子集产生，<strong>例如， abcef可以通过它的两个核模式ab和cef产生。而不需要用单个项增量地扩展，而是与池中多个模式进行凝聚，这样能够迅速地到达巨型模式</strong>。</p>
+<p>模型融合包括以下两个阶段：</p>
+<ul>
+<li><p>1、池初始化</p>
+<p>模式融合假定有一个短频繁模式的初始池。这是一个短长度的频繁模式挖掘集。这个初始值可以用任意已有的有效挖掘算法挖掘。</p>
+</li>
+<li><p>2、迭代的模式融合</p>
+<p>用户首先指定一个参数K的值（K代表挖掘模式的最大个数），然后从当前池中随机地选取K个种子，对于每个种子，我们找出直径为ττ的球内的所有模式。然后，每个”球“中的所有模式融合在一起，形成一个超模式集，这些超模式形成新的池，然后再从这个新的池子中随机地找到K个种子，然后重复上面的工作，一直迭代，直到不能融合为止</p>
+</li>
+</ul>
+<p>因此，该方法可以绕过中型模式，通往巨型模式。</p>
+<p>7.5/7.6的内容暂时不是特别重要，用到再补。</p>
+
+      
+    </div>
+    
+    
+    
+    
+    
+	<div>
+    	  <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------<i class="fa fa-heart"></i>Thanks for Reading!<i class="fa fa-heart"></i>-------------</div>
+    
+</div>
+	</div>
+    
+    
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/多层挖掘模式/" rel="tag"><i class="fa fa-tag"></i> 多层挖掘模式</a>
+          
+            <a href="/tags/多维模式挖掘/" rel="tag"><i class="fa fa-tag"></i> 多维模式挖掘</a>
+          
+            <a href="/tags/稀有模式和负模式挖掘/" rel="tag"><i class="fa fa-tag"></i> 稀有模式和负模式挖掘</a>
+          
+            <a href="/tags/基于约束模式挖掘/" rel="tag"><i class="fa fa-tag"></i> 基于约束模式挖掘</a>
+          
+            <a href="/tags/巨型模式挖掘/" rel="tag"><i class="fa fa-tag"></i> 巨型模式挖掘</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/11/02/数据挖掘概念与技术/数据挖掘概念与技术笔记（3）：挖掘频繁模式、关联和相关性/" rel="next" title="数据挖掘概念与技术笔记（3）：挖掘频繁模式、关联和相关性">
+                <i class="fa fa-chevron-left"></i> 数据挖掘概念与技术笔记（3）：挖掘频繁模式、关联和相关性
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/11/06/数据挖掘概念与技术/数据挖掘概念与技术笔记（5）：分类/" rel="prev" title="数据挖掘概念与技术笔记（5）：分类">
+                数据挖掘概念与技术笔记（5）：分类 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="Mosbyllc" />
+            
+              <p class="site-author-name" itemprop="name">Mosbyllc</p>
+              <p class="site-description motion-element" itemprop="description">Sometimes thing have to fall apart to make way for better things.</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">60</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">73</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/kugua233" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="http://weibo.com/Mosbyllc" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://segmentfault.com/u/kugua233" target="_blank" title="SegmentFault">
+                      
+                        <i class="fa fa-fw fa-strikethrough"></i>SegmentFault</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:1499913789@qq.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Recommended reading
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://plushunter.github.io/" title="Free Will" target="_blank">Free Will</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#挖掘多层关联规则"><span class="nav-number">1.</span> <span class="nav-text">挖掘多层关联规则</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#检查多层关联规则冗余性"><span class="nav-number">1.1.</span> <span class="nav-text">检查多层关联规则冗余性</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#挖掘多维关联规则"><span class="nav-number">2.</span> <span class="nav-text">挖掘多维关联规则</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#挖掘稀有模式和负模式"><span class="nav-number">3.</span> <span class="nav-text">挖掘稀有模式和负模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基于约束的频繁模式挖掘"><span class="nav-number">4.</span> <span class="nav-text">基于约束的频繁模式挖掘</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#对模式空间剪枝"><span class="nav-number">4.1.</span> <span class="nav-text">对模式空间剪枝</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#对数据空间剪枝"><span class="nav-number">4.2.</span> <span class="nav-text">对数据空间剪枝</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#巨型模式"><span class="nav-number">5.</span> <span class="nav-text">巨型模式</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-star"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mosbyllc</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+  
+
+  
+
+</body>
+</html>

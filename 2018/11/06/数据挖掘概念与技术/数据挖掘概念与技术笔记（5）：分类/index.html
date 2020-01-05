@@ -1,0 +1,1261 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16.ico?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="决策树剪枝,IF-THEN规则分类,t检验," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Mosbyllc" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="这一章很多概念都是之前就接触了，就不一一记录了，这里记录一些感兴趣的吧。 决策树剪枝为了避免决策树过拟合数据，一般要对决策树进行剪枝：先剪枝和后剪枝 在先剪枝方法中，通过提前停止树的构造（例如，通过决定在给定的结点上不再分裂或划分训练样本的子集）而对树“剪枝”。在构造树时，统计意义下的度量，如信息增益、基尼指数等，可以用于评估分裂的优劣。如果在一个结点划分样本将导致低于预定义阈值的分裂，则给定子集">
+<meta name="keywords" content="决策树剪枝,IF-THEN规则分类,t检验">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数据挖掘概念与技术笔记（5）：分类">
+<meta property="og:url" content="http://yoursite.com/2018/11/06/数据挖掘概念与技术/数据挖掘概念与技术笔记（5）：分类/index.html">
+<meta property="og:site_name" content="Mosbyllc">
+<meta property="og:description" content="这一章很多概念都是之前就接触了，就不一一记录了，这里记录一些感兴趣的吧。 决策树剪枝为了避免决策树过拟合数据，一般要对决策树进行剪枝：先剪枝和后剪枝 在先剪枝方法中，通过提前停止树的构造（例如，通过决定在给定的结点上不再分裂或划分训练样本的子集）而对树“剪枝”。在构造树时，统计意义下的度量，如信息增益、基尼指数等，可以用于评估分裂的优劣。如果在一个结点划分样本将导致低于预定义阈值的分裂，则给定子集">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/2018/11/06/数据挖掘概念与技术/数据挖掘概念与技术笔记（5）：分类/01.png">
+<meta property="og:image" content="http://yoursite.com/2018/11/06/数据挖掘概念与技术/数据挖掘概念与技术笔记（5）：分类/02.png">
+<meta property="og:image" content="http://yoursite.com/2018/11/06/数据挖掘概念与技术/数据挖掘概念与技术笔记（5）：分类/03.png">
+<meta property="og:updated_time" content="2019-12-28T12:57:57.265Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="数据挖掘概念与技术笔记（5）：分类">
+<meta name="twitter:description" content="这一章很多概念都是之前就接触了，就不一一记录了，这里记录一些感兴趣的吧。 决策树剪枝为了避免决策树过拟合数据，一般要对决策树进行剪枝：先剪枝和后剪枝 在先剪枝方法中，通过提前停止树的构造（例如，通过决定在给定的结点上不再分裂或划分训练样本的子集）而对树“剪枝”。在构造树时，统计意义下的度量，如信息增益、基尼指数等，可以用于评估分裂的优劣。如果在一个结点划分样本将导致低于预定义阈值的分裂，则给定子集">
+<meta name="twitter:image" content="http://yoursite.com/2018/11/06/数据挖掘概念与技术/数据挖掘概念与技术笔记（5）：分类/01.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"right","display":"always","offset":12,"b2t":true,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/11/06/数据挖掘概念与技术/数据挖掘概念与技术笔记（5）：分类/"/>
+
+
+
+
+
+  <title>数据挖掘概念与技术笔记（5）：分类 | Mosbyllc</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Mosbyllc</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+<link href="https://cdn.bootcss.com/KaTeX/0.7.1/katex.min.css" rel="stylesheet">
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/06/数据挖掘概念与技术/数据挖掘概念与技术笔记（5）：分类/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mosbyllc">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Mosbyllc">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">数据挖掘概念与技术笔记（5）：分类</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-06T17:06:14+08:00">
+                2018-11-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/数据挖掘/" itemprop="url" rel="index">
+                    <span itemprop="name">数据挖掘</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  2,774
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  10
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>这一章很多概念都是之前就接触了，就不一一记录了，这里记录一些感兴趣的吧。</p>
+<h2 id="决策树剪枝"><a href="#决策树剪枝" class="headerlink" title="决策树剪枝"></a>决策树剪枝</h2><p>为了避免决策树过拟合数据，一般要对决策树进行剪枝：<strong>先剪枝和后剪枝</strong></p>
+<p>在先剪枝方法中，通过提前停止树的构造（例如，通过决定在给定的结点上不再分裂或划分训练样本的子集）而对树“剪枝”。在构造树时，统计意义下的度量，如信息增益、基尼指数等，可以用于评估分裂的优劣。如果在一个结点划分样本将导致低于预定义阈值的分裂，则给定子集的进一步划分将停止。然而，选取一个适当的阈值是困难的。较高的阈值可能导致过分简化的树，而较低的阈值可能使得树的化简太少。</p>
+<p>第二种更常用的方法是后剪枝，它由“完全生长”的树之后再剪去分枝，通过用叶子节点替换要删除的分枝。CART使用的代价复杂度剪枝算法是后剪枝方法的一个实例。该方法把树的复杂度看做树叶节点的个数和树的错误率的函数，如果减去节点N的子树导致较小的代价复杂度，则剪掉该子树；否则，保留该子树。</p>
+<h2 id="可伸缩性与决策树"><a href="#可伸缩性与决策树" class="headerlink" title="可伸缩性与决策树"></a>可伸缩性与决策树</h2><p>已有的决策树算法，如ID3、C4.5和CART都是为相对较小的数据集规模。另外，大部分情况下，大规模的训练数据不能放在内存！因此，由于训练元组在主存和高速缓存换进换出，决策树的构造可能变得效率低下。最近，已经提出了一些可以解决伸缩问题的决策树算法，例如，<strong>RainForest（雨林）能适应可用的内存量，采用了一种新的数据结构形式</strong>。</p>
+<p><img src="/2018/11/06/数据挖掘概念与技术/数据挖掘概念与技术笔记（5）：分类/01.png" alt=""></p>
+<p> 转为AVC集的聚集信息的数据结构来存放 </p>
+<p><img src="/2018/11/06/数据挖掘概念与技术/数据挖掘概念与技术笔记（5）：分类/02.png" alt=""></p>
+<p><strong>另外一种方法是采用树构造的自助乐观算法（BOAT）</strong>，它采用了统计学计数，创建给定训练数据的一些较小的样本（或子集），其中每个子集都能放在内存中。使用每个子集构造一颗树，导致多棵树，并使用它们构造一个新树。</p>
+<h2 id="使用IF-THEN规则分类"><a href="#使用IF-THEN规则分类" class="headerlink" title="使用IF-THEN规则分类"></a>使用IF-THEN规则分类</h2><p>基于规则的分类器使用一组IF-THEN规则进行分类。一个IF-THEN的规则R1一般表示形式有如下两种</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">R1:IF age=youth AND student=yes THEN buys_conmputer = yes </span><br><span class="line"></span><br><span class="line">R1:IF age=youth ^ student=yes THEN buys_computer = yes</span><br></pre></td></tr></table></figure>
+<p> 规<strong>则R可以用覆盖率和准确率来评估</strong>。给定类标记的数据集D中的一个元组X，设$n_{covers}$为规则R覆盖的元组数，$n_{covers}$为R正确分类的元组数，|D|是D中的总元组数，可将R的<strong>覆盖率</strong>和<strong>准确率</strong>定义为： </p>
+<script type="math/tex; mode=display">
+coverage(R)=\frac{n_{cover}}{|D|} \\ accuracy(R)=\frac{n_{correct}}{n_{covers}}</script><h3 id="如何建立基于规则的分类器呢"><a href="#如何建立基于规则的分类器呢" class="headerlink" title="如何建立基于规则的分类器呢"></a>如何建立基于规则的分类器呢</h3><ul>
+<li>1、根据决策树提取规则</li>
+</ul>
+<p><strong>对从根到树叶节点的每条路经创建一个规则</strong>。沿着给定路经上的每个属性-值的逻辑AND形成规则前件（“IF”部分）。叶结点包含类预测，形成规则后件（“THEN”部分）。<strong>由于这些规则都是直接从书中提取的，所以它们是互斥的和穷举的</strong>（互斥意味不可能存在规则冲突），<strong>因此规则的序不重要——它们是无序的</strong>。</p>
+<p>由于每个树叶对应一个规则，所以提取的规则集的量也很多。所以有两种解决方法，第一种是先对决策树剪枝，然后提取规则。另外一种是直接提取规则，然后修剪规则，对于不能提高规则的估计准确率的任何条件都可以删减，从而泛化该规则。</p>
+<ul>
+<li>2、使用顺序覆盖算法</li>
+</ul>
+<p>顺序覆盖算法是最广泛使用的挖掘分类规则取集的方法，有许多流行的顺序覆盖算法，包括AQ、CN2和最近提出的RIPPER。算法的一般策略如下：一次学习一个规则，每学习一个规则，就删除该规则覆盖的元组，并在剩下的元组上重负该过程。</p>
+<p><img src="/2018/11/06/数据挖掘概念与技术/数据挖掘概念与技术笔记（5）：分类/03.png" alt=""></p>
+<p>从最一般的规则开始，即从规则前件条件为空的规则开始。该规则是：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">IF  THEN loan_decision = accept</span><br></pre></td></tr></table></figure>
+<p>然后，我们考虑每个可以添加到该规则中可能属性测试。Learn_One_Rule采用一种贪心策略，每次选择最能提高规则质量的属性。目前，我们使用规则的准确率作为质量度量。假设Learn_One_Rule发现属性测试income=high最大限度地提高了当前（空）规则的准确率。把它添加到条件中，当前规则变成</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">IF income=high THEN loan_decision = accept</span><br></pre></td></tr></table></figure>
+<p>下一次迭代时，再次考虑可能的属性测试，结果选中credit_rating=excellent，当前规则增长，变成</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">IF income=high AND credit_rating=excellent THEN loan_decision = accept</span><br></pre></td></tr></table></figure>
+<p>重复该过程，直到结果规则达到可接受的质量水平。另外，贪心策略如果不自觉选到一个很差的属性怎么办，为了减少这种发生的几率，可以选出最好的k个而不是最好的一个属性添加到当前规则。</p>
+<h3 id="规则质量的度量"><a href="#规则质量的度量" class="headerlink" title="规则质量的度量"></a>规则质量的度量</h3><p>Learn_One_Rule需要度量规则的质量，之前我们用的是准确率。但准确率本身并非规则质量的可靠估计。这里介绍几个相对有用的几种度量：1）、熵 ；2）、信息增益；3）考虑覆盖率的统计检验</p>
+<p>我们想知道给定属性测试到condition中是否导致更好的规则，我们称新的条件为condition’，换言之，我们想知道R’是否比R好。</p>
+<p><strong>熵</strong>：D是condition’覆盖元组集合，而$p_i$是D中$C_i$类的概率。熵越小，condition’越好。熵更偏向于覆盖单个类大量元组和少量其他类元组的条件。</p>
+<p><strong>信息增益</strong>：FOIL算法是一种学习一阶逻辑规则的顺序覆盖算法，FOIL用下式估计扩展condition’s而获得信息</p>
+<script type="math/tex; mode=display">
+FOIL\_Gain=pos'\times (log_2\frac{pos'}{pos'+neg'}-log_2\frac{pos}{pos+neg})</script><p>它偏向于具有高准确率并且覆盖许多正元组的规则</p>
+<p><strong>似然率统计量</strong></p>
+<script type="math/tex; mode=display">
+Likelihood\_Ratio=2\sum_{i=1}^mf_ilog(\frac{f_i}{e_i})</script><p>其中，m是类数，$f_i$是这些元组类i的观测概率，$e_i$是规则随机预测时类i的期望频率。似然率有助于识别具有显著覆盖率的规则。</p>
+<p>CN2使用熵和似然率检验，而FOIL的信息增益被RIPPER使用。</p>
+<h3 id="规则剪枝"><a href="#规则剪枝" class="headerlink" title="规则剪枝"></a>规则剪枝</h3><p>之前说了可以在决策树生成之后对规则剪枝，有很多剪枝策略。这里介绍FOIL使用的一种简单但很有效的方法，给定规则R，有：</p>
+<script type="math/tex; mode=display">
+FOIL\_Prune(R)=\frac{pos-neg}{pos+neg}</script><p>其中，pos和neg分别为规则R覆盖的正元组数和负元组数。这个值将随着R在剪枝集上的准确率增加而增加。因此，如果R剪枝后版本的FOIL_Prune值较高，则对R剪枝。</p>
+<h3 id="如何使用规则分类器来预测元组类标号呢？"><a href="#如何使用规则分类器来预测元组类标号呢？" class="headerlink" title="如何使用规则分类器来预测元组类标号呢？"></a>如何使用规则分类器来预测元组类标号呢？</h3><p>如果正常的话，R1是唯一满足的规则，则该规则激活，返回X的类预测。但如果有多个规则被触发，它们指定了不同的类，这时则需要一种解决冲突的策略来决定激活哪一个规则。我们考察两种，即规模序和规则序：</p>
+<p>规模序：方案吧最高优先权赋予给”最苛刻”要求的规则，其中苛刻性用<strong>规则前件的规模度量</strong>（类似于树的深度）</p>
+<p>规则序：这<strong>种序可以是基于类的或基于规则的</strong>。<strong>使用基于类的序</strong>，类按”重要性”递减排序，如按普遍性的降序排序；<strong>基于规则的序</strong>，或者根据领域专家的建议，把规则组织成一个优先权列表。</p>
+<h2 id="使用统计显著性检验选择模型"><a href="#使用统计显著性检验选择模型" class="headerlink" title="使用统计显著性检验选择模型"></a>使用统计显著性检验选择模型</h2><p>在前面我们已经使用了 一些策略来测算分类器的准确率（例如K折交叉验证）。在这里，我们假设经处理，最后生成了两个分类器，他们的评估度量都不相同，那么我们应该选择哪个分类器呢？</p>
+<p>直观的看法当然是选择指标好的那个分类器呀，但是 实际上这种差别很有可能是偶然的。我们为了判定这种差别是否是偶然的，还需要进行<strong>统计显著性检验</strong>。 此外，希望得到平均错误率的置信界，使得我们可以做出这样的陈述：”对于未来样本的95%，观测到的均值将不会偏离正、负两个标准差”或者”一个模型比另外一个模型好，误差幅度为±4±4”</p>
+<p>这里用的是显著性检验是t-检验。知乎上给出了相关的解释 ： <a href="https://www.zhihu.com/question/60321751/answer/399954823" target="_blank" rel="noopener">知乎t检验解释</a> <a href="https://www.zhihu.com/question/60321751/answer/399954823" target="_blank" rel="noopener">https://www.zhihu.com/question/60321751/answer/399954823</a></p>
+<p> 对于10-折交叉验证（k=10）的第ii轮，设$err(M_1)_i$(或$err(M_2)_i$)是模型$M_1$(或$M_2$)在第i轮的错误率。对$M_1$的错误率取平均值得到$M_1$的平均错误率，记为$\overline {err}(M_1)$，类似的，可以得到$\overline {err}(M_2)$。两个模型差的方差记为$var(M_1-M_2)$。在我们的例子中，k=10，这里的k个样本是从每个模型的10-折交叉验证得到的错误率。逐对比较t-统计量按下式计算： </p>
+<script type="math/tex; mode=display">
+t=\frac{\overline{err}(M_1)-\overline{err}(M_2)}{\sqrt{var(M_1-M_2)/k}}</script><p> 其中 </p>
+<script type="math/tex; mode=display">
+var(M_1-M_2)=\frac{1}{k}\sum_{i=1}^k[err(M_1)_i-err(M_2)_i-(\overline{err}(M_1)-\overline{err}(M_2))]^2</script><p>为了计算$M_1$和$M_2$是否显著不同，计算t并选择显著水平sig。实践中，通常使用5%或1%的显著水平。然后，查找t-分布表。通常该表以自由度为行（k个样本具有k-1个自由度，对于我们的例子，自由度为9），显著水平为列。假定要确定$M_1$和$M_2$之间的差对总体的95%（即sig=5%或0.05）是否显著不同。然而，由于t分布是对称的，通常只显示分布上部的百分点，因此，找z=sig/2=0.025的表值，其中z也称为置信界。如果t&gt;z或t&lt;-z，则t落在拒斥域，在分布的尾部。这意味着可以拒绝$M_1$和$M_2$的均值相同的原假设，并断言两个模型之间存在统计的显著的差别。否则，如果不能拒绝原假设，于是断言$M_1$和$M_2$之间的差可能是随机的。</p>
+<p>如果有两个检验集而不是单个检验集，则使用t-检验的非逐对版本，其中两个模型的均值之间的方差估计为：</p>
+<script type="math/tex; mode=display">
+var(M_1-M_2)=\sqrt{\frac{var(M_1)}{k_1}+\frac{var(M_2)}{k_2}}</script><p> 其中，k1和k2分别用于M1和M2的交叉验证样本数（在我们的情况下，10-折交叉验证的轮）。这也称为两个样本的t检验。在查t分布表时，自由度取两个模型的最小自由度。 </p>
+
+      
+    </div>
+    
+    
+    
+    
+    
+	<div>
+    	  <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------<i class="fa fa-heart"></i>Thanks for Reading!<i class="fa fa-heart"></i>-------------</div>
+    
+</div>
+	</div>
+    
+    
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/决策树剪枝/" rel="tag"><i class="fa fa-tag"></i> 决策树剪枝</a>
+          
+            <a href="/tags/IF-THEN规则分类/" rel="tag"><i class="fa fa-tag"></i> IF-THEN规则分类</a>
+          
+            <a href="/tags/t检验/" rel="tag"><i class="fa fa-tag"></i> t检验</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/11/05/数据挖掘概念与技术/数据挖掘概念与技术笔记（4）：高级模式挖掘/" rel="next" title="数据挖掘概念与技术笔记（4）：高级模式挖掘">
+                <i class="fa fa-chevron-left"></i> 数据挖掘概念与技术笔记（4）：高级模式挖掘
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/11/09/数据挖掘概念与技术/数据挖掘概念与技术笔记（6）：高级分类方法/" rel="prev" title="数据挖掘概念与技术笔记（6）：高级分类方法">
+                数据挖掘概念与技术笔记（6）：高级分类方法 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="Mosbyllc" />
+            
+              <p class="site-author-name" itemprop="name">Mosbyllc</p>
+              <p class="site-description motion-element" itemprop="description">Sometimes thing have to fall apart to make way for better things.</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">60</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">73</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/kugua233" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="http://weibo.com/Mosbyllc" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://segmentfault.com/u/kugua233" target="_blank" title="SegmentFault">
+                      
+                        <i class="fa fa-fw fa-strikethrough"></i>SegmentFault</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:1499913789@qq.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Recommended reading
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://plushunter.github.io/" title="Free Will" target="_blank">Free Will</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#决策树剪枝"><span class="nav-number">1.</span> <span class="nav-text">决策树剪枝</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#可伸缩性与决策树"><span class="nav-number">2.</span> <span class="nav-text">可伸缩性与决策树</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用IF-THEN规则分类"><span class="nav-number">3.</span> <span class="nav-text">使用IF-THEN规则分类</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#如何建立基于规则的分类器呢"><span class="nav-number">3.1.</span> <span class="nav-text">如何建立基于规则的分类器呢</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#规则质量的度量"><span class="nav-number">3.2.</span> <span class="nav-text">规则质量的度量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#规则剪枝"><span class="nav-number">3.3.</span> <span class="nav-text">规则剪枝</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何使用规则分类器来预测元组类标号呢？"><span class="nav-number">3.4.</span> <span class="nav-text">如何使用规则分类器来预测元组类标号呢？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用统计显著性检验选择模型"><span class="nav-number">4.</span> <span class="nav-text">使用统计显著性检验选择模型</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-star"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mosbyllc</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+  
+
+  
+
+</body>
+</html>

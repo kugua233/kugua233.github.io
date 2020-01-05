@@ -1,0 +1,1305 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16.ico?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="深度学习,反向传播,神经网络," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Mosbyllc" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="神经元首先我们从最简单的神经网络——神经元讲起，以下即为一个神经元（Neuron）的图示：  我们知道感知机的激活函数是阶跃函数；而当我们说神经元的时，激活函数往往选择sigmoid函数或tanh函数 ,还有Relu函数（效果较好）。如下图所示   可以看出，这个单一神经元的输入输出的映射关系其实就是一个逻辑回归（logistic regression）。 神经网络模型神经网络模型所谓神经网络就是">
+<meta name="keywords" content="深度学习,反向传播,神经网络">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深度学习（一）：神经网络与反向传播">
+<meta property="og:url" content="http://yoursite.com/2018/12/09/深度学习/深度学习（一）：神经网络与反向传播/index.html">
+<meta property="og:site_name" content="Mosbyllc">
+<meta property="og:description" content="神经元首先我们从最简单的神经网络——神经元讲起，以下即为一个神经元（Neuron）的图示：  我们知道感知机的激活函数是阶跃函数；而当我们说神经元的时，激活函数往往选择sigmoid函数或tanh函数 ,还有Relu函数（效果较好）。如下图所示   可以看出，这个单一神经元的输入输出的映射关系其实就是一个逻辑回归（logistic regression）。 神经网络模型神经网络模型所谓神经网络就是">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/2018/12/09/深度学习/深度学习（一）：神经网络与反向传播/01.jpg">
+<meta property="og:image" content="http://yoursite.com/2018/12/09/深度学习/深度学习（一）：神经网络与反向传播/02.jpg">
+<meta property="og:image" content="http://yoursite.com/2018/12/09/深度学习/深度学习（一）：神经网络与反向传播/03.jpg">
+<meta property="og:image" content="http://yoursite.com/2018/12/09/深度学习/深度学习（一）：神经网络与反向传播/04.png">
+<meta property="og:image" content="http://yoursite.com/2018/12/09/深度学习/深度学习（一）：神经网络与反向传播/05.png">
+<meta property="og:image" content="http://yoursite.com/2018/12/09/深度学习/深度学习（一）：神经网络与反向传播/06.png">
+<meta property="og:image" content="http://yoursite.com/2018/12/09/深度学习/深度学习（一）：神经网络与反向传播/07.png">
+<meta property="og:image" content="http://yoursite.com/2018/12/09/深度学习/深度学习（一）：神经网络与反向传播/08.png">
+<meta property="og:updated_time" content="2019-12-29T01:55:34.567Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="深度学习（一）：神经网络与反向传播">
+<meta name="twitter:description" content="神经元首先我们从最简单的神经网络——神经元讲起，以下即为一个神经元（Neuron）的图示：  我们知道感知机的激活函数是阶跃函数；而当我们说神经元的时，激活函数往往选择sigmoid函数或tanh函数 ,还有Relu函数（效果较好）。如下图所示   可以看出，这个单一神经元的输入输出的映射关系其实就是一个逻辑回归（logistic regression）。 神经网络模型神经网络模型所谓神经网络就是">
+<meta name="twitter:image" content="http://yoursite.com/2018/12/09/深度学习/深度学习（一）：神经网络与反向传播/01.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"right","display":"always","offset":12,"b2t":true,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/12/09/深度学习/深度学习（一）：神经网络与反向传播/"/>
+
+
+
+
+
+  <title>深度学习（一）：神经网络与反向传播 | Mosbyllc</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Mosbyllc</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+<link href="https://cdn.bootcss.com/KaTeX/0.7.1/katex.min.css" rel="stylesheet">
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/12/09/深度学习/深度学习（一）：神经网络与反向传播/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mosbyllc">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Mosbyllc">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">深度学习（一）：神经网络与反向传播</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-12-09T17:06:13+08:00">
+                2018-12-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/深度学习/" itemprop="url" rel="index">
+                    <span itemprop="name">深度学习</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  5,115
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  19
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="神经元"><a href="#神经元" class="headerlink" title="神经元"></a>神经元</h2><p>首先我们从最简单的神经网络——神经元讲起，以下即为一个神经元（Neuron）的图示：</p>
+<p><img src="/2018/12/09/深度学习/深度学习（一）：神经网络与反向传播/01.jpg" alt=""></p>
+<p>我们知道感知机的激活函数是阶跃函数；而当我们说神经元的时，激活函数往往选择sigmoid函数或tanh函数 ,<strong>还有Relu函数（效果较好）</strong>。如下图所示 </p>
+<p><img src="/2018/12/09/深度学习/深度学习（一）：神经网络与反向传播/02.jpg" alt=""></p>
+<p>可以看出，这个单一神经元的输入输出的映射关系其实就是一个逻辑回归（logistic regression）。</p>
+<h2 id="神经网络模型"><a href="#神经网络模型" class="headerlink" title="神经网络模型"></a>神经网络模型</h2><h3 id="神经网络模型-1"><a href="#神经网络模型-1" class="headerlink" title="神经网络模型"></a>神经网络模型</h3><p>所谓神经网络就是将许多神经元联结在一起，这样，一个神经元的输出就可以是另一神经元的输入。例如，下图就是一个简单的神经网络：</p>
+<p><img src="/2018/12/09/深度学习/深度学习（一）：神经网络与反向传播/03.jpg" alt=""></p>
+<p>这样的神经网络也称之为多层感知机（MLP），MLP 由一个（通过）输入层、一个或多个称为隐藏层的 LTU （单层感知器）组成，一个最终层 LTU 称为输出层。除了输出层之外的每一层包括偏置神经元，并且全连接到下一层。当人工神经网络有两个或多个隐含层时，称为深度神经网络（DNN）。</p>
+<h2 id="BP反向传播"><a href="#BP反向传播" class="headerlink" title="BP反向传播"></a>BP反向传播</h2><p>反向传播指的是计算神经⽹络参数梯度的⽅法。总的来说，反向传播依据微积分中的链式法则，沿着从输出层到输⼊层的顺序，依次计算并存储⽬标函数有关神经⽹络各层的中间变量以及参数的梯度。</p>
+<p><img src="/2018/12/09/深度学习/深度学习（一）：神经网络与反向传播/04.png" alt=""></p>
+<p><img src="/2018/12/09/深度学习/深度学习（一）：神经网络与反向传播/05.png" alt=""></p>
+<p><img src="/2018/12/09/深度学习/深度学习（一）：神经网络与反向传播/06.png" alt=""></p>
+<p><img src="/2018/12/09/深度学习/深度学习（一）：神经网络与反向传播/07.png" alt=""></p>
+<p>上图依次为利用dE/dx6求出第一个dE/dw; 利用分量的点对点继续求dE/dw; 利用求和来下一个dE/dy2 ;(这里的所以x,y总输入输出都是知道的)</p>
+<ul>
+<li>dE/dw是有上下夹层dE/dx与上面一层的y求出的</li>
+<li>dE/dy是由上面一层全连接的wij 与其连接的dE/dx求出的</li>
+</ul>
+<p><img src="/2018/12/09/深度学习/深度学习（一）：神经网络与反向传播/08.png" alt=""></p>
+<p>dE/dy2 = dE/dx4, w24 和 dE/dx5, dw25的求和得到其中，y2=w24*x4,故有dx_j/dy_i = wij</p>
+<h2 id="用-TensorFlow-高级-API-训练-MLP"><a href="#用-TensorFlow-高级-API-训练-MLP" class="headerlink" title="用 TensorFlow 高级 API 训练 MLP"></a>用 TensorFlow 高级 API 训练 MLP</h2><p>与 TensorFlow 一起训练 MLP 最简单的方法是使用高级 API TF.Learn，这与 sklearn 的 API 非常相似。<code>DNNClassifier</code>可以很容易训练具有任意数量隐层的深度神经网络，而 softmax 输出层输出估计的类概率。例如，下面的代码训练两个隐藏层的 DNN（一个具有 300 个神经元，另一个具有 100 个神经元）和一个具有 10 个神经元的 SOFTMax 输出层进行分类：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br><span class="line">feature_columns = tf.contrib.learn.infer_real_valued_columns_from_input(X) </span><br><span class="line">dnn_clf = tf.contrib.learn.DNNClassifier(hidden_units=[<span class="number">300</span>, <span class="number">100</span>], n_classes=<span class="number">10</span>,</span><br><span class="line">                                         feature_columns=feature_columns) </span><br><span class="line">dnn_clf.fit(x=X, y=y, batch_size=<span class="number">50</span>, steps=<span class="number">40000</span>)</span><br></pre></td></tr></table></figure>
+<p>如果你在 MNIST 数据集上运行这个代码（在缩放它之后，例如，通过使用 skLearn 的<code>StandardScaler</code>），你实际上可以得到一个在测试集上达到 98.1% 以上精度的模型！</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> accuracy_score &gt;&gt;&gt; y_pred = list(dnn_clf.predict(X_test)) &gt;&gt;&gt; accuracy_score(y_test, y_pred) <span class="number">0.98180000000000001</span></span><br></pre></td></tr></table></figure>
+<p>TF.Learn 学习库也为评估模型提供了一些方便的功能：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>dnn_clf.evaluate(X_test, y_test) &#123;<span class="string">'accuracy'</span>: <span class="number">0.98180002</span>, <span class="string">'global_step'</span>: <span class="number">40000</span>, <span class="string">'loss'</span>: <span class="number">0.073678359</span>&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="使用普通-TensorFlow-训练-DNN"><a href="#使用普通-TensorFlow-训练-DNN" class="headerlink" title="使用普通 TensorFlow 训练 DNN"></a>使用普通 TensorFlow 训练 DNN</h2><p>如果您想要更好地控制网络架构，您可能更喜欢使用 TensorFlow 的较低级别的 Python API。 在本节中，我们将使用与之前的 API 相同的模型，我们将实施 Minibatch 梯度下降来在 MNIST 数据集上进行训练。 第一步是建设阶段，构建 TensorFlow 图。 第二步是执行阶段，您实际运行计算图谱来训练模型。</p>
+<h3 id="构造阶段"><a href="#构造阶段" class="headerlink" title="构造阶段"></a>构造阶段</h3><p>开始吧。 首先我们需要导入<code>tensorflow</code>库。 然后我们必须指定输入和输出的数量，并设置每个层中隐藏的神经元数量：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tfn_inputs = <span class="number">28</span>*<span class="number">28</span> <span class="comment"># MNISTn_hidden1 = 300n_hidden2 = 100n_outputs = 10</span></span><br></pre></td></tr></table></figure>
+<p>接下来，可以使用占位符节点来表示训练数据和目标。<code>X</code>的形状仅有部分被定义。 我们知道它将是一个 2D 张量（即一个矩阵），沿着第一个维度的实例和第二个维度的特征，我们知道特征的数量将是<code>28×28</code>（每像素一个特征） <strong>但是我们不知道每个训练批次将包含多少个实例。 所以<code>X</code>的形状是<code>(None, n_inputs)</code></strong>。 <strong>同样，我们知道<code>y</code>将是一个 1D 张量，每个实例有一个入口，但是我们再次不知道在这一点上训练批次的大小，所以形状<code>(None)</code></strong>。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">X = tf.placeholder(tf.float32, shape=(<span class="keyword">None</span>, n_inputs), name=<span class="string">"X"</span>)y = tf.placeholder(tf.int64, shape=(<span class="keyword">None</span>), name=<span class="string">"y"</span>)</span><br></pre></td></tr></table></figure>
+<p>现在让我们创建一个实际的神经网络。 占位符<code>X</code>将作为输入层; 在执行阶段，它将一次更换一个训练批次（注意训练批中的所有实例将由神经网络同时处理）。 现在您需要创建两个隐藏层和输出层。 两个隐藏的层几乎相同：它们只是它们所连接的输入和它们包含的神经元的数量不同。 <strong>输出层也非常相似，但它使用 softmax 激活函数而不是 ReLU 激活函数</strong>。 <strong>所以让我们创建一个<code>neuron_layer()</code>函数，我们将一次创建一个图层。 它将需要参数来指定输入，神经元数量，激活函数和图层的名称：</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">neuron_layer</span><span class="params">(X, n_neurons, name, activation=None)</span>:</span></span><br><span class="line">    <span class="keyword">with</span> tf.name_scope(name):</span><br><span class="line">        n_inputs = int(X.get_shape()[<span class="number">1</span>])</span><br><span class="line">        stddev = <span class="number">2</span> / np.sqrt(n_inputs)</span><br><span class="line">        init = tf.truncated_normal((n_inputs, n_neurons), stddev=stddev)</span><br><span class="line">        W = tf.Variable(init, name=<span class="string">"weights"</span>) <span class="comment"># 使用满足分布概率来更好第初始化W权重</span></span><br><span class="line">        b = tf.Variable(tf.zeros([n_neurons]), name=<span class="string">"biases"</span>)</span><br><span class="line">        <span class="comment"># multiply这个函数实现的是元素级别的相乘，也就是两个相乘的数元素各自相乘，而不是矩阵乘法</span></span><br><span class="line">        <span class="comment"># tf.matmul才算矩阵乘法，注意区别</span></span><br><span class="line">        z = tf.matmul(X, W) + b </span><br><span class="line">        <span class="keyword">if</span> activation == <span class="string">"relu"</span>:</span><br><span class="line">            <span class="keyword">return</span> tf.nn.relu(z)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">return</span> z</span><br></pre></td></tr></table></figure>
+<p>我们逐行浏览这个代码：</p>
+<ol>
+<li>首先，我们使用名称范围来创建每层的名称：它将包含该神经元层的所有计算节点。 <strong>这是可选的</strong>，但如果节点组织良好，则 TensorBoard 图形将会更加出色。</li>
+<li>接下来，我们通过查找输入矩阵的形状并获得第二个维度的大小来获得输入数量（<strong>第一个维度用于实例数量</strong>）。</li>
+<li>接下来的三行创建一个保存权重矩阵的<code>W</code>变量。 它将是包含每个输入和每个神经元之间的所有连接权重的2D张量；因此，<strong>它的形状将是<code>(n_inputs, n_neurons)</code></strong>。<strong>它将被随机初始化，使用具有标准差为<code>2/√n</code>的截断的正态（高斯）分布</strong>(使用截断的正态分布而不是常规正态分布确保不会有任何大的权重，这可能会减慢训练。).<strong>使用这个特定的标准差有助于算法的收敛速度更快</strong>（我们将在后面进一步讨论这一点），这是对神经网络的微小调整之一，对它们的效率产生了巨大的影响）。 重要的是为所有隐藏层随机初始化连接权重，以避免梯度下降算法无法中断的任何对称性。（例如，如果将所有权重设置为 0，则所有神经元将输出 0，并且给定隐藏层中的所有神经元的误差梯度将相同。 然后，梯度下降步骤将在每个层中以相同的方式更新所有权重，因此它们将保持相等。 换句话说，尽管每层有数百个神经元，你的模型就像每层只有一个神经元一样。）</li>
+<li>下一行创建一个偏差的<code>b</code>变量，初始化为 0（在这种情况下无对称问题），每个神经元有一个偏置参数。</li>
+<li>然后我们创建一个子图来计算<code>z = X·W + b</code>。 该向量化实现将有效地计算输入的加权和加上层中每个神经元的偏置，对于批次中的所有实例，仅需一次.</li>
+<li>最后，如果激活参数设置为<code>relu</code>，则代码返回<code>relu(z)</code>（即<code>max(0,z)</code>），否则它只返回<code>z</code>。</li>
+</ol>
+<p>好了，现在你有一个很好的函数来创建一个神经元层。 让我们用它来创建深层神经网络！ 第一个隐藏层以<code>X</code>为输入。 第二个将第一个隐藏层的输出作为其输入。 最后，输出层将第二个隐藏层的输出作为其输入。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> tf.name_scope(<span class="string">"dnn"</span>):</span><br><span class="line">        hidden1 = neuron_layer(X, n_hidden1, <span class="string">"hidden1"</span>, activation=<span class="string">"relu"</span>)</span><br><span class="line">    hidden2 = neuron_layer(hidden1, n_hidden2, <span class="string">"hidden2"</span>, activation=<span class="string">"relu"</span>)</span><br><span class="line">    logits = neuron_layer(hidden2, n_outputs, <span class="string">"outputs"</span>)</span><br></pre></td></tr></table></figure>
+<p>要注意，<strong>logit 是在通过 softmax 激活函数之前神经网络的输出</strong>：为了优化，我们稍后将处理 softmax 计算。</p>
+<p><strong>正如你所期望的，TensorFlow 有许多方便的功能来创建标准的神经网络层，所以通常不需要像我们刚才那样定义你自己的<code>neuron_layer()</code>函数</strong>。 例如，TensorFlow 的<code>tf.layers.dense()</code>函数创建一个完全连接的层，其中所有输入都连接到图层中的所有神经元。 <strong>它使用正确的初始化策略来负责创建权重和偏置变量，并且默认情况下不使用激活函数（我们可以使用<code>activate_fn</code>参数来更改它）</strong>。 它还支持正则化和归一化参数。 我们来调整上面的代码来使用<code>tf.layers.dense()</code>函数，而不是我们的<code>neuron_layer()</code>函数。 只需导入该功能，并使用以下代码替换之前所有 dnn 构建部分：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> tf.name_scope(<span class="string">"dnn"</span>):</span><br><span class="line">    hidden1 = tf.layers.dense(X, n_hidden1, name=<span class="string">"hidden1"</span>,</span><br><span class="line">                              activation=tf.nn.relu)</span><br><span class="line">    hidden2 = tf.layers.dense(hidden1, n_hidden2, name=<span class="string">"hidden2"</span>,</span><br><span class="line">                              activation=tf.nn.relu)</span><br><span class="line">    logits = tf.layers.dense(hidden2, n_outputs, name=<span class="string">"outputs"</span>)</span><br></pre></td></tr></table></figure>
+<h3 id="损失函数"><a href="#损失函数" class="headerlink" title="损失函数"></a>损失函数</h3><p>现在我们已经有了神经网络模型，我们需要定义我们用来训练的损失函数。 正如我们在之前对 Softmax 回归所做的那样，我们将使用交叉熵。 我们将使用<code>sparse_softmax_cross_entropy_with_logits()</code>：它根据“logit”计算交叉熵（即，在通过 softmax 激活函数之前的网络输出），并且期望以 0 到 -1 数量的整数形式的标签（在我们的例子中，从 0 到 9）。 <strong>这将给我们一个包含每个实例的交叉熵的 1D 张量</strong>。 <strong>然后，我们可以使用 TensorFlow 的<code>reduce_mean()</code>函数来计算所有实例的平均交叉熵。</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> tf.name_scope(<span class="string">"loss"</span>):</span><br><span class="line">    xentropy = tf.nn.sparse_softmax_cross_entropy_with_logits(labels=y, logits=logits)</span><br><span class="line">    loss = tf.reduce_mean(xentropy, name=<span class="string">"loss"</span>)</span><br></pre></td></tr></table></figure>
+<p>该<code>sparse_softmax_cross_entropy_with_logits()</code>函数等同于应用 SOFTMAX 激活函数，然后计算交叉熵，但它更高效，它妥善照顾的边界情况下，比如 logits 等于 0，这就是为什么我们没有较早的应用 SOFTMAX 激活函数。 还有称为<code>softmax_cross_entropy_with_logits()</code>的另一个函数，该函数在标签单热载体的形式（而不是整数 0 至类的数目减 1）。</p>
+<h3 id="优化器"><a href="#优化器" class="headerlink" title="优化器"></a>优化器</h3><p>我们有神经网络模型，我们有损失函数，现在我们需要定义一个<code>GradientDescentOptimizer</code>来调整模型参数以最小化损失函数。没什么新鲜的; 就像我们之前中所做的那样：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">learning_rate = <span class="number">0.01</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> tf.name_scope(<span class="string">"train"</span>):</span><br><span class="line">    optimizer = tf.train.GradientDescentOptimizer(learning_rate)</span><br><span class="line">    training_op = optimizer.minimize(loss)</span><br></pre></td></tr></table></figure>
+<h3 id="评估模型性能"><a href="#评估模型性能" class="headerlink" title="评估模型性能"></a>评估模型性能</h3><p>建模阶段的最后一个重要步骤是指定如何评估模型。 我们将简单地将精度用作我们的绩效指标。 首先，对于每个实例，通过检查最高 logit 是否对应于目标类别来确定神经网络的预测是否正确。 为此，您可以使用<code>in_top_k()</code>函数。 这返回一个充满布尔值的 1D 张量，因此我们需要将这些布尔值转换为浮点数，然后计算平均值。 这将给我们网络的整体准确性.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> tf.name_scope(<span class="string">"eval"</span>):</span><br><span class="line">    correct = tf.nn.in_top_k(logits, y, <span class="number">1</span>)</span><br><span class="line">    accuracy = tf.reduce_mean(tf.cast(correct, tf.float32))</span><br></pre></td></tr></table></figure>
+<p>而且，像往常一样，我们需要创建一个初始化所有变量的节点，我们还将创建一个<code>Saver</code>来将我们训练有素的模型参数保存到磁盘中：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">init = tf.global_variables_initializer()</span><br><span class="line">saver = tf.train.Saver()</span><br></pre></td></tr></table></figure>
+<p>建模阶段结束。 这是不到 40 行代码，但相当激烈：我们为输入和目标创建占位符，我们创建了一个构建神经元层的函数，我们用它来创建 DNN，我们定义了损失函数，我们 创建了一个优化器，最后定义了性能指标。 现在到执行阶段。</p>
+<h3 id="执行阶段"><a href="#执行阶段" class="headerlink" title="执行阶段"></a>执行阶段</h3><p>首先，我们加载 MNIST。 我们可以像之前的章节那样使用 ScikitLearn，但是 TensorFlow 提供了自己的助手来获取数据，将其缩放（0 到 1 之间），将它洗牌，并提供一个简单的功能来一次加载一个小批量：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> tensorflow.examples.tutorials.mnist <span class="keyword">import</span> input_data</span><br><span class="line">mnist = input_data.read_data_sets(<span class="string">"/tmp/data/"</span>)</span><br><span class="line">n_epochs = <span class="number">10001</span>  <span class="comment"># 迭代次数</span></span><br><span class="line">batch_size = <span class="number">50</span>   <span class="comment"># 小批量大小</span></span><br></pre></td></tr></table></figure>
+<p>现在我们去训练模型:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</span><br><span class="line">    init.run()</span><br><span class="line">    <span class="keyword">for</span> epoch <span class="keyword">in</span> range(n_epochs):</span><br><span class="line">        <span class="keyword">for</span> iteration <span class="keyword">in</span> range(mnist.train.num_examples // batch_size): <span class="comment"># 每批量一次</span></span><br><span class="line">            X_batch, y_batch = mnist.train.next_batch(batch_size)</span><br><span class="line">            sess.run(training_op, feed_dict=&#123;X: X_batch, y: y_batch&#125;) <span class="comment"># 运行计算程序</span></span><br><span class="line">        acc_train = accuracy.eval(feed_dict=&#123;X: X_batch, y: y_batch&#125;)</span><br><span class="line">        acc_test = accuracy.eval(feed_dict=&#123;X: mnist.test.images, y: mnist.test.labels&#125;)</span><br><span class="line">        print(epoch, <span class="string">"Train accuracy:"</span>, acc_train, <span class="string">"Test accuracy:"</span>, acc_test)</span><br><span class="line"></span><br><span class="line">    save_path = saver.save(sess, <span class="string">"./my_model_final.ckpt"</span>)</span><br></pre></td></tr></table></figure>
+<p>该代码打开一个 TensorFlow 会话，并运行初始化所有变量的<code>init</code>节点。 然后它运行的主要训练循环：在每个时期，通过一些小批次的对应于训练集的大小的代码进行迭代。 <strong>每个小批量通过<code>next_batch()</code>方法获取，然后代码简单地运行训练操作</strong>，为当前的小批量输入数据和目标提供。 接下来，在每个时期结束时，代码评估最后一个小批量和完整训练集上的模型，并打印出结果。 最后，模型参数保存到磁盘。</p>
+<h3 id="使用神经网络进行预测"><a href="#使用神经网络进行预测" class="headerlink" title="使用神经网络进行预测"></a>使用神经网络进行预测</h3><p>现在神经网络被训练了，你可以用它进行预测。 为此，您可以重复使用相同的建模阶段，但是更改执行阶段，如下所示：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</span><br><span class="line">    saver.restore(sess, <span class="string">"./my_model_final.ckpt"</span>) <span class="comment"># or better, use save_path</span></span><br><span class="line">    X_new_scaled = mnist.test.images[:<span class="number">20</span>]</span><br><span class="line">    Z = logits.eval(feed_dict=&#123;X: X_new_scaled&#125;)</span><br><span class="line">    y_pred = np.argmax(Z, axis=<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+<p>首先，代码从磁盘加载模型参数。 然后加载一些您想要分类的新图像。 记住应用与训练数据相同的特征缩放（在这种情况下，将其从 0 缩放到 1）。 然后代码评估对数点节点。 如果您想知道所有估计的类概率，则需要将<code>softmax()</code>函数应用于对数，但如果您只想预测一个类，则可以简单地选择具有最高 logit 值的类（使用<code>argmax()</code>函数做的伎俩）。</p>
+<h2 id="微调神经网络超参数"><a href="#微调神经网络超参数" class="headerlink" title="微调神经网络超参数"></a>微调神经网络超参数</h2><p>神经网络的灵活性也是其主要缺点之一：有很多超参数要进行调整。 不仅可以使用任何可想象的网络拓扑（如何神经元互连），而且即使在简单的 MLP 中，您可以更改层数，每层神经元数，每层使用的激活函数类型，权重初始化逻辑等等。 你怎么知道什么组合的超参数是最适合你的任务？</p>
+<p>可以使用具有交叉验证的网格搜索来查找正确的超参数 ，但是由于要调整许多超参数，并且由于在大型数据集上训练神经网络需要很多时间 。像之前讨论过的，使用随机搜索要好得多 ，另一个选择是使用诸如 Oscar 之类的工具，它可以实现更复杂的算法，以帮助您快速找到一组好的超参数.</p>
+<h3 id="隐藏层数量"><a href="#隐藏层数量" class="headerlink" title="隐藏层数量"></a>隐藏层数量</h3><p>实际上已经表明，只有一个隐藏层的 MLP 可以建模甚至最复杂的功能，只要它具有足够的神经元。 但是他们忽略了这样一个事实：深层网络具有比浅层网络更高的参数效率：他们可以使用比浅网格更少的神经元来建模复杂的函数，使得训练更快。</p>
+<p>总而言之，对于许多问题，您可以从一个或两个隐藏层开始。(MNIST 数据集上容易达到 97% 以上的准确度使用两个具有相同总神经元数量的隐藏层 )；对于更复杂的问题，您可以逐渐增加隐藏层的数量，直到您开始覆盖训练集。 <strong>但是，我们很少从头开始训练这样的网络：重用预先训练的最先进的网络执行类似任务的部分更为常见</strong>。训练将会更快，需要更少的数据 。</p>
+<h3 id="每层隐藏层的神经元数量"><a href="#每层隐藏层的神经元数量" class="headerlink" title="每层隐藏层的神经元数量"></a>每层隐藏层的神经元数量</h3><p>不幸的是，正如你所看到的，找到完美的神经元数量仍然是黑色的艺术.</p>
+<p><strong>一个更简单的方法是选择一个具有比实际需要的更多层次和神经元的模型</strong>，然后使用早期停止来防止它过度拟合（以及其他正则化技术，特别是 drop out，我们将在后面）。 这被称为“拉伸裤”的方法：而不是浪费时间寻找完美匹配您的大小的裤子，只需使用大型伸缩裤，缩小到合适的尺寸。</p>
+<h3 id="激活函数"><a href="#激活函数" class="headerlink" title="激活函数"></a>激活函数</h3><p>在大多数情况下，您可以在隐藏层中使用 ReLU 激活函数（或其中一个变体 ）</p>
+<p>对于输出层，softmax 激活函数通常是分类任务的良好选择（当这些类是互斥的时）。 对于回归任务，您完全可以不使用激活函数。</p>
+<hr>
+<ol>
+<li>为什么通常使用逻辑斯蒂回归分类器而不是经典感知器（即使用感知器训练算法训练单层的线性阈值单元）？你如何调整感知器使之等同于逻辑回归分类器？</li>
+</ol>
+<p>答：经典感知器只有在数据集是线性可分的情况下才会收敛。相比之下，逻辑回归分类器将收敛于一个很好的解决方案，即使数据集不是线性可分的，它会输出类的概率。如果你将感知器的激活函数改为逻辑激活函数(或如果有多个神经元，则为softmax激活函数)，，则等价于逻辑回归分类器。</p>
+<ol>
+<li>为什么激活函数是训练第一个 MLP 的关键因素？</li>
+</ol>
+<p>答：logistic激活函数是训练第一批MLP的关键因素，因为它是一个复杂的过程导数总是不为零的，所以梯度下降总是可以沿着斜率向下滚动。当激活函数是阶跃函数，梯度下降无法移动，因为根本没有斜率。</p>
+<ol>
+<li>假设有一个 MLP 有一个 10 个神经元组成的输入层，接着是一个 50 个神经元的隐藏层，最后一个 3 个神经元输出层。所有人工神经元使用 Relu 激活函数。</li>
+</ol>
+<ul>
+<li>输入矩阵<code>X</code>的形状是什么？ ——   -m × 10，其中m为batch size.</li>
+<li>隐藏层的权重向量的形状以及它的偏置向量的形状如何？ ——W_h=50 × 10，b_h = 50（一维长度）</li>
+<li>输出层的权重向量和它的偏置向量的形状是什么？ ——W_o=50 × 3，b_o=3</li>
+<li>网络的输出矩阵<code>Y</code>是什么形状？ ——Y=m × 3</li>
+<li>写出计算网络输出矩阵的方程 —$-Y=(X\cdot W_h+b_h)\cdot W_o+b_o$</li>
+</ul>
+<ol>
+<li>如果你想把电子邮件分类成垃圾邮件或正常邮件，你需要在输出层中有多少个神经元？在输出层中应该使用什么样的激活函数？如果你想解决 MNIST 问题，你需要多少神经元在输出层，使用什么激活函数？</li>
+</ol>
+<p>答：只需要神经系统在输出层中的一个神经元，通常在估计概率时，使用输出层的logistic激活函数。如果你想处理mnist，你需要输出层的10个神经元，你必须替换<br>logistic函数与softmax激活函数，它可以处理多个分裂，每个类输出一个概率。如果现在想让你的神经网络预测房屋价格，则需要一个输出神经元，不使用任何激活函数<br>输出层。</p>
+
+      
+    </div>
+    
+    
+    
+    
+    
+	<div>
+    	  <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------<i class="fa fa-heart"></i>Thanks for Reading!<i class="fa fa-heart"></i>-------------</div>
+    
+</div>
+	</div>
+    
+    
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/深度学习/" rel="tag"><i class="fa fa-tag"></i> 深度学习</a>
+          
+            <a href="/tags/反向传播/" rel="tag"><i class="fa fa-tag"></i> 反向传播</a>
+          
+            <a href="/tags/神经网络/" rel="tag"><i class="fa fa-tag"></i> 神经网络</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/11/14/数据挖掘概念与技术/数据挖掘概念与技术笔记（8）：聚类（2）/" rel="next" title="数据挖掘概念与技术笔记（8）：聚类（2）">
+                <i class="fa fa-chevron-left"></i> 数据挖掘概念与技术笔记（8）：聚类（2）
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/12/11/深度学习/深度学习（二）：训练深层神经网络/" rel="prev" title="深度学习（二）：训练深层神经网络">
+                深度学习（二）：训练深层神经网络 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="Mosbyllc" />
+            
+              <p class="site-author-name" itemprop="name">Mosbyllc</p>
+              <p class="site-description motion-element" itemprop="description">Sometimes thing have to fall apart to make way for better things.</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">60</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">73</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/kugua233" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="http://weibo.com/Mosbyllc" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://segmentfault.com/u/kugua233" target="_blank" title="SegmentFault">
+                      
+                        <i class="fa fa-fw fa-strikethrough"></i>SegmentFault</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:1499913789@qq.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Recommended reading
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://plushunter.github.io/" title="Free Will" target="_blank">Free Will</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#神经元"><span class="nav-number">1.</span> <span class="nav-text">神经元</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#神经网络模型"><span class="nav-number">2.</span> <span class="nav-text">神经网络模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#神经网络模型-1"><span class="nav-number">2.1.</span> <span class="nav-text">神经网络模型</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#BP反向传播"><span class="nav-number">3.</span> <span class="nav-text">BP反向传播</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#用-TensorFlow-高级-API-训练-MLP"><span class="nav-number">4.</span> <span class="nav-text">用 TensorFlow 高级 API 训练 MLP</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用普通-TensorFlow-训练-DNN"><span class="nav-number">5.</span> <span class="nav-text">使用普通 TensorFlow 训练 DNN</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#构造阶段"><span class="nav-number">5.1.</span> <span class="nav-text">构造阶段</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#损失函数"><span class="nav-number">5.2.</span> <span class="nav-text">损失函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#优化器"><span class="nav-number">5.3.</span> <span class="nav-text">优化器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#评估模型性能"><span class="nav-number">5.4.</span> <span class="nav-text">评估模型性能</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#执行阶段"><span class="nav-number">5.5.</span> <span class="nav-text">执行阶段</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用神经网络进行预测"><span class="nav-number">5.6.</span> <span class="nav-text">使用神经网络进行预测</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#微调神经网络超参数"><span class="nav-number">6.</span> <span class="nav-text">微调神经网络超参数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#隐藏层数量"><span class="nav-number">6.1.</span> <span class="nav-text">隐藏层数量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#每层隐藏层的神经元数量"><span class="nav-number">6.2.</span> <span class="nav-text">每层隐藏层的神经元数量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#激活函数"><span class="nav-number">6.3.</span> <span class="nav-text">激活函数</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-star"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mosbyllc</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+  
+
+  
+
+</body>
+</html>

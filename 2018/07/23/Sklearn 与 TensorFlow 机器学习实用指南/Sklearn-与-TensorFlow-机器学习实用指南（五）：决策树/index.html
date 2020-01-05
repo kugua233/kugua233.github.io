@@ -1,0 +1,1452 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16.ico?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="机器学习,决策树,CART," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Mosbyllc" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="一些基本概念决策树简述决策树（Decision Tree）是数据挖掘中一种基本的分类和回归方法，它呈树形结构，在分类问题中，表示基于特征对实例进行分类的过程，可以认为是if−thenif−then规则的集合。决策树模型的主要优点是模型具有可读性，分类速度快。在学习时，利用训练数据，根据损失函数最小化原则建立决策树模型；而在预测时，对新的数据，利用决策树模型进行分类。主要的决策树算法有ID3算法、C">
+<meta name="keywords" content="机器学习,决策树,CART">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Sklearn 与 TensorFlow 机器学习实用指南（五）：决策树">
+<meta property="og:url" content="http://yoursite.com/2018/07/23/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（五）：决策树/index.html">
+<meta property="og:site_name" content="Mosbyllc">
+<meta property="og:description" content="一些基本概念决策树简述决策树（Decision Tree）是数据挖掘中一种基本的分类和回归方法，它呈树形结构，在分类问题中，表示基于特征对实例进行分类的过程，可以认为是if−thenif−then规则的集合。决策树模型的主要优点是模型具有可读性，分类速度快。在学习时，利用训练数据，根据损失函数最小化原则建立决策树模型；而在预测时，对新的数据，利用决策树模型进行分类。主要的决策树算法有ID3算法、C">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/2018/07/23/Sklearn%20与%20TensorFlow%20机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（五）：决策树/01.jpg">
+<meta property="og:image" content="http://yoursite.com/2018/07/23/Sklearn%20与%20TensorFlow%20机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（五）：决策树/02.jpg">
+<meta property="og:image" content="http://yoursite.com/2018/07/23/Sklearn%20与%20TensorFlow%20机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（五）：决策树/03.jpg">
+<meta property="og:image" content="http://yoursite.com/2018/07/23/Sklearn%20与%20TensorFlow%20机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（五）：决策树/04.jpg">
+<meta property="og:image" content="http://yoursite.com/2018/07/23/Sklearn%20与%20TensorFlow%20机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（五）：决策树/05.jpg">
+<meta property="og:image" content="http://yoursite.com/2018/07/23/Sklearn%20与%20TensorFlow%20机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（五）：决策树/06.jpg">
+<meta property="og:image" content="http://yoursite.com/2018/07/23/Sklearn%20与%20TensorFlow%20机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（五）：决策树/07.jpg">
+<meta property="og:image" content="http://yoursite.com/2018/07/23/Sklearn%20与%20TensorFlow%20机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（五）：决策树/08.png">
+<meta property="og:image" content="http://yoursite.com/2018/07/23/Sklearn%20与%20TensorFlow%20机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（五）：决策树/09.png">
+<meta property="og:image" content="http://yoursite.com/2018/07/23/Sklearn%20与%20TensorFlow%20机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（五）：决策树/10.png">
+<meta property="og:image" content="http://yoursite.com/2018/07/23/Sklearn%20与%20TensorFlow%20机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（五）：决策树/11.png">
+<meta property="og:image" content="http://yoursite.com/2018/07/23/Sklearn%20与%20TensorFlow%20机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（五）：决策树/12.png">
+<meta property="og:image" content="http://yoursite.com/2018/07/23/Sklearn%20与%20TensorFlow%20机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（五）：决策树/13.png">
+<meta property="og:image" content="http://yoursite.com/2018/07/23/Sklearn%20与%20TensorFlow%20机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（五）：决策树/14.png">
+<meta property="og:image" content="http://yoursite.com/2018/07/23/Sklearn%20与%20TensorFlow%20机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（五）：决策树/15.png">
+<meta property="og:image" content="http://yoursite.com/2018/07/23/Sklearn%20与%20TensorFlow%20机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（五）：决策树/16.png">
+<meta property="og:image" content="http://yoursite.com/2018/07/23/Sklearn%20与%20TensorFlow%20机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（五）：决策树/17.png">
+<meta property="og:image" content="http://yoursite.com/2018/07/23/Sklearn%20与%20TensorFlow%20机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（五）：决策树/18.png">
+<meta property="og:updated_time" content="2018-07-24T11:38:40.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Sklearn 与 TensorFlow 机器学习实用指南（五）：决策树">
+<meta name="twitter:description" content="一些基本概念决策树简述决策树（Decision Tree）是数据挖掘中一种基本的分类和回归方法，它呈树形结构，在分类问题中，表示基于特征对实例进行分类的过程，可以认为是if−thenif−then规则的集合。决策树模型的主要优点是模型具有可读性，分类速度快。在学习时，利用训练数据，根据损失函数最小化原则建立决策树模型；而在预测时，对新的数据，利用决策树模型进行分类。主要的决策树算法有ID3算法、C">
+<meta name="twitter:image" content="http://yoursite.com/2018/07/23/Sklearn%20与%20TensorFlow%20机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（五）：决策树/01.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"right","display":"always","offset":12,"b2t":true,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/07/23/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（五）：决策树/"/>
+
+
+
+
+
+  <title>Sklearn 与 TensorFlow 机器学习实用指南（五）：决策树 | Mosbyllc</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Mosbyllc</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+<link href="https://cdn.bootcss.com/KaTeX/0.7.1/katex.min.css" rel="stylesheet">
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/23/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（五）：决策树/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mosbyllc">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Mosbyllc">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Sklearn 与 TensorFlow 机器学习实用指南（五）：决策树</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-23T11:07:30+08:00">
+                2018-07-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Sklearn-与-TensorFlow-机器学习实用指南/" itemprop="url" rel="index">
+                    <span itemprop="name">Sklearn 与 TensorFlow 机器学习实用指南</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  7,682
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  28
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="一些基本概念"><a href="#一些基本概念" class="headerlink" title="一些基本概念"></a>一些基本概念</h1><h2 id="决策树简述"><a href="#决策树简述" class="headerlink" title="决策树简述"></a>决策树简述</h2><p>决策树（Decision Tree）是数据挖掘中一种基本的分类和回归方法，它呈树形结构，在分类问题中，表示基于特征对实例进行分类的过程，可以认为是if−thenif−then规则的集合。决策树模型的主要优点是模型具有可读性，分类速度快。在学习时，利用训练数据，根据损失函数最小化原则建立决策树模型；而在预测时，对新的数据，利用决策树模型进行分类。主要的决策树算法有ID3算法、C4.5算法和CART算法。一个决策树的学习过程包括三个步骤：特征选择、决策树的生成以及决策树的修剪。</p>
+<h2 id="信息熵"><a href="#信息熵" class="headerlink" title="信息熵"></a>信息熵</h2><p>信息熵是衡量样本纯度的一种指标，嘉定当前样本集合D中第k类样本所占的比例为$p_k(k=1,2,…,|y|)$,则D的信息熵定义为</p>
+<script type="math/tex; mode=display">
+Ent(D)=-\sum_{k=1}^{\vert y\vert}p_klog_2{p_k}</script><p>Ent(D)的值越小，则D的纯度越高。</p>
+<p>以周志华西瓜书P76的西瓜数据集中的17个样本数据为例子。</p>
+<p><img src="/2018/07/23/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（五）：决策树/01.jpg" alt=""></p>
+<p>显然，标签类别|y|=2.其中正例占$p_1$=8/17，反例占$p_2$=9/17。于是根节点的信息熵为</p>
+<script type="math/tex; mode=display">
+Ent(D)=-\sum_{k=1}^2p_klog_2^{p_k}=-(\frac{8}{17}log_2\frac{8}{17}+\frac{9}{17}log_2\frac{9}{17})=0.998</script><h2 id="条件熵"><a href="#条件熵" class="headerlink" title="条件熵"></a>条件熵</h2><p>$Ent(Y|X)$表示在已知随机变量X的条件下随机变量Y的不确定性，定义为X给定条件下Y的条件概率分布的熵对X的数学期望</p>
+<script type="math/tex; mode=display">
+Ent\left( Y|X \right) =\sum_{i=1}^n{p_iEnt\left( Y|X=x_i \right)}</script><h1 id="特征选择"><a href="#特征选择" class="headerlink" title="特征选择"></a>特征选择</h1><h2 id="信息增益"><a href="#信息增益" class="headerlink" title="信息增益"></a>信息增益</h2><p><strong>信息增益表示得知特征X的信息而使得类Y的信息的不确定性减少的程度</strong>。特征A对训练数据集D的信息增益Gain(D,a)定义为集合D的经验熵$Ent(D)$与特征A给定条件下D的经验条件熵$Ent(Y | X)$之差，即假定离散属性a有n个可能的取值${a^1,a^2,…a^n}$，若使用属性a的取值来对样本集合划分，则会产生n个分支节点子集$D_1,D_2,..,Dn$，$|D_i|$ 为$D_i$的样本个数。(考虑不同的分支节点所包含的样本数不同，用$\frac{|D^i|}{|D|}$代替期望概率$p_i$，即样本越多的分支节点的影响越大)</p>
+<script type="math/tex; mode=display">
+Gain(D,a)=Ent(D)-\sum_{i=1}^n\frac{|D^i|}{|D|}End(D^i)</script><p>以西瓜数据集的“色泽”属性为例，它有3个可能的取值{青绿，乌黑，浅白}。若使用该属性对D角线划分，则可以得到三个子集，分布记为$D^1$(色泽=青绿)={1,4,6,10,13,17}，正反例率分别为$p_1=\frac{3}{6}$，$p_2=\frac{3}{6}$；$D^2$(色泽=乌黑)={2,3,7,8,9,15}，正反例率分别为$p_1=\frac{4}{6}$，$p_2=\frac{2}{6}$ ；$D^3$(色泽=乌黑)={5,11,12,14,16}，正反例率分别为$p_1=\frac{1}{5}$，$p_2=\frac{4}{5}$。</p>
+<p>首先，根据信息熵公式可计算出“色泽”划分之后所获得的3个分支节点的信息熵为</p>
+<script type="math/tex; mode=display">
+Ent(D^1)=-(\frac{3}{6}log_2\frac{3}{6}+\frac{3}{6}log_2\frac{3}{6})=1.000 \\ \\ \\ Ent(D^2)=-(\frac{4}{6}log_2\frac{4}{6}+\frac{2}{6}log_2\frac{2}{6})=0.918 \\ \\ \\ Ent(D^3)=-(\frac{1}{5}log_2\frac{1}{5}+\frac{4}{5}log_2\frac{4}{5})=0.722</script><p>之后根据上面公式可计算出属性“色泽”的信息增益为</p>
+<script type="math/tex; mode=display">
+Gain(D,色泽)=Ent(D)-\sum_{i=1}^3\frac{|D^i|}{|D|}Ent(D^i)  \\ \\ \\ =0.998-((\frac{6}{17}\times1.000+\frac{6}{17}\times0.918+\frac{5}{17}\times0.722)=0.109</script><p>一般而言，信息增益越大，则意味着使用属性a来进行划分所获得的“纯度提升”越大。其中ID3决策树就是以信息增益为准则来选择划分属性。根据得到的属性最大信息增益来划分结果示例如下所示。之后再根据子集样本进一步划分，直到只有一个样本个体或者样本个体都为同一类标签为止。</p>
+<p><img src="/2018/07/23/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（五）：决策树/02.jpg" alt=""></p>
+<p>若我们把样本编号1-17也作为一个划分属性，则根据信息增益公式可计算出它的信息增益为0.998，远大于其他候选划分属性。这很容易理解，“编号”将产生17个分支，每个分支仅包含一个样本，这些分支节点纯度已打最大。然而这些侧介绍显然不具有泛化能力。</p>
+<p><strong>所以实际上，信息增益准则对可取数目较多的属性有所偏好</strong>；为了减少这种偏好，著名的C4.5决策树算法不直接采用信息增益，而是使用增益率来做最优划分属性。</p>
+<h2 id="增益率"><a href="#增益率" class="headerlink" title="增益率"></a>增益率</h2><p>增益率定义为其信息增益Gain(D，a)与训练数据集D关于特征a样本数的信息熵之比，增益率的数学定义为</p>
+<script type="math/tex; mode=display">
+Gain_{ratio}(D,a)=\frac{Gain(D,a)}{IV(a)}</script><script type="math/tex; mode=display">
+IV(a)=-\sum_{v=1}^n\frac{|D^i|}{|D|}log_2\frac{|D^i|}{|D|}</script><p>（<strong>注意子集的划分是属性a样本的可取类别数目n，而不是标签类别|y|了啊</strong>），IV(a)可以成为属性a的内在信息，若属性a的可取数目越大，则IV(a)的值通常越大。这样就可以一定程度平衡信息增益对可取数目较多的属性的偏好。以“色泽”为例</p>
+<script type="math/tex; mode=display">
+IV(色泽)=-\frac{6}{17}log_2\frac{6}{17}-\frac{6}{17}log_2\frac{6}{17}-\frac{5}{17}log_2\frac{5}{17}=1.580</script><p>另外，需要注意的是，增益率准则对可取数值数目较少的属性有所偏好，因此，C4.5算法并不是直接选择增益率最大的候选划分属性，而是先从候选划分属性中找出信息增益高于平均水平的属性，再从中选择增益率的最高的。</p>
+<h2 id="基尼指数"><a href="#基尼指数" class="headerlink" title="基尼指数"></a>基尼指数</h2><p>数据集D的纯度可以用基尼指数来度量，Gini（D）越小，则数据集D的纯度越高。假设有K个类，样本点属于第k类的概率为$p_k$，则概率分布的基尼系数定义为</p>
+<script type="math/tex; mode=display">
+Gini\left( p \right) =\sum_{k=1}^K{p_k\left( 1-p_k \right) =1-\sum_{k=1}^K{p_k^2}}</script><p>根据基尼指数定义，可以得到样本集合D的基尼指数，其中$D_k$表示数据集D中属于第k类的样本子集</p>
+<script type="math/tex; mode=display">
+Gini(D)=1-\sum_{k=1}^{K}\left(\frac{|D_k|}{|D|} \right)^2</script><p>若样本集合D根据特征A是否取某一可能值a被分割成$D_1$和$D_2$两部分，即</p>
+<script type="math/tex; mode=display">
+D_1=\left\{ \left( x,y \right) \in D|A\left( x \right) =0 \right\} \mathrm{，}D_2=D-D_1</script><p>则在特征A的条件下，集合D的基尼指数定义为</p>
+<script type="math/tex; mode=display">
+Gini\left( D,A \right) =\frac{|D_1|}{|D|}Gini\left( D_1 \right) +\frac{|D_2|}{|D|}Gini\left( D_2 \right)</script><p>基尼系数Gini(D)表示集合D的不确定性，基尼系数Gini(D,A)表示A=a分割后集合D的不确定性。基尼指数越大，样本集合的不确定性越大。<strong>对于属性A，分别计算任意属性值将数据集划分为两部分之后的Gain_Gini</strong>，选取其中的最小值，作为属性A得到的<strong>最优二分方案</strong>。<strong>然后对于训练集S，计算所有属性的最优二分方案，选取其中的最小值，作为样本及S的最优二分方案</strong>。</p>
+<script type="math/tex; mode=display">
+\min_{i\epsilon A}(Gain\_Gini(D,A))</script><script type="math/tex; mode=display">
+\min_{A\epsilon Attribute}(\min_{i\epsilon A}(Gain\_Gini(D,A)))</script><h1 id="剪枝"><a href="#剪枝" class="headerlink" title="剪枝"></a>剪枝</h1><p>剪枝是决策树学习算法对付“过拟合”的主要手段。在决策树学习中，为了尽可能正确分类样本，节点划分过程不断重复，有时会造成决策树分支过多，这时有时候把自身特点当做所有数据都具有的一般性质而导致过拟合，因此，可以通过主动去掉一些分支来降低过拟合的风险</p>
+<p>基本策略有预剪枝和后剪枝，预剪枝是指在决策树生成过程中，对每个节点在划分前先进行估计，若当前节点的划分不能带来决策树泛化性能的提升，则停止划分当前节点标记为叶节点；后剪枝则是先从训练集生成一颗完整的决策树，然后自底向上地对非叶节点进行考察，若将该节点对应的字数替换为叶节点能带来决策树泛化性能提升，则将该子树替换为叶节点。</p>
+<h1 id="CART决策树的生成"><a href="#CART决策树的生成" class="headerlink" title="CART决策树的生成"></a>CART决策树的生成</h1><p> ID3算法和C4.5按照信息增益和增益率最大的特征作为节点特征，然后递归构建。比较简单，还要注意这两种方法都容易过拟合。这里主要讲一下CART分类与回归树。</p>
+<p>分类树与回归树（classification and regression tree，CART）模型（Breiman）由特征选择、树生成及剪枝组成，既可用于分类也可用于回归。CART算法采用<strong>二分递归分割的技术</strong>将当前样本集分为两个子样本集，使得生成的每个非叶子节点都有两个分支。因此CART算法生成的决策树是结构简洁的二叉树。CART可以处理连续型变量和离散型变量，利用训练数据递归的划分特征空间进行建树，用验证数据进行剪枝。利用训练数据递归的划分特征空间进行建树，用验证数据进行剪枝。</p>
+<ul>
+<li>如果待预测分类是离散型数据，则CART生成分类决策树。</li>
+<li>如果待预测分类是连续性数据，则CART生成回归决策树。</li>
+</ul>
+<h2 id="CART分类树"><a href="#CART分类树" class="headerlink" title="CART分类树"></a>CART分类树</h2><p>对分类树用基尼系数（Gini index）最小化准则，进行特征选择，生成二叉树。</p>
+<p>具体算法步骤如下：</p>
+<ul>
+<li>1）设结点的训练数据集为D，计算现有特征对该数据集的基尼指数。此时，对每一个特征A，对其可能取的每个值a，根据样本点对A=a的测试为”是”或者“否”将D分割为D1和D2两部分，计算其基尼系数。</li>
+<li>2）在所有可能的特征A以及他们所有可能的切分点a中，选择基尼系数最小的特征及其对应的切分点作为最优特征与最优切分点。依最优特征与最优切分点，从现结点生成两个子结点，将训练数据集依特征分配到两个子结点中去。</li>
+<li>3）对两个子结点递归地调用上述两个步骤，直至满足停止条件。</li>
+<li>4）生成CART决策树</li>
+</ul>
+<p>以生物特征分类数据为例</p>
+<p><img src="/2018/07/23/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（五）：决策树/03.jpg" alt=""></p>
+<p>针对上述离散型数据，按照<strong>体温为恒温和非恒温</strong>(多类别属性也按’非’分成两类别)进行划分。其中恒温时包括哺乳类5个、鸟类2个，非恒温时包括爬行类3个、鱼类3个、两栖类2个，如下所示我们计算以体温为划分特征D1,D2的基尼指数。</p>
+<script type="math/tex; mode=display">
+Gini(D_1)=1-[ (\frac{5}{7})^2+(\frac{2}{7})^2]=\frac{20}{49}</script><script type="math/tex; mode=display">
+Gini(D_2)=1-[ (\frac{3}{8})^2+(\frac{3}{8})^2+(\frac{2}{8})^2]=\frac{42}{64}</script><p>然后计算得到特征<strong>体温</strong>下数据集的Gini指数，最后我们选择Gain_Gini最小的特征和相应的划分</p>
+<script type="math/tex; mode=display">
+Gain\_Gini(D,体温)=\frac{7}{15}*\frac{20}{49}+\frac{8}{15}*\frac{42}{64}</script><p>在所有可能的特征A以及他们所有可能的切分点a中的二分划分中，选择基尼系数最小的特征及其对应的切分点作为最优特征与最优切分点，依次递归。</p>
+<h2 id="CART回归树"><a href="#CART回归树" class="headerlink" title="CART回归树"></a>CART回归树</h2><p>回归树衡量最好的标准不再是最大熵，而是<strong>最小化均方差</strong>。而且在每个节点（不一定是叶子节点）都会得一个预测值，这个预测值可为所有样本的平均值。我们利用最小二乘回归树生成算法来生成回归树f(x)，即在训练数据集所在的输入空间中，递归地将每个区域分为两个子区域并决定每个子区域上的输出值，构建二叉决策树。</p>
+<p><strong>回归树算法流程：j为选定的某个特征属性，s为在这个特征上的切分数值（需要遍历所有特征和切分点来选到最小化均方差），R1R2为切分的样本，C1C2为切分区域样本中的特征均值。</strong></p>
+<p><img src="/2018/07/23/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（五）：决策树/04.jpg" alt=""></p>
+<p><strong>实例详解：</strong></p>
+<p><img src="/2018/07/23/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（五）：决策树/05.jpg" alt=""></p>
+<p>考虑如上所示的连续性变量，根据给定的数据点，考虑<strong>1.5,2.5,3.5,4.5,5.5,6.5,7.5,8.5,9.5</strong>共9个自定均分的切分点。对各切分点依次求出<strong>R1,R2,c1,c2及m(s)</strong>，例如当切分点s=1.5时，得到R1={1},R2={2,3,4,5,6,7,8,9,10}，其中c1,c2,m(s)如下所示</p>
+<script type="math/tex; mode=display">
+c_1=\frac{1}{N_m}\sum_{x_i\epsilon R_m(j,s)}y_i=\frac{1}{1}\sum_{x_i\epsilon R_1(1,1.5)}5.56=5.56</script><script type="math/tex; mode=display">
+c_2=\frac{1}{N_m}\sum_{x_i\epsilon R_m(j,s)}y_i=\frac{1}{9}\sum_{x_i\epsilon R_2(1,1.5)}(5.70+5.91+...+9.05)=7.50</script><script type="math/tex; mode=display">
+m(s)=\min_{j,s}[\min_{c_1}\sum _{x_i\epsilon R_i(j,s)}(y_i-c_1)^2+\min_{c_2}\sum _{x_i\epsilon R_i(j,s)}(y_i-c_1)^2]=0+15.72=15.72</script><p><strong>依次改变(j,s)对，可以得到s及m(s)的计算结果</strong>，如下表所示。</p>
+<p><img src="/2018/07/23/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（五）：决策树/06.jpg" alt=""></p>
+<p>当x=6.5时，此时R1={1,2,3,4,5,6},R2={7,8,9,10},c1=6.24,c2=8.9。<strong>回归树T1(x)</strong>为</p>
+<script type="math/tex; mode=display">
+T_1(x)=\begin{cases}
+ & 6.24,x<6.5 \\ 
+ & 8.91,x\ge 6.5
+\end{cases}</script><script type="math/tex; mode=display">
+f_1(x)=T_1(x)</script><p><strong>然后我们利用f1(x)拟合训练数据的残差</strong>(各目标值减去对应的c1,c2)，如下表所示</p>
+<p><img src="/2018/07/23/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（五）：决策树/07.jpg" alt=""></p>
+<p><strong>用f1(x)拟合训练数据得到平方误差</strong></p>
+<script type="math/tex; mode=display">
+L(y,f_1(x))=\sum_{i=1}^{10}(y_i-f_1(x_i))^2=1.93</script><p>第二步求T2(x)与求T1(x)方法相同，只是拟合的数据是上表的残差。可以得到</p>
+<script type="math/tex; mode=display">
+T_2(x)=\begin{cases}
+ & -0.52,x<3.5 \\ 
+ & 0.22,x\ge 3.5
+\end{cases}</script><script type="math/tex; mode=display">
+f_2(x)=f_1(x)+T_2(x)=
+\begin{cases}
+ & 5.72,x<3.5 \\ 
+ & 6.46,3.5\le x \le 6.5 \\
+ & 9.13,x\ge 6.5
+\end{cases}</script><p>用f2(x)拟合训练数据的平方误差</p>
+<script type="math/tex; mode=display">
+L(y,f_2(x))=\sum_{i=1}^{10}(y_i-f_2(x_i))^2=0.79</script><p>继续求得T3(x)、T4(x)、T5(x)、T6(x)，如下所示</p>
+<script type="math/tex; mode=display">
+T_3(x)=\begin{cases}
+ & 0.15,x<6.5 \\ 
+ & -0.22,x\ge 6.5
+\end{cases}
+L(y,f_3(x))=0.47</script><script type="math/tex; mode=display">
+T_4(x)=\begin{cases}
+ & -0.16,x<4.5 \\ 
+ & 0.11,x\ge 4.5
+\end{cases}
+L(y,f_4(x))=0.30</script><script type="math/tex; mode=display">
+T_5(x)=\begin{cases}
+ & 0.07,x<6.5 \\ 
+ & -0.11,x\ge 6.5
+\end{cases}
+L(y,f_5(x))=0.23</script><script type="math/tex; mode=display">
+T_6(x)=\begin{cases}
+ & -0.15,x<2.5 \\ 
+ & 0.04,x\ge 2.5
+\end{cases}</script><script type="math/tex; mode=display">
+f_6(x)=f_5(x)+T_6(x)=T_1(x)+...+T_6(x)=
+\begin{cases}
+ & 5.63,x<2.5 \\ 
+ & 5.82,2.5\le x \le 3.5 \\
+  & 6.56,3.5\le x \le 4.5 \\
+ & 6.83,4.5\le x \le 6.5 \\
+  & 8.95,x\ge 6.5 
+\end{cases}</script><p>用f6(x)拟合训练数据的平方损失误差如下所示，假设此时已经满足误差要求，那么f(x)=f6(x)便是所求的回归树。</p>
+<script type="math/tex; mode=display">
+L(y,f_6(x))=\sum_{i=1}^{10}(y_i-f_6(x_i))^2=0.71</script><h2 id="CART剪枝"><a href="#CART剪枝" class="headerlink" title="CART剪枝"></a>CART剪枝</h2><p>们将一颗充分生长的树称为<strong>T0</strong> ，希望减少树的大小来防止过拟化。但同时<strong>去掉一些节点后预测的误差可能会增大</strong>，<strong>即完整树T0拟合的损失是最小的</strong>。那么如何达到这两个变量之间的平衡则是问题的关键。因此我们用一个变量α 来平衡，定义损失函数如下</p>
+<script type="math/tex; mode=display">
+C_\alpha(T)=C(T)+\alpha|T|</script><ul>
+<li>T为任意子树，|T|为子树T的叶子节点个数。</li>
+<li>α是参数，权衡拟合程度与树的复杂度。</li>
+<li>C(T)为<strong>预测误差</strong>，可以是平方误差也可以是基尼指数，C(T)衡量训练数据的拟合程度。</li>
+</ul>
+<p><strong>那么我们如何找到这个合适的α来使拟合程度与复杂度之间达到最好的平衡呢？</strong>准确的方法就是将α从0取到正无穷，对于每一个固定的α，我们都可以找到使得$C_\alpha(T)$最小的最优子树T(α)。</p>
+<ul>
+<li>当α很小的时候(相当于弱化正则)，T0 完整树是这样的最优子树.</li>
+<li>当α很大的时候(相当于强化正则)，单独一个根节点就是最优子树。</li>
+</ul>
+<p>Breiman等人证明：可以用递归地方法对树进行剪枝。将a从小增大，$0=a_0&lt;a_1&lt;…..a_n&lt;+∞$产生一系列的区间$[a_i,a_i+1),i=0,1,…,n$剪枝得到的子树序列对应着区间$a∈[a_i,a_i+1)，i=0,1,2,…,n$的最优子树序列为${T_0,T_1,T_2,…,T_n}$,序列的子树是嵌套的。</p>
+<p>具体地，从整体树$T_0$开始剪枝，对$T_0$的人以内部结点t，<strong>以t为单结点树</strong>的损失函数是</p>
+<script type="math/tex; mode=display">
+C_a\left( t \right) =C\left( t \right) +a</script><p><strong>以t为根结点的子树</strong>$T_t$的损失函数是</p>
+<script type="math/tex; mode=display">
+C_a(T_t)=C(T_t)+a|T_t|</script><p>到这里，我们的目的就变得很明确了，当t为单节点树的损失比以t为根节点的子树$T_t$损失相等的时候，损失相同，而t的节点少，就进行剪枝操作。其过程会随a由0逐渐增大，单节点树t损失一开始大于子树$T_t$，随后不断减少，直到大于子树损失。具体的，当$\alpha =\frac{C\left( t \right) -C\left( T_t \right)}{|T_t|-1}$ ，$T_t$和t有相同的损失。</p>
+<p>为此，对$T_0$中的每一个内部结点t，计算</p>
+<script type="math/tex; mode=display">
+g\left( t \right) =\frac{C\left( t \right) -C\left( T_t \right)}{|T_t|-1}</script><p>它表示剪枝后整体损失函数减少的程度。在$T_0$中减去g(t)最小的$T_t$，将得到的子树作为$T_1$，同时将最小的g(t)设为$a_1$，$T_1$为区间$[a_1,a_2)$的最优子树。如此剪枝下去，直至得到根结点。在这一过程中，不断得增加a的值，产生新的区间。</p>
+<p>然后，在剪枝得到的子树序列$T_0,T_1,…,T_n$中通过交叉验证选取最优子树$T_a$.</p>
+<p>具体地，利用独立的验证数据集，测试子树序列$T_0,T_1,…,T_n$中各棵子树的平方误差或基尼指数。平方误差或基尼指数最小的决策树被认为是最优的决策树。在子树序列中，每棵子树$T_0,T_1,…,T_n$都对应一个参数$a_1,a_2,…,a_n$。所以当最优子树$T_k$确定时，对应的$a_k$也就确定了，即得到最由决策树$T_a$.</p>
+<h1 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h1><h2 id="决策树分类边界"><a href="#决策树分类边界" class="headerlink" title="决策树分类边界"></a>决策树分类边界</h2><p>另外，决策树所形成的分类边界有一个明显的特点：轴平行，即它的分类边界有若干个与坐标轴平行的分段组成。</p>
+<p><img src="/2018/07/23/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（五）：决策树/08.png" alt=""></p>
+<h2 id="决策树的训练和可视化"><a href="#决策树的训练和可视化" class="headerlink" title="决策树的训练和可视化"></a>决策树的训练和可视化</h2><p>下面的代码就是在我们熟知的鸢尾花数据集上进行一个决策树分类器的训练</p>
+<blockquote>
+<p>决策树的众多特性之一就是， 它不需要太多的数据预处理， 尤其是不需要进行特征的缩放或者归一化。</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.datasets <span class="keyword">import</span> load_iris</span><br><span class="line"><span class="keyword">from</span> sklearn.tree <span class="keyword">import</span> DecisionTreeClassifier</span><br><span class="line">iris = load_iris()</span><br><span class="line">X = iris.data[:, <span class="number">2</span>:] <span class="comment"># petal length and width y = iris.target</span></span><br><span class="line">    tree_clf = DecisionTreeClassifier(max_depth=<span class="number">2</span>)</span><br><span class="line">    tree_clf.fit(X, y)</span><br></pre></td></tr></table></figure>
+<p>你可以通过使用export_graphviz()方法，通过生成一个叫做iris_tree.dot的图形定义文件将一个训练好的决策树模型可视化</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.tree <span class="keyword">import</span> export_graphviz</span><br><span class="line">    export_graphviz(</span><br><span class="line">            tree_clf,</span><br><span class="line">            out_file=image_path(<span class="string">"iris_tree.dot"</span>),</span><br><span class="line">            feature_names=iris.feature_names[<span class="number">2</span>:],</span><br><span class="line">            class_names=iris.target_names,</span><br><span class="line">            rounded=<span class="keyword">True</span>,</span><br><span class="line">            filled=<span class="keyword">True</span></span><br><span class="line">        )</span><br></pre></td></tr></table></figure>
+<p>然后，我们可以利用graphviz package 中的dot命令行，将.dot文件转换成 PDF 或 PNG 等多种数据格式。例如，使用命令行将.dot文件转换成.png文件的命令如下：</p>
+<blockquote>
+<p>Graphviz是一款开源图形可视化软件包，<a href="http://www.graphviz.org/" target="_blank" rel="noopener">http://www.graphviz.org/</a></p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ dot -Tpng iris_tree.dot -o iris_tree.png</span><br></pre></td></tr></table></figure>
+<p>我们的第一个决策树如图</p>
+<p><img src="/2018/07/23/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（五）：决策树/09.png" alt=""></p>
+<p>节点的samples属性统计出它应用于多少个训练样本实例，例如，我们有一百个训练实例是花瓣长度大于 2.45 里面的（深度为 1， 右侧），在这 100 个样例中又有 54 个花瓣宽度小于 1.75cm（深度为 2，左侧）；节点的value属性告诉你这个节点对于每一个类别的样例有多少个，例如：右下角的节点中包含 0 个 Iris-Setosa，1 个 Iris-Versicolor 和 45 个 Iris-Virginica；最后，节点的Gini属性用于测量它的纯度：如果一个节点包含的所有训练样例全都是同一类别的，我们就说这个节点是纯的（Gini=0）</p>
+<p>下面公式显示了训练算法如何计算第i个节点的 gini 分数 。例如， 深度为 2 的左侧节点基尼指数为：</p>
+<script type="math/tex; mode=display">G_i=\sum_{k=1}^nP_{i,k}^2</script><p> $p_{i,k}$ 是第i个节点中训练实例为的k类实例的比例</p>
+<blockquote>
+<p>Scikit-Learn 用的是 CART 算法， CART 算法仅产生二叉树：每一个非叶节点总是只有两个子节点（只有是或否两个结果）。然而，像 ID3 这样的算法可以产生超过两个子节点的决策树模型</p>
+</blockquote>
+<p>下图显示了决策树的决策边界。粗的垂直线代表根节点（深度为 0）的决定边界：花瓣长度为 2.45 厘米。由于左侧区域是纯的（只有 Iris-Setosa），所以不能再进一步分裂。然而，右边的区域是不纯的，所以深度为 1 的右边节点在花瓣宽度为 1.75 厘米处分裂（用虚线表示）。又由于max_depth设置为 2，决策树在那里停了下来。但是，如果将max_depth设置为 3，两个深度为 2 的节点，每个都将会添加另一个决策边界（用虚线表示）</p>
+<p><img src="/2018/07/23/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（五）：决策树/10.png" alt=""></p>
+<h2 id="估计分类概率"><a href="#估计分类概率" class="headerlink" title="估计分类概率"></a>估计分类概率</h2><p>决策树还可以估计某个实例属于特定类k的概率：首先遍历树来查找此实例的叶节点，然后它返回此节点中类k的训练实例的比例。</p>
+<p>例如，假设你发现了一个花瓣长 5 厘米，宽 1.5 厘米的花朵。相应的叶节点是深度为 2 的左节点，因此决策树应该输出以下概率：Iris-Setosa 为 0%（0/54），Iris-Versicolor 为 90.7%（49/54），Iris-Virginica 为 9.3%（5/54）。当然，如果你要求它预测具体的类，它应该输出 Iris-Versicolor（类别 1），因为它具有最高的概率。我们了测试一下</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>tree_clf.predict_proba([[<span class="number">5</span>, <span class="number">1.5</span>]])</span><br><span class="line">array([[ <span class="number">0.</span> , <span class="number">0.90740741</span>, <span class="number">0.09259259</span>]])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>tree_clf.predict([[<span class="number">5</span>, <span class="number">1.5</span>]])</span><br><span class="line">array([<span class="number">1</span>])</span><br></pre></td></tr></table></figure>
+<h2 id="CART-训练算法"><a href="#CART-训练算法" class="headerlink" title="CART 训练算法"></a>CART 训练算法</h2><p>Scikit-Learn 用分裂回归树（Classification And Regression Tree，简称 CART）算法训练决策树（也叫“增长树”）。这种算法思想真的非常简单：</p>
+<p>首先使用单个特征k和阈值$t_k$ (例如，“花瓣长度≤2.45cm”）将训练集分成两个子集。它如何选择k和$t_k$ 呢？它寻找到能够产生最纯粹的子集一对(k,$t_k$) ，然后通过子集大小加权计算.</p>
+<p>算法会尝试最小化成本函数。方法如公式</p>
+<p><img src="/2018/07/23/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（五）：决策树/11.png" alt=""></p>
+<p>当它成功的将训练集分成两部分之后， 它将会继续使用相同的递归式逻辑继续的分割子集，然后是子集的子集。当达到预定的最大深度之后将会停止分裂（由max_depth超参数决定），或者是它找不到可以继续降低不纯度的分裂方法的时候。几个其他超参数（之后介绍）控制了其他的停止生长条件（min_samples_split，min_samples_leaf，min_weight_fraction_leaf，max_leaf_nodes）。</p>
+<blockquote>
+<p>正如您所看到的，CART 算法是一种贪婪算法：它贪婪地搜索最高级别的最佳分割方式，然后在每个深度重复该过程。 它不检查分割是否能够在几个级别中的全部分割可能中找到最佳方法。贪婪算法通常会产生一个相当好的解决方法，但它不保证这是全局中的最佳解决方案</p>
+</blockquote>
+<h2 id="计算复杂度"><a href="#计算复杂度" class="headerlink" title="计算复杂度"></a>计算复杂度</h2><p>在建立好决策树模型后， 做出预测需要遍历决策树， 从根节点一直到叶节点。决策树通常近似左右平衡，因此遍历决策树需要经历大致 $O(log_2^m)$ 个节点。由于每个节点只需要检查一个特征的值，因此总体预测复杂度仅为$O(log_2^m)$ ，与特征的数量无关。 所以即使在处理大型训练集时，预测速度也非常快.</p>
+<p>然而，训练算法的时候（训练和预测不同）需要比较所有特征（如果设置了max_features会更少一些）<br>在每个节点的所有样本上。就有了$O(nmlog_2^m)$的训练复杂度。对于小型训练集（少于几千例），Scikit-Learn 可以通过预先设置数据（presort = True）来加速训练，但是这对于较大训练集来说会显着减慢训练速度。</p>
+<h2 id="基尼不纯度或是信息熵"><a href="#基尼不纯度或是信息熵" class="headerlink" title="基尼不纯度或是信息熵"></a>基尼不纯度或是信息熵</h2><p>通常，算法使用 Gini 不纯度来进行检测， 但是你也可以通过将标准超参数设置为”entropy”来使用熵不纯度进行检测。这里熵的概念是源于热力学中分子混乱程度的概念，当分子井然有序的时候，熵值接近于 0</p>
+<p>那么我们到底应该使用 Gini 指数还是熵(ID3,C4.5决策树)呢？ 事实上大部分情况都没有多大的差别：他们会生成类似的决策树。 基尼指数计算稍微快一点，所以这是一个很好的默认值。但是，也有的时候它们会产生不同的树，基尼指数会趋于在树的分支中将最多的类隔离出来，而熵指数趋向于产生略微平衡一些的决策树模型。</p>
+<h2 id="正则化超参数"><a href="#正则化超参数" class="headerlink" title="正则化超参数"></a>正则化超参数</h2><p>决策树几乎不对训练数据做任何假设（于此相反的是线性回归等模型，这类模型通常会假设数据是符合线性关系的）。</p>
+<p>如果不添加约束，树结构模型通常将根据训练数据调整自己，使自身能够很好的拟合数据，而这种情况下大多数会导致模型过拟合。</p>
+<p>这一类的模型通常会被称为非参数模型，这不是因为它没有任何参数（通常也有很多），而是因为在训练之前没有确定参数的具体数量，所以模型结构可以根据数据的特性自由生长。</p>
+<p>DecisionTreeClassifier类还有一些其他的参数用于限制树模型的形状:</p>
+<blockquote>
+<p>min_samples_split（节点在被分裂之前必须具有的最小样本数），min_samples_leaf（叶节点必须具有的最小样本数），min_weight_fraction_leaf（和min_samples_leaf相同，但表示为加权总数的一小部分实例），max_leaf_nodes（叶节点的最大数量）和max_features（在每个节点被评估是否分裂的时候，具有的最大特征数量）。增加min_hyperparameters或者减少max_hyperparameters会使模型正则化</p>
+<p>预剪枝与后剪枝</p>
+</blockquote>
+<p>下图显示了对moons数据集进行训练生成的两个决策树模型，左侧的图形对应的决策树使用默认超参数生成（没有限制生长条件），右边的决策树模型设置为min_samples_leaf=4。很明显，左边的模型过拟合了，而右边的模型泛用性更好。</p>
+<p><img src="/2018/07/23/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（五）：决策树/12.png" alt=""></p>
+<h2 id="回归"><a href="#回归" class="headerlink" title="回归"></a>回归</h2><p>决策树也能够执行回归任务，让我们使用 Scikit-Learn 的DecisionTreeRegressor类构建一个回归树，让我们用max_depth = 2在具有噪声的二次项数据集上进行训练。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.tree <span class="keyword">import</span> DecisionTreeRegressor</span><br><span class="line">tree_reg = DecisionTreeRegressor(max_depth=<span class="number">2</span>)</span><br><span class="line">tree_reg.fit(X, y)</span><br></pre></td></tr></table></figure>
+<p>结果如图：</p>
+<p><img src="/2018/07/23/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（五）：决策树/13.png" alt=""></p>
+<p>这棵树看起来非常类似于你之前建立的分类树，它的主要区别在于，它不是预测每个节点中的样本所属的分类，而是预测一个具体的数值。例如，假设您想对  的新实例进行预测。从根开始遍历树，最终到达预测值等于 0.1106 的叶节点。该预测仅仅是与该叶节点相关的 110 个训练实例的平均目标值。而这个预测结果在对应的 110 个实例上的均方误差（MSE）等于 0.0151</p>
+<p>下图的左侧显示的是模型的预测结果，如果你将max_depth=3设置为 3，模型就会如 6-5 图右侧显示的那样.注意每个区域的预测值总是该区域中实例的平均目标值。算法以一种使大多数训练实例尽可能接近该预测值的方式分割每个区域。</p>
+<blockquote>
+<p>译者注：图里面的红线就是训练实例的平均目标值，对应上图中的value</p>
+</blockquote>
+<p><img src="/2018/07/23/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（五）：决策树/14.png" alt=""></p>
+<p>CART 算法的工作方式与之前处理分类模型基本一样，不同之处在于，现在不再以最小化不纯度的方式分割训练集，而是试图以最小化 MSE 的方式分割训练集</p>
+<p>下面公式显示了成本函数，该算法试图最小化这个成本函数。</p>
+<p><img src="/2018/07/23/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（五）：决策树/15.png" alt=""></p>
+<p>和处理分类任务时一样，决策树在处理回归问题的时候也容易过拟合。如果不添加任何正则化（默认的超参数），你就会得到图 6-6 左侧的预测结果，显然，过度拟合的程度非常严重。而当我们设置了min_samples_leaf = 10，相对就会产生一个更加合适的模型了，就如图 6-6 所示的那样</p>
+<p><img src="/2018/07/23/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（五）：决策树/16.png" alt=""></p>
+<h2 id="不稳定性"><a href="#不稳定性" class="headerlink" title="不稳定性"></a>不稳定性</h2><p>它很容易理解和解释，易于使用且功能丰富而强大。然而，它也有一些限制，首先，你可能已经注意到了，决策树很喜欢设定正交化的决策边界，（所有边界都是和某一个轴相垂直的），这使得它对训练数据集的旋转很敏感，例如图 6-7 显示了一个简单的线性可分数据集。在左图中，决策树可以轻易的将数据分隔开，但是在右图中，当我们把数据旋转了 45° 之后，决策树的边界看起来变的格外复杂。尽管两个决策树都完美的拟合了训练数据，右边模型的泛化能力很可能非常差。</p>
+<p>解决这个难题的一种方式是使用 PCA 主成分分析，这样通常能使训练结果变得更好一些。</p>
+<p><img src="/2018/07/23/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（五）：决策树/17.png" alt=""></p>
+<p>更加通俗的讲，决策时的主要问题是它对训练数据的微小变化非常敏感，举例来说，我们仅仅从鸢尾花训练数据中将最宽的 Iris-Versicolor 拿掉（花瓣长 4.8 厘米，宽 1.8 厘米），然后重新训练决策树模型，你可能就会得到图 6-8 中的模型。正如我们看到的那样，决策树有了非常大的变化（原来的如图 6-2），事实上，由于 Scikit-Learn 的训练算法是非常随机的，即使是相同的训练数据你也可能得到差别很大的模型（除非你设置了随机数种子）</p>
+<p><img src="/2018/07/23/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（五）：决策树/18.png" alt=""></p>
+<h1 id="练习题"><a href="#练习题" class="headerlink" title="练习题"></a>练习题</h1><ol>
+<li>在 100 万例训练集上训练（没有限制）的决策树的近似深度是多少？</li>
+<li>节点的基尼指数比起它的父节点是更高还是更低？它是通常情况下更高/更低，还是永远更高/更低？</li>
+<li>如果决策树过拟合了，减少最大深度是一个好的方法吗？</li>
+<li>如果决策树对训练集欠拟合了，尝试缩放输入特征是否是一个好主意？</li>
+<li>如果对包含 100 万个实例的数据集训练决策树模型需要一个小时，在包含 1000 万个实例的培训集上训练另一个决策树大概需要多少时间呢？</li>
+<li>如果你的训练集包含 100,000 个实例，设置<code>presort=True</code>会加快训练的速度吗？</li>
+</ol>
+<hr>
+<p>1、$log_210^6\approx20$</p>
+<p>2、子节点的基尼指数通常比父节点更低，这是由CART训练树损失函数决定的，它只会每次减少子节点权重求和后的Gini指数。然而子节点的Gini并不会永远小于父节点，比如现在根节点包括{A B A A A}五个样本，其Gini为$1-\frac{1}{5}^2-\frac{4}{5}^2=0.32$，划分样本后为{A B}和 {A A A} ，Gini分别为0.5和0。权重求和后的Gini为$\frac{2}{5}\times0.5+\frac{3}{5}\times0=0.2$，其Gini指数划分后只会比原来的更小。</p>
+<p>3、如果决策树过度拟合训练集，那么减少max_depth是个不错的选择。</p>
+<p>4、决策树不关心训练数据是否缩放或居中，这是他们的优势之一。 因此，如果决策树如果欠拟合，缩放输入功能只会浪费时间。</p>
+<p>5、训练决策树的时间复杂度为$O(nmlog_2m)$，m为样本数，n为特征数。所以训练样本增加十倍，其训练时间会增加$K=(n\cdot 10m\cdot log_2(10m))=10\times log(10m)/log(m)$.如果m=10^6,则K$\approx$11.7</p>
+<p>6、仅当数据集小于几千个实例时，预先训练训练集能加速训练。 如果它包含100,000个实例，则设置presort = True将大大减慢训练速度。</p>
+
+      
+    </div>
+    
+    
+    
+    
+    
+	<div>
+    	  <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------<i class="fa fa-heart"></i>Thanks for Reading!<i class="fa fa-heart"></i>-------------</div>
+    
+</div>
+	</div>
+    
+    
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/机器学习/" rel="tag"><i class="fa fa-tag"></i> 机器学习</a>
+          
+            <a href="/tags/决策树/" rel="tag"><i class="fa fa-tag"></i> 决策树</a>
+          
+            <a href="/tags/CART/" rel="tag"><i class="fa fa-tag"></i> CART</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/07/18/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（四）：支持向量机/" rel="next" title="Sklearn 与 TensorFlow 机器学习实用指南（四）：支持向量机">
+                <i class="fa fa-chevron-left"></i> Sklearn 与 TensorFlow 机器学习实用指南（四）：支持向量机
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/08/04/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（六）：集成学习/" rel="prev" title="Sklearn 与 TensorFlow 机器学习实用指南（六）：集成学习">
+                Sklearn 与 TensorFlow 机器学习实用指南（六）：集成学习 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="Mosbyllc" />
+            
+              <p class="site-author-name" itemprop="name">Mosbyllc</p>
+              <p class="site-description motion-element" itemprop="description">Sometimes thing have to fall apart to make way for better things.</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">60</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">73</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/kugua233" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="http://weibo.com/Mosbyllc" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://segmentfault.com/u/kugua233" target="_blank" title="SegmentFault">
+                      
+                        <i class="fa fa-fw fa-strikethrough"></i>SegmentFault</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:1499913789@qq.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Recommended reading
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://plushunter.github.io/" title="Free Will" target="_blank">Free Will</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#一些基本概念"><span class="nav-number">1.</span> <span class="nav-text">一些基本概念</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#决策树简述"><span class="nav-number">1.1.</span> <span class="nav-text">决策树简述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#信息熵"><span class="nav-number">1.2.</span> <span class="nav-text">信息熵</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#条件熵"><span class="nav-number">1.3.</span> <span class="nav-text">条件熵</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#特征选择"><span class="nav-number">2.</span> <span class="nav-text">特征选择</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#信息增益"><span class="nav-number">2.1.</span> <span class="nav-text">信息增益</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#增益率"><span class="nav-number">2.2.</span> <span class="nav-text">增益率</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基尼指数"><span class="nav-number">2.3.</span> <span class="nav-text">基尼指数</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#剪枝"><span class="nav-number">3.</span> <span class="nav-text">剪枝</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#CART决策树的生成"><span class="nav-number">4.</span> <span class="nav-text">CART决策树的生成</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#CART分类树"><span class="nav-number">4.1.</span> <span class="nav-text">CART分类树</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CART回归树"><span class="nav-number">4.2.</span> <span class="nav-text">CART回归树</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CART剪枝"><span class="nav-number">4.3.</span> <span class="nav-text">CART剪枝</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#应用"><span class="nav-number">5.</span> <span class="nav-text">应用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#决策树分类边界"><span class="nav-number">5.1.</span> <span class="nav-text">决策树分类边界</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#决策树的训练和可视化"><span class="nav-number">5.2.</span> <span class="nav-text">决策树的训练和可视化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#估计分类概率"><span class="nav-number">5.3.</span> <span class="nav-text">估计分类概率</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CART-训练算法"><span class="nav-number">5.4.</span> <span class="nav-text">CART 训练算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#计算复杂度"><span class="nav-number">5.5.</span> <span class="nav-text">计算复杂度</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基尼不纯度或是信息熵"><span class="nav-number">5.6.</span> <span class="nav-text">基尼不纯度或是信息熵</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#正则化超参数"><span class="nav-number">5.7.</span> <span class="nav-text">正则化超参数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#回归"><span class="nav-number">5.8.</span> <span class="nav-text">回归</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#不稳定性"><span class="nav-number">5.9.</span> <span class="nav-text">不稳定性</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#练习题"><span class="nav-number">6.</span> <span class="nav-text">练习题</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-star"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mosbyllc</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+  
+
+  
+
+</body>
+</html>

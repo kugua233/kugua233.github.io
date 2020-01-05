@@ -1,0 +1,1492 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16.ico?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="机器学习,CART,Adaboost,GBDT,XGBoost,Bagging,随机森林,Stacking," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Mosbyllc" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="集成学习(ensemble learning)通过构建并结合多个学习器来完成学习任务，比单一学习器获得显著优越的泛化性能。想要获得好的集成，个体学习器应”好而不同“，要保证准确性和多样性。要产生好而不同的个体学习器，恰是集成学习研究的核心 目前集成学习可分为两大类，即个体学习器之间有依赖关系，必须串行生成的序列化方法；以及个体学习器不存在强依赖关系，可同时生成的并行化方法。前者的代表是Boosti">
+<meta name="keywords" content="机器学习,CART,Adaboost,GBDT,XGBoost,Bagging,随机森林,Stacking">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Sklearn 与 TensorFlow 机器学习实用指南（六）：集成学习">
+<meta property="og:url" content="http://yoursite.com/2018/08/04/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（六）：集成学习/index.html">
+<meta property="og:site_name" content="Mosbyllc">
+<meta property="og:description" content="集成学习(ensemble learning)通过构建并结合多个学习器来完成学习任务，比单一学习器获得显著优越的泛化性能。想要获得好的集成，个体学习器应”好而不同“，要保证准确性和多样性。要产生好而不同的个体学习器，恰是集成学习研究的核心 目前集成学习可分为两大类，即个体学习器之间有依赖关系，必须串行生成的序列化方法；以及个体学习器不存在强依赖关系，可同时生成的并行化方法。前者的代表是Boosti">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/2018/08/04/Sklearn%20与%20TensorFlow%20机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（六）：集成学习/01.png">
+<meta property="og:image" content="http://yoursite.com/2018/08/04/Sklearn%20与%20TensorFlow%20机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（六）：集成学习/02.png">
+<meta property="og:image" content="http://yoursite.com/2018/08/04/Sklearn%20与%20TensorFlow%20机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（六）：集成学习/03.png">
+<meta property="og:image" content="http://yoursite.com/2018/08/04/Sklearn%20与%20TensorFlow%20机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（六）：集成学习/04.png">
+<meta property="og:image" content="http://yoursite.com/2018/08/04/Sklearn%20与%20TensorFlow%20机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（六）：集成学习/05.png">
+<meta property="og:image" content="http://yoursite.com/2018/08/04/Sklearn%20与%20TensorFlow%20机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（六）：集成学习/06.png">
+<meta property="og:image" content="http://yoursite.com/2018/08/04/Sklearn%20与%20TensorFlow%20机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（六）：集成学习/07.png">
+<meta property="og:image" content="http://yoursite.com/2018/08/04/Sklearn%20与%20TensorFlow%20机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（六）：集成学习/08.png">
+<meta property="og:image" content="http://yoursite.com/2018/08/04/Sklearn%20与%20TensorFlow%20机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（六）：集成学习/09.png">
+<meta property="og:image" content="http://yoursite.com/2018/08/04/Sklearn%20与%20TensorFlow%20机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（六）：集成学习/10.png">
+<meta property="og:image" content="http://yoursite.com/2018/08/04/Sklearn%20与%20TensorFlow%20机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（六）：集成学习/11.png">
+<meta property="og:image" content="http://yoursite.com/2018/08/04/Sklearn%20与%20TensorFlow%20机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（六）：集成学习/12.png">
+<meta property="og:image" content="http://yoursite.com/2018/08/04/Sklearn%20与%20TensorFlow%20机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（六）：集成学习/13.jpg">
+<meta property="og:image" content="http://yoursite.com/2018/08/04/Sklearn%20与%20TensorFlow%20机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（六）：集成学习/14.png">
+<meta property="og:image" content="http://yoursite.com/2018/08/04/Sklearn%20与%20TensorFlow%20机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（六）：集成学习/15.png">
+<meta property="og:image" content="http://yoursite.com/2018/08/04/Sklearn%20与%20TensorFlow%20机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（六）：集成学习/16.png">
+<meta property="og:image" content="http://yoursite.com/2018/08/04/Sklearn%20与%20TensorFlow%20机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（六）：集成学习/17.png">
+<meta property="og:image" content="http://yoursite.com/2018/08/04/Sklearn%20与%20TensorFlow%20机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（六）：集成学习/18.png">
+<meta property="og:image" content="http://yoursite.com/2018/08/04/Sklearn%20与%20TensorFlow%20机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（六）：集成学习/19.png">
+<meta property="og:image" content="http://yoursite.com/2018/08/04/Sklearn%20与%20TensorFlow%20机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（六）：集成学习/27.jpg">
+<meta property="og:image" content="http://yoursite.com/2018/08/04/Sklearn%20与%20TensorFlow%20机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（六）：集成学习/20.png">
+<meta property="og:image" content="http://yoursite.com/2018/08/04/Sklearn%20与%20TensorFlow%20机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（六）：集成学习/21.png">
+<meta property="og:image" content="http://yoursite.com/2018/08/04/Sklearn%20与%20TensorFlow%20机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（六）：集成学习/22.png">
+<meta property="og:image" content="http://yoursite.com/2018/08/04/Sklearn%20与%20TensorFlow%20机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（六）：集成学习/23.png">
+<meta property="og:image" content="http://yoursite.com/2018/08/04/Sklearn%20与%20TensorFlow%20机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（六）：集成学习/24.png">
+<meta property="og:image" content="http://yoursite.com/2018/08/04/Sklearn%20与%20TensorFlow%20机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（六）：集成学习/25.png">
+<meta property="og:image" content="http://yoursite.com/2018/08/04/Sklearn%20与%20TensorFlow%20机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（六）：集成学习/26.png">
+<meta property="og:updated_time" content="2018-09-06T08:07:46.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Sklearn 与 TensorFlow 机器学习实用指南（六）：集成学习">
+<meta name="twitter:description" content="集成学习(ensemble learning)通过构建并结合多个学习器来完成学习任务，比单一学习器获得显著优越的泛化性能。想要获得好的集成，个体学习器应”好而不同“，要保证准确性和多样性。要产生好而不同的个体学习器，恰是集成学习研究的核心 目前集成学习可分为两大类，即个体学习器之间有依赖关系，必须串行生成的序列化方法；以及个体学习器不存在强依赖关系，可同时生成的并行化方法。前者的代表是Boosti">
+<meta name="twitter:image" content="http://yoursite.com/2018/08/04/Sklearn%20与%20TensorFlow%20机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（六）：集成学习/01.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"right","display":"always","offset":12,"b2t":true,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/08/04/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（六）：集成学习/"/>
+
+
+
+
+
+  <title>Sklearn 与 TensorFlow 机器学习实用指南（六）：集成学习 | Mosbyllc</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Mosbyllc</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+<link href="https://cdn.bootcss.com/KaTeX/0.7.1/katex.min.css" rel="stylesheet">
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/04/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（六）：集成学习/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mosbyllc">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Mosbyllc">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Sklearn 与 TensorFlow 机器学习实用指南（六）：集成学习</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-04T16:05:54+08:00">
+                2018-08-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Sklearn-与-TensorFlow-机器学习实用指南/" itemprop="url" rel="index">
+                    <span itemprop="name">Sklearn 与 TensorFlow 机器学习实用指南</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  11,685
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  43
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>集成学习(ensemble learning)通过构建并结合多个学习器来完成学习任务，<strong>比单一学习器获得显著优越的泛化性能</strong>。想要获得好的集成，个体学习器应”<strong>好而不同</strong>“，要保证准确性和多样性。要产生好而不同的个体学习器，恰是集成学习研究的核心</p>
+<p><strong>目前集成学习可分为两大类，即个体学习器之间有依赖关系，必须串行生成的序列化方法；以及个体学习器不存在强依赖关系，可同时生成的并行化方法。前者的代表是Boosting，最著名的是代表有Adaboost, GBDT和XGBOOST;后者的代表是Bagging和随机森林。对于学习器的结合策略有三大类：投票法（分类），平均法（连续数值），学习法（Stacking）</strong></p>
+<h1 id="Boosting"><a href="#Boosting" class="headerlink" title="Boosting"></a>Boosting</h1><h2 id="Adaboost"><a href="#Adaboost" class="headerlink" title="Adaboost"></a>Adaboost</h2><h3 id="算法思想"><a href="#算法思想" class="headerlink" title="算法思想"></a>算法思想</h3><p>Adaboost提升方法是改变训练数据的概率分布（训练数据的权值分布），针对不同的训练数据分布调用弱学习算法学习一系列弱分类器。AdaBoost的做法是，<strong>提高那些被前一轮弱分类器错误分类样本的权值，而降低那些被正确分类样本的权值</strong>。这样一来，那些没有得到正确分类的数据，由于其权值的加大而受到后一轮的弱分类器的更大关注，于是，分类问题就被一系列的弱分类器“分而治之”。另外，对于弱分类器的组合，AdaBoost采取加权多数表决的方法。具体地，<strong>加大分类误差率小的弱分类器的权值，使其在表决中起较大的作用，减小分类误差率较大的弱分类器的权值，使其在表决中起较小的作用。</strong>(两个权重，一个是样本权重，另外一个是分类器的权重)</p>
+<p>AdaboostBoost的算法的框架如下图所示</p>
+<p><img src="/2018/08/04/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（六）：集成学习/01.png" alt=""></p>
+<h3 id="算法流程"><a href="#算法流程" class="headerlink" title="算法流程"></a>算法流程</h3><p>具体算法流程如下图所示：</p>
+<p><img src="/2018/08/04/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（六）：集成学习/02.png" alt=""></p>
+<ul>
+<li>step2. 预期迭代T轮</li>
+<li>step4. 计算分类器$h_t$的误差率$\epsilon_t$ </li>
+</ul>
+<script type="math/tex; mode=display">
+\epsilon_t=P\left(h_t\left(x\right)\ne y_i\right)=\frac{\sum_{i=1}^m{w_{ki}I\left(h_t\left(x_i\right)\ne y_i\right)}}{\sum_{i=1}^m{w_{ki}}}=\sum_{i=1}^m{w_{ki}I\left(G_m\left(x_i\right)\ne y_i\right)}</script><p>这里$w_{ki}$表示第k轮（第k个分类器）中第i个实例的权重，$\sum_{i=1}^m{w_{ki}=1}$，I表示指示函数，代表满足条件的样本。这表明，误差率是被$h_t$分类错误的样本的权重之和。（这些样本的权重会在后面归一化）</p>
+<ul>
+<li>step5. 分类器比随机分类效果还差则停止</li>
+<li>step6. 根据误差率计算分类器的权重，表示最终分类器的重要程度。由表达式可知，当误差率小于等于1/2时，$\alpha_k$大于等于0。并且$\alpha_k$随着误差率的减小而增大，意味着误差越小的分类器最后的重要程度越大。</li>
+<li>step7. 更新样本权重，$Z_k$为归一化因子，把最后的全部样本权重求和即可。</li>
+</ul>
+<script type="math/tex; mode=display">
+w_{k+1,i}=\frac{w_{ki}}{Z_k}exp(-\alpha_k y_i G_k(x_i))</script><h3 id="Adaboost算法优缺点"><a href="#Adaboost算法优缺点" class="headerlink" title="Adaboost算法优缺点"></a>Adaboost算法优缺点</h3><h4 id="Adaboost优点"><a href="#Adaboost优点" class="headerlink" title="Adaboost优点"></a>Adaboost优点</h4><ul>
+<li>不容易发生过拟合。</li>
+<li>Adaboost是一种有很高精度的分类器。</li>
+<li>当使用简单分类器时，计算出的结果是可理解的。</li>
+<li>可以使用各种方法构建子分类器，Adaboost算法提供的是框架。</li>
+</ul>
+<h4 id="Adaboost缺点"><a href="#Adaboost缺点" class="headerlink" title="Adaboost缺点"></a>Adaboost缺点</h4><ul>
+<li>训练时间过长。</li>
+<li>执行效果依赖于弱分类器的选择。</li>
+<li>对样本敏感，异常样本在迭代中可能会获得较高的权重，影响最终的强学习器的预测准确性。</li>
+</ul>
+<h2 id="GBTD"><a href="#GBTD" class="headerlink" title="GBTD"></a>GBTD</h2><p>GBDT（Gradient Boosting Decision Tree）是一种迭代的决策树算法，又叫 MART（Multiple Additive Regression Tree)，它通过构造一组弱的学习器（树），并把多颗决策树的结果累加起来作为最终的预测输出。该算法将决策树与集成思想进行了有效的结合。并且GBDT每一棵树都是回归树CART.。由于GBDT的核心在与累加所有树的结果作为最终结果，而分类树得到的离散分类结果对于预测分类并不是这么的容易叠加。这是区别于分类树的一个显著特征（毕竟男+女=是男是女?，这样的运算是毫无道理的），GBDT在运行时就使用到了回归树的这个性质，它将累加所有树的结果作为最终结果。所以GBDT中的树都是回归树，而不是分类树，它用来做回归预测，当然回归树经过调整之后也能用来做分类。</p>
+<p>这里要先介绍GBDT简单版本的提升树Boosting Decision Tree，后面再介绍GBDT。</p>
+<h3 id="提升树Boosting-Decision-Tree"><a href="#提升树Boosting-Decision-Tree" class="headerlink" title="提升树Boosting Decision Tree"></a>提升树Boosting Decision Tree</h3><p>提升树(Boosting Decision Tree)由于输出样本是连续值，因此我们通过迭代<strong>多棵</strong>回归树来共同决策（之前CART只是拟合一颗完整的回归树）。回归树的构造在上一节已经介绍过了，不再赘述。</p>
+<p>我们利用平方误差来表示损失函数，其中每一棵回归树学习的是之前所有树的结论和残差，拟合得到一个当前的残差回归树。其中残差=真实值-预测值，提升树即是整个迭代过程生成的回归树的累加。提升树模型可以表示为决策树的加法模型：</p>
+<script type="math/tex; mode=display">
+f_M\left(x\right)=\sum_{m=1}^M{T\left(x;\varTheta_m\right)}</script><p>其中$T\left(x;\varTheta_m\right)$表示决策树；$\varTheta_m$为决策树的参数；M为树的个数。</p>
+<p>提升树的过程如下，节点下所有点的均值作为该节点的预测值，例如左图的15与25。（这里是将特征分开处理并缩小了树的规模，若用CART可能会出现深度为3的回归树）</p>
+<p><img src="/2018/08/04/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（六）：集成学习/03.png" alt=""></p>
+<p>回归问题的提升树算法叙述如下：</p>
+<p><img src="/2018/08/04/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（六）：集成学习/04.png" alt=""></p>
+<p>对比初始的CART回归树与GBDT所生成的回归树，可以发现，最终的结果可能是相同的，那我们为什么还要使用GBDT呢？</p>
+<ul>
+<li>答案就是对模型过拟合的考虑。过拟合是指为了让训练集精度更高，学到了很多“仅在训练集上成立的规律”，导致换一个数据集后，当前规律的预测精度就不足以使人满意了。毕竟，在训练精度和实际精度（或测试精度）之间，后者才是我们想要真正得到的。</li>
+<li>在上面这个例子中，初始的回归树为达到100%精度使用了3个特征（上网时长、时段、网购金额），但观察发现，分枝“上网时长&gt;1.1h”很显然过拟合了，不排除恰好A上网1.5h, B上网1小时，所以用上网时间是不是&gt;1.1小时来判断所有人的年龄很显然是有悖常识的。</li>
+<li>而在GBDT中，两棵回归树仅使用了两个特征（购物金额与对百度知道的使用方式）就实现了100%的预测精度，其分枝依据更合乎逻辑（当然这里是相比较于上网时长特征而言），算法在运行中也体现了“如无必要，勿增实体”的奥卡姆剃刀原理</li>
+</ul>
+<h3 id="梯度提升决策树Gradient-Boosting-Decision-Tree"><a href="#梯度提升决策树Gradient-Boosting-Decision-Tree" class="headerlink" title="梯度提升决策树Gradient Boosting Decision Tree"></a>梯度提升决策树Gradient Boosting Decision Tree</h3><h4 id="GBDT回归算法"><a href="#GBDT回归算法" class="headerlink" title="GBDT回归算法"></a>GBDT回归算法</h4><p>提升树利用加法模型与向前分布算法实现学习的优化过程，即是通过迭代得到一系列的弱分类器，进而通过不同的组合策略得到相应的强学习器。在GBDT的迭代中，<strong>假设前一轮得到的强学习器为</strong>$f_{t−1}(x)$ ，对应的损失函数则为$L(y,f_{t−1}(x))$ 。<strong>因此新一轮迭代的目的就是找到一个弱学习器</strong>$h_t(x)$ ，<strong>使得损失函</strong>$L(y,f_{t−1}(x)+h_t(x))$ <strong>达到最小</strong>。<strong>因此问题的关键就在于对损失函数的度量，这也正是难点所在。当损失函数是平方损失和指数损失时，每一步优化是很简单的。但对一般损失函数而言，往往每一步优化没那么容易，如绝对值损失函数和Huber损失函数</strong>。常见的损失函数及其梯度如下表所示：</p>
+<p><img src="/2018/08/04/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（六）：集成学习/05.png" alt=""></p>
+<p>那我们怎么样才能找到一种通用的拟合方法呢？针对这一问题，Freidman提出了梯度提升算法：利用最速下降的近似方法，<strong>即利用损失函数的负梯度在当前模型的值</strong>，进而拟合一个CART回归树。其中第t轮的第i个样本的损失函数的扶梯度表示为，右下角的等式是求偏导后带入计算的</p>
+<script type="math/tex; mode=display">
+r_{ti}=-\left[\frac{\partial L\left(y,f\left(x_i\right)\right)}{\partial f\left(x_i\right)}\right]_{f\left(x\right)=f_{t-1}\;\,\left(x\right)}</script><p><strong>负梯度作为回归问题中提升树算法的残差的近似值</strong>（与其说负梯度作为残差的近似值，不如说残差是负梯度的一种特例，拟合一个回归树），这就是梯度提升决策树。假设样本数据为m，最大的迭代次数为T。其算法过程如下：</p>
+<p><img src="/2018/08/04/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（六）：集成学习/06.png" alt=""></p>
+<ul>
+<li>step1. 初始化弱分类器，计算出使损失函数极小化的一个常数值c，此时树仅有一个根结点。c的均值可取样本y的均值。这个初始化得到的c将用于第一次计算负梯度$f(x_i)=f(t-1)=f(0)$的代入计算得到残差近似值$r_{ti}$。(第t代第i个样本)</li>
+<li>step2(a) .计算每个样本的$r_{ti}$</li>
+<li>step2(b). 利用$(x_i,r_{ti})i=1,2,3,…,m$，我们可以拟合一颗CART回归树，得到第t棵回归树（注意回归树节点内的均值求法不再是我们想要的了），其对应的叶节点区域为$R_{tj},j=1,2,3,…,J$，其中J为叶子节点的个数。</li>
+<li>step2(c). 接下来，针对每一个叶子节点中的样本，要拟合叶子结点最好的输出值$c_{tj}$(不再是简单的求节点均值)，使得求出的损失函数最小。回顾之前写的新一轮迭代的目的，这时候的输出值$c_{tj}$组成就是我们想要的第t棵弱学习器$h_t(x)$。其实就是在上一棵强学习器树稍加改变决策树中叶节点值，希望拟合的误差越来越小。</li>
+</ul>
+<script type="math/tex; mode=display">
+c_{tj}=\underset{c}{\underbrace{\arg\min}} \sum_{x_i \in R_{tj}}L(y_i,f_{t-1}(x_i)+c)</script><p>这样我们便得到本轮的弱学习器决策树拟合函数</p>
+<script type="math/tex; mode=display">
+h_t(x)=\sum _{j=1} ^{J} c_{tj},I(x \in R_{tj})</script><ul>
+<li>step2(d). 更新强学习器，上一个强学习器+弱学习器</li>
+</ul>
+<script type="math/tex; mode=display">
+f_t(x)=f_{t-1}(x)+\sum_{j=1}^{J}c_{tj},I(x\in R_{tj})</script><ul>
+<li>step3. 得到输出的最后一轮的最终强学习器模型（最大迭代T轮）</li>
+</ul>
+<script type="math/tex; mode=display">
+f(x)=f_T(x)=f_0(x)+\sum_{t=1}^{T}\sum_{j=1}^{J}c_{tj},I(x\in R_{tj})</script><h4 id="GBDT分类算法"><a href="#GBDT分类算法" class="headerlink" title="GBDT分类算法"></a>GBDT分类算法</h4><p>GBDT分类算法在思想上和回归算法没有区别，但是由于样本输出不是连续的值，而是离散的类别，导致我们无法直接从输出类别去拟合类别输出的误差。为解决此问题，我们尝试用类似于逻辑回归的对数似然损失函数的方法,也就是说我们用的是类别的预测概率值和真实概率值来拟合损失函数。对于对数似然损失函数，我们有二元分类和多元分类的区别。</p>
+<h5 id="二元GBDT分类算法"><a href="#二元GBDT分类算法" class="headerlink" title="二元GBDT分类算法"></a>二元GBDT分类算法</h5><p>对于二元GBDT，如果用类似于逻辑回归的对数似然损失函数，则损失函数表示为</p>
+<script type="math/tex; mode=display">
+L(y,f(x))=log(1+exp(-yf(x)))</script><p>其中y∈{−1,1}。则此时的负梯度误差为</p>
+<script type="math/tex; mode=display">
+r_{ti}=-\left[\frac{\partial L(y_i,f(x_i))}{\partial f(x_i)} \right]_{f(x)=f_{t-1}(x)}=\frac{y_i}{1+exp(y_if(x_i))}</script><p>对于生成的决策树，我们各个叶子节点的最佳残差拟合值为</p>
+<script type="math/tex; mode=display">
+c_{tj}=\underset{c}{\underbrace{\arg\min}} \sum _{x_i\in R_{tj}}log(1+exp(-y_i(f_{t-1}(x_i)+c)))</script><p>由于上式比较难优化，我们一般使用近似值代替</p>
+<script type="math/tex; mode=display">
+c_{tj}=\frac{\sum _{x_i\in R_{tj}}r_{ti}}{\sum _{x_i \in R_{tj}}|r_{ti}|(1-|r_{ti}|)}</script><p>除了负梯度计算和叶子节点的最佳残差拟合的线性搜索外，二元GBDT分类和GBDT回归算法过程相同。</p>
+<h5 id="多元GBDT分类算法"><a href="#多元GBDT分类算法" class="headerlink" title="多元GBDT分类算法"></a>多元GBDT分类算法</h5><p>多元GBDT要比二元GBDT复杂一些，对应的是多元逻辑回归和二元逻辑回归的复杂度差别。假如类别数为K，则我们的对数似然函数为</p>
+<script type="math/tex; mode=display">
+L(y,f(x))=-\sum_{k=1}^{K}y_k log(p_k(x))</script><p>其中如果样本输出类别为k，则$y_k=1$。第k类的概率$p_k(x)$的表达式为</p>
+<script type="math/tex; mode=display">
+p_k(x)=\frac {exp(f_k(x))}{\sum _{l=1}^{K}exp(f_l(x))}</script><p>集合上两式，我们可以计算出第t轮的第i个样本对应类别l的负梯度误差为</p>
+<script type="math/tex; mode=display">
+r_{til}=-\left[\frac{\partial L(y_i,f(x_i))}{\partial f(x_i)} \right]_{f_k(x)=f_{t-1,l}(x)}=y_{il}-p_{t-1,l}(x_i)</script><p>其实这里的误差就是样本i对应类别l的真实概率和t-1轮预测概率的差值。对于生成的决策树，我们各个叶子节点的最佳残差拟合值为</p>
+<script type="math/tex; mode=display">
+c_{tjl}=\underset{cjl}{\underbrace{\arg\min}} \sum_{i=1}^{m} \sum_{k=1}^{K}L(y_k,f_{t-1,l}(x))+\sum _{j=1}^{J}c_{jl},I(x_i\in R_{tj})</script><p>由于上式比较难优化，我们用近似值代替</p>
+<script type="math/tex; mode=display">
+c_{tjl}=\frac{K-1}{K}=\frac{\sum_{x_i\in R_{tjl}}r_{til}}{\sum _{x_i\in R_{til}}|r_{til}|(1-|r_{til}|)}</script><p>除了负梯度计算和叶子节点的最佳残差拟合的线性搜索，多元GBDT分类和二元GBDT分类以及GBDT回归算法过程相同。</p>
+<h2 id="XGBoost"><a href="#XGBoost" class="headerlink" title="XGBoost"></a>XGBoost</h2><p>数据建模中，经常采用Boosting方法通过将成百上千个分类准确率较低的树模型组合起来，成为一个准确率很高的预测模型。这个模型会不断地迭代，每次迭代就生成一颗新的树。但在数据集较复杂的时候，可能需要几千次迭代运算，这将造成巨大的计算瓶颈。</p>
+<p>针对这个问题。华盛顿大学的陈天奇博士开发的XGBoost（eXtreme Gradient Boosting）基于C++通过多线程实现了回归树的并行构建，并在原有Gradient Boosting算法基础上加以改进，从而极大地提升了模型训练速度和预测精度.</p>
+<h3 id="梯度下降与牛顿法"><a href="#梯度下降与牛顿法" class="headerlink" title="梯度下降与牛顿法"></a>梯度下降与牛顿法</h3><p>在机器学习任务中，需要最小化损失函数L(θ)，其中θ是要求解的模型参数。梯度下降法常用来求解这种无约束最优化问题，它是一种迭代方法：选取初值$θ^0$ ,不断迭代，更新θ的值，进行损失函数的极小化。</p>
+<ul>
+<li>迭代公式：$θ^t = θ_{t-1}+△θ$ </li>
+</ul>
+<p><strong>梯度下降</strong>：将$L(θ^t)$ 在$θ^{t-1}$ 处进行一阶泰勒展开:</p>
+<script type="math/tex; mode=display">L(θ^t)=L(θ^{t-1}+△θ)\approx L(θ^{t-1})+L'(θ^{t-1})△θ</script><p>要使得$L(θ^t)&lt;L(θ^{t-1})$ ,可取$△θ=-\alpha L’(θ^{t-1})$ ，则$θ^t = θ^{t-1}-\alpha L’(θ^{t-1})$<br>这里$\alpha$ 是步长，可通过line search确定，但一般直接赋一个小的数</p>
+<p><strong>牛顿法</strong>：将$L(θ^t)$ 在$θ^{t-1}$ 处进行二阶泰勒展开:</p>
+<script type="math/tex; mode=display">L(θ^t)\approx L(θ^{t-1})+L'(θ^{t-1})△θ+L''(θ^{t-1})\frac{(△θ)^2}{2}</script><p>可将一阶和二阶导数分别记为g 和 h,则:</p>
+<script type="math/tex; mode=display">L(θ^t)\approx L(θ^{t-1})+g△θ+h\frac{(△θ)^2}{2}</script><p>要使得$L(θ^t)$极小，即让$g△θ+h\frac{(△θ)^2}{2}$ 极小，可令其对△θ求偏导值为0，求得$△θ=-\frac{g}{h}$ ,故$θ^t = θ^{t-1}+△θ=θ^{t-1}-\frac{g}{h}$ ,将其推广到向量形式，有$θ^t = θ^{t-1}-H^{-1}g$ </p>
+<p>GBDT 在函数空间中利用梯度下降法进行优化<br>XGBoost 在函数空间中用牛顿法进行优化</p>
+<h3 id="XGBoost的推导过程"><a href="#XGBoost的推导过程" class="headerlink" title="XGBoost的推导过程"></a>XGBoost的推导过程</h3><h4 id="定义目标函数"><a href="#定义目标函数" class="headerlink" title="定义目标函数"></a>定义目标函数</h4><p><strong>相比原始的GBDT，XGBoost的目标函数多了正则项，使得学习出来的模型更加不容易过拟</strong>合。有哪些指标可以衡量树的复杂度？树的深度，内部节点个数，<strong>叶子节点个数(T)，叶节点分数(w)</strong>…<br>XGBoost采用的是：T代表叶子数量，w代表叶子预测权值</p>
+<p><img src="/2018/08/04/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（六）：集成学习/07.png" alt=""></p>
+<p><strong>而XGBoost第t次迭代后，模型的预测等于前t-1次的模型预测加上第t棵树的预测</strong></p>
+<p><img src="/2018/08/04/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（六）：集成学习/08.png" alt=""></p>
+<p>即每次迭代生成一棵新的回归树，从而使预测值不断逼近真实值（即进一步最小化目标函数）。每一次保留原来的模型不变，加入一个新的函数f到模型里面。其中$\hat{y}_i\left(t-1\right)$就是t-1轮的模型预测，$f_t{(x_i)}$为新t轮加入的预测函数。选取的$f_t{(x_i)}$必须使我们的目标函数尽量最大地降低（这里应用到了Boosting的基本思想，即当前的基学习器重点关注以前所有学习器犯错误的那些数据样本，以此来达到提升的效果）</p>
+<p>此时目标损失函数可写作：</p>
+<p><img src="/2018/08/04/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（六）：集成学习/09.png" alt=""></p>
+<p>如果我们考虑平方误差作为损失函数，公式可改写为：</p>
+<p><img src="/2018/08/04/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（六）：集成学习/10.png" alt=""></p>
+<blockquote>
+<p>这里的化简没有看懂，感觉少了一项残差的平方。不过原等式$+f_t{(x_i)}$看做泰勒展开的$+\bigtriangleup x$ .</p>
+</blockquote>
+<p>公式中$y_i,\widehat y_i$ 都是已知的，<strong>模型要学习的只有第t棵树</strong>$f_t$ .另外对于损失函数不是平方误差的情况，我们可以采用如下的泰勒展开近似来定义一个近似的目标函数，方便我们进行下一步的计算。其中$g_i$和$h_i$为损失函数对$\widehat y_i^{t-1}$的一阶和二阶倒数。</p>
+<p><img src="/2018/08/04/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（六）：集成学习/11.png" alt=""></p>
+<p>这时候，所有东西都准备好了，<strong>最后我们怎么定义</strong>$f_t$呢？<strong>它可以代表一颗具有预测结果的树</strong>，即叶子节点有预测权重。我们定义w为树叶的权重序列，q为树的结构，那么q(x)代表样本x落在树叶的位置。</p>
+<p><img src="/2018/08/04/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（六）：集成学习/12.png" alt=""></p>
+<h4 id="目标函数的最小化"><a href="#目标函数的最小化" class="headerlink" title="目标函数的最小化"></a>目标函数的最小化</h4><p>得到了目标函数，接下来是最关键的一步，在这种新的定义下，我们可以把目标函数进行如下改写，其中$I$被定义为每个叶子上面样本集合$I_j=\{i| q(x_i)=j\}$ 。$L(y_i,\widehat y_i^{t-1})$为真实值与前一个函数计算所得残差是已知的(我们都是在已知前一个树的情况下计算下一颗树的)，同时，在同一个叶子节点上的数的函数值是相同的，可以做合并，于是：</p>
+<p><img src="/2018/08/04/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（六）：集成学习/13.jpg" alt=""></p>
+<p>对上诉目标函数求导等于0，可以得到最后的结果：</p>
+<p><img src="/2018/08/04/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（六）：集成学习/14.png" alt=""></p>
+<p>得到这个目标函数，乍一看目标函数的计算与回归树的结构q函数没有什么关系，但是如果我们仔细回看目标函数的构成，就会发现<strong>其中$G_j$和$H_j$的取值是由第j个树叶上数据样本所决定的</strong>。而第jj个树上所具有的数据样本则是由树结构q函数决定的。也<strong>就是说，一旦回归树的结构q确定，那么相应的目标函数就能够根据上式计算出来。那么回归树的生成问题也就转换为找到一个最优的树结构q，使得它具有最小的目标函数。</strong></p>
+<p><strong>计算求得的Obj目标函数代表了当指定一个树的结构的时候，目标函数上面最多减少多少</strong>。我们可以把它叫做<strong>结构分数</strong>（structure score）。可以把它认为是类似于基尼系数一样更加一般的对于树结构进行打分的函数。</p>
+<p><strong>当回归树的结构确定时，我们前面已经推导出其最优的叶节点分数以及对应的最小损失值，问题是怎么确定树的结构？才能让得到的结构分数最好，目标函数损失降低最大</strong> 。主要有以下两种方法</p>
+<ul>
+<li>暴力枚举所有可能的树结构，选择损失值最小的 - NP难问题（树的结构有无穷种）</li>
+<li>贪心法，每次尝试分裂一个叶节点，计算分裂前后的增益，选择增益最大的（主要）</li>
+</ul>
+<h4 id="确定树的结构（贪心法）"><a href="#确定树的结构（贪心法）" class="headerlink" title="确定树的结构（贪心法）"></a>确定树的结构（贪心法）</h4><p>分裂前后的增益怎么计算？</p>
+<ul>
+<li>ID3算法采用信息增益</li>
+<li>C4.5算法采用信息增益比</li>
+<li>CART采用Gini系数</li>
+<li>XGBoost采用上诉优化函数的打分</li>
+</ul>
+<p>即每一次尝试区队已有的叶子加入一个分割。对于一个剧透的分割方案，我们可以获得的增益可以由如下公式计算得到：</p>
+<p><img src="/2018/08/04/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（六）：集成学习/15.png" alt=""></p>
+<p>这个公式形式上跟ID3算法（采用信息熵计算增益）或者CART算法（采用基尼指数计算增益） 是一致的，都是用分裂后的某种值减去分裂前的某种值，从而得到增益。<strong>为了限制树的生长</strong>，我们可以加入阈值，当增益大于阈值时才让节点分裂，上式中的$\gamma$即阈值，它是正则项里叶子节点数T的系数，<strong>所以xgboost在优化目标函数的同时相当于做了预剪枝</strong>。另外，<strong>上式中还有一个系数$\lambda$，是正则项里leaf score的L2模平方的系数，对leaf score做了平滑，也起到了防止过拟合的作用</strong>，这个是传统GBDT里不具备的特性。</p>
+<blockquote>
+<p> 但需要注意是：引入的分割不一定会使得情况变好，因为在引入分割的同时也引入新叶子的惩罚项。所以通常需要设定一个阈值，如果引入的分割带来的增益小于一个阀值的时候，我们可以剪掉这个分割。此外在XGBoost的具体实践中，通常会设置树的深度来控制树的复杂度，避免单个树过于复杂带来的过拟合问题。</p>
+</blockquote>
+<h4 id="如何使用及参数"><a href="#如何使用及参数" class="headerlink" title="如何使用及参数"></a>如何使用及参数</h4><p><img src="/2018/08/04/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（六）：集成学习/16.png" alt=""></p>
+<p><img src="/2018/08/04/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（六）：集成学习/17.png" alt=""></p>
+<h4 id="一些常见的问题"><a href="#一些常见的问题" class="headerlink" title="一些常见的问题"></a>一些常见的问题</h4><p>1、机器学习算法中GBDT和XGBOOST的区别有哪些？</p>
+<p>2、为什么在实际的 kaggle 比赛中 gbdt 和 random forest 效果非常好？</p>
+<p>3、 为什么xgboost/gbdt在调参时为什么树的深度很少就能达到很高的精度？</p>
+<blockquote>
+<p>这里就不花时间写了，可以参考知乎和一些博客文章。</p>
+</blockquote>
+<h1 id="Bagging和随机森林"><a href="#Bagging和随机森林" class="headerlink" title="Bagging和随机森林"></a>Bagging和随机森林</h1><p>如果采样出的每个子集都完全不同，则每个基学习器只用到一小部分训练数据，甚至不足以进行有效学习，这显然无法确保产生出比较好的基学习器。为了解决这个问题，我们可考虑使用相互有交叠的采样子集。</p>
+<h2 id="Bagging"><a href="#Bagging" class="headerlink" title="Bagging"></a>Bagging</h2><p>随机取出一个样本放入采样集中，再把该样本放回初始数据集。这样的自助采样过程还给 Bagging带来了另一个优点：由于每个基学习器只使用了初始训练集中约 63.2%的样本，剩下约 36.8%的样本可用作验证集来对泛化性能进行包外估计(out-of-bag estimate)。Bagging通常对分类任务使用简单的投票法，对回归任务使用简单平均法。<br>Bagging的算法描述如下所诉($D_{bs}$是自助采样产生的样本分布,输出采用投票法)：</p>
+<p><img src="/2018/08/04/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（六）：集成学习/18.png" alt=""></p>
+<h2 id="随机森林"><a href="#随机森林" class="headerlink" title="随机森林"></a>随机森林</h2><p>随机森林(Random Forest)是Bagging的一个扩展变体。随机森林在以决策树为基学习器构建 Bagging集成的基础上，进一步在决策树的训练过程中引入了随机属性选择。具体来说，传统决策树在选择划分属性时是在当前结点的属性集合（假定有d个属性）中选择一个最优属性；而在随机森林中，对基决策树的每个结点，先从该结点的属性集合中随机选择一个包含k个属性的子集，然后再从这个子集中选择一个最优属性用于划分。这里的参数k控制了随机性的引入程度：若令 k=d，则基决策树的构建与传统决策树相同；若令k=1,则是随机选择一个属性用于划分；一般情况下，推荐值 k=log2d.随机森林简单、容易实现、计算开销小.</p>
+<p>随机森林的训练效率常优于 Bagging，因为在个体决策树的构建过程中，Bagging使用的是“确定型”决策树，在选择划分属性时要对结点的所有属性进行考察，而随机森林使用的“随机型”决策树则只需考察一个属性子集。</p>
+<p>由于这些树是随机生成的，大部分的树对解决分类或回归问题是没有意义的，那么生成上万的树有什么好处呢？好处便是生成的决策树中有少数非常好的决策树。当你要做预测的时候，新的观察值随着决策树自上而下的预测并被赋予一个预测值或标签。一旦森林中的每棵树都有了预测值或标签，所有的预测结果将被归总到一起，所有树的投票做为最终的预测结果。简单来说，会像大数原理一样，抛硬币的次数接近无穷，其正反概率会越接近真实概率1/2。大部分的树会相互抵消，最后得到一个泛化较好的结果，从而得到一个好的预测结果。</p>
+<h1 id="学习器结合策略"><a href="#学习器结合策略" class="headerlink" title="学习器结合策略"></a>学习器结合策略</h1><p>假定集成包含 T 个基学习器h1,h2,…ht,其中hi在示例x上的输出为hi(x)下面介绍几种对hi进行结合的常见策略。</p>
+<ul>
+<li>投票法 1）硬投票  2）相对多数投票 3）加权投票</li>
+<li>平均法 1）简单平均法 2）加权平均法（较好）</li>
+<li>学习法 1）Stacking</li>
+</ul>
+<p><strong>Stacking</strong><br>当训练数据很多时，一种更为强大的结合策略是使用“学习法”，即通过另一个学习器来进行结合。Stacking是学习法的典型代表。这里我们把个体学习器称为初级学习器，用于结合的学习器称为次级学习器或元学习(metalearner)。</p>
+<p><strong>Stacking先从初始数据集训练出初级学习器，然后“生成”一个新数据集用于训练次级学习器。在这个新数据集中，初级学习器的输出被当做样例输入特征，而初始样本的标记仍被当作样例标记</strong>。Stacking的算法描述如下，这里假定初级学习器使用不同的学习算法产生，即初级集成是异质的（初级学习器也可是同质的）。</p>
+<p><img src="/2018/08/04/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（六）：集成学习/19.png" alt=""></p>
+<p>train数据是初级训练器5折交叉得到的输出，test是初级训练器预测test后的均值</p>
+<p><img src="/2018/08/04/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（六）：集成学习/27.jpg" alt=""></p>
+<h1 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h1><h2 id="投票分类"><a href="#投票分类" class="headerlink" title="投票分类"></a>投票分类</h2><p>像我们之前讨论的一样，我们会在一个项目快结束的时候使用集成算法，一旦你建立了一些好的分类器，就把他们合并为一个更好的分类器。事实上，在机器学习竞赛中获得胜利的算法经常会包含一些集成方法。</p>
+<p>接下来的代码创建和训练了在 sklearn 中的投票分类器。这个分类器由三个不同的分类器组成（训练集是第五章中的 moons 数据集）：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> sklearn.ensemble <span class="keyword">import</span> RandomForestClassifier </span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> sklearn.ensemble <span class="keyword">import</span> VotingClassifier </span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> sklearn.linear_model <span class="keyword">import</span> LogisticRegression </span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> sklearn.svm <span class="keyword">import</span> SVC</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>log_clf = LogisticRegression() </span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>rnd_clf = RandomForestClassifier() </span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>svm_clf = SVC()</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>voting_clf = VotingClassifier(estimators=[(<span class="string">'lr'</span>, log_clf), (<span class="string">'rf'</span>, rnd_clf), &gt;&gt;&gt; (<span class="string">'svc'</span>, svm_clf)],voting=<span class="string">'hard'</span>) </span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>voting_clf.fit(X_train, y_train)</span><br></pre></td></tr></table></figure>
+<p>让我们看一下在测试集上的准确率：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> accuracy_score </span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">for</span> clf <span class="keyword">in</span> (log_clf, rnd_clf, svm_clf, voting_clf): </span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>    clf.fit(X_train, y_train) </span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>    y_pred = clf.predict(X_test) </span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>    print(clf.__class__.__name__, accuracy_score(y_test, y_pred)) </span><br><span class="line">LogisticRegression <span class="number">0.864</span> </span><br><span class="line">RandomForestClassifier <span class="number">0.872</span> </span><br><span class="line">SVC <span class="number">0.888</span> </span><br><span class="line">VotingClassifier <span class="number">0.896</span></span><br></pre></td></tr></table></figure>
+<p><strong>你看！投票分类器比其他单独的分类器表现的都要好。</strong></p>
+<p>如果所有的分类器都能够预测类别的概率（例如他们有一个predict_proba()方法），那么你就可以让 sklearn 以最高的类概率来预测这个类，平均在所有的分类器上。这种方式叫做<strong>软投票</strong>。<strong>他经常比硬投票表现的更好，因为它给予高自信的投票更大的权重。你可以通过把voting=”hard”设置为voting=”soft”来保证分类器可以预测类别概率。然而这不是 SVC 类的分类器默认的选项，所以你需要把它的probability hyperparameter设置为True</strong>（<strong>这会使 SVC 使用交叉验证去预测类别概率，其降低了训练速度，但会添加predict_proba()方法</strong>）。如果你修改了之前的代码去使用软投票，你会发现投票分类器正确率高达 91%</p>
+<h2 id="Bagging-和-Pasting"><a href="#Bagging-和-Pasting" class="headerlink" title="Bagging 和 Pasting"></a>Bagging 和 Pasting</h2><p>就像之前讲到的，可以通过使用不同的训练算法去得到一些不同的分类器。另一种方法就是对每一个分类器都使用相同的训练算法，但是在不同的训练集上去训练它们。<strong>有放回采样被称为装袋（Bagging，是 bootstrap aggregating 的缩写）。无放回采样称为粘贴（pasting）</strong></p>
+<p>换句话说，Bagging 和 Pasting 都允许在多个分类器上对训练集进行多次采样，但只有 Bagging 允许对同一种分类器上对训练集进行进行多次采样。</p>
+<p><strong>当所有的分类器被训练后，集成可以通过对所有分类器结果的简单聚合来对新的实例进行预测。聚合函数通常对分类是统计模式（例如硬投票分类器）或者对回归是平均</strong>。<strong>每一个单独的分类器在如果在原始训练集上都是高偏差，但是聚合降低了偏差和方差</strong>。通常情况下，集成的结果是有一个相似的偏差，但是对比与在原始训练集上的单一分类器来讲<strong>有更小的方差</strong>。</p>
+<h2 id="sklearn-中的-Bagging-和-Pasting"><a href="#sklearn-中的-Bagging-和-Pasting" class="headerlink" title="sklearn 中的 Bagging 和 Pasting"></a>sklearn 中的 Bagging 和 Pasting</h2><p>sklearn 为 Bagging 和 Pasting 提供了一个简单的API：BaggingClassifier类（或者对于回归可以是BaggingRegressor。接下来的代码训练了一个 500 个决策树分类器的集成，每一个都是在数据集上有放回采样 100 个训练实例下进行训练（<strong>这是 Bagging 的例子，如果你想尝试 Pasting，就设置bootstrap=False</strong>）。<strong>n_jobs参数告诉 sklearn 用于训练和预测所需要 CPU 核的数量。（-1 代表着 sklearn 会使用所有空闲核）：</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt;<span class="keyword">from</span> sklearn.ensemble <span class="keyword">import</span> BaggingClassifier </span><br><span class="line">&gt;&gt;&gt;<span class="keyword">from</span> sklearn.tree <span class="keyword">import</span> DecisionTreeClassifier</span><br><span class="line">&gt;&gt;&gt;bag_clf = BaggingClassifier(DecisionTreeClassifier(), n_estimators=<span class="number">500</span>, 	max_samples=<span class="number">100</span>, bootstrap=<span class="keyword">True</span>, n_jobs=<span class="number">-1</span>) </span><br><span class="line">&gt;&gt;&gt;bag_clf.fit(X_train, y_train) </span><br><span class="line">&gt;&gt;&gt;y_pred = bag_clf.predict(X_test)</span><br></pre></td></tr></table></figure>
+<p><strong>如果基分类器可以预测类别概率（例如它拥有predict_proba()方法），那么BaggingClassifier会自动的运行软投票，这是决策树分类器的情况。</strong></p>
+<p>下图对比了单一决策树的决策边界和 Bagging 集成 500 个树的决策边界，两者都在 moons 数据集上训练。正如你所看到的，集成的分类比起单一决策树的分类产生情况更好：集成有一个可比较的偏差但是有一个较小的方差（它在训练集上的错误数目大致相同，但决策边界较不规则）。</p>
+<p><img src="/2018/08/04/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（六）：集成学习/20.png" alt=""></p>
+<p><strong>Bootstrap 在每个预测器被训练的子集中引入了更多的分集，所以 Bagging 结束时的偏差比 Pasting 更高，但这也意味着预测因子最终变得不相关，从而减少了集合的方差。总体而言，Bagging 通常会导致更好的模型，这就解释了为什么它通常是首选的</strong>。然而，如果你有空闲时间和 CPU 功率，可以使用交叉验证来评估 Bagging 和 Pasting 哪一个更好。</p>
+<h2 id="Out-of-Bag-评价"><a href="#Out-of-Bag-评价" class="headerlink" title="Out-of-Bag 评价"></a>Out-of-Bag 评价</h2><p>对于 Bagging 来说，一些实例可能被一些分类器重复采样，但其他的有可能不会被采样。BaggingClassifier默认采样。<strong>BaggingClassifier默认是有放回的采样m个实例 （bootstrap=True），其中m是训练集的大小</strong>，这意味着平均下来只有63%的训练实例被每个分类器采样，<strong>剩下的37%个没有被采样的训练实例就叫做 Out-of-Bag 实例。注意对于每一个的分类器它们的 37% 不是相同的</strong>。</p>
+<p><strong>因为在训练中分类器从来没有看到过 oob 实例，所以它可以在这些实例上进行评估，而不需要单独的验证集或交叉验证</strong>。你可以拿出每一个分类器的 oob 来评估集成本身。</p>
+<p>在 sklearn 中，你可以在训练后需要创建一个BaggingClassifier来自动评估时设置oob_score=True来自动评估。接下来的代码展示了这个操作。评估结果通过变量oob_score_来显示：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>bag_clf = BaggingClassifier(DecisionTreeClassifier(), n_estimators=<span class="number">500</span>,bootstrap=<span class="keyword">True</span>, n_jobs=<span class="number">-1</span>, oob_score=<span class="keyword">True</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>bag_clf.fit(X_train, y_train) </span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>bag_clf.oob_score_ </span><br><span class="line"><span class="number">0.93066666666666664</span></span><br></pre></td></tr></table></figure>
+<p>根据这个 obb 评估，BaggingClassifier可以再测试集上达到93.1%的准确率，让我们修改一下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> accuracy_score </span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>y_pred = bag_clf.predict(X_test) </span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>accuracy_score(y_test, y_pred) </span><br><span class="line"><span class="number">0.93600000000000005</span></span><br></pre></td></tr></table></figure>
+<p>我们在测试集上得到了 93.6% 的准确率，足够接近了！</p>
+<p><strong>对于每个训练实例 oob 决策函数也可通过oob_decision_function_变量来展示</strong>。在这种情况下（当基决策器有predict_proba()时）决策函数会对每个训练实例返回类别概率。例如，oob 评估预测第二个训练实例有 60.6% 的概率属于正类（39.4% 属于负类）：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>bag_clf.oob_decision_function_ </span><br><span class="line">array([[ <span class="number">0.</span>,  <span class="number">1.</span>], [ <span class="number">0.60588235</span>,  <span class="number">0.39411765</span>],[ <span class="number">1.</span>, <span class="number">0.</span> ], </span><br><span class="line"><span class="meta">... </span> [ <span class="number">1.</span> ,  <span class="number">0.</span> ],[ <span class="number">0.</span>,  <span class="number">1.</span>],[ <span class="number">0.48958333</span>,  <span class="number">0.51041667</span>]])</span><br></pre></td></tr></table></figure>
+<h2 id="随机森林-1"><a href="#随机森林-1" class="headerlink" title="随机森林"></a>随机森林</h2><p>正如我们所讨论的，随机森林是决策树的一种集成，通常是通过 bagging 方法（有时是 pasting 方法）进行训练，通常用max_samples设置为训练集的大小。与建立一个BaggingClassifier然后把它放入 DecisionTreeClassifier 相反，你可以使用更方便的也是对决策树优化够的RandomForestClassifier（对于回归是RandomForestRegressor）。接下来的代码训练了带有 500 个树（每个被限制为 16 叶子结点）的决策森林，使用所有空闲的 CPU 核：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt;<span class="keyword">from</span> sklearn.ensemble <span class="keyword">import</span> RandomForestClassifier</span><br><span class="line">&gt;&gt;&gt;rnd_clf = RandomForestClassifier(n_estimators=<span class="number">500</span>, max_leaf_nodes=<span class="number">16</span>, n_jobs=<span class="number">-1</span>) </span><br><span class="line">&gt;&gt;&gt;rnd_clf.fit(X_train, y_train)</span><br><span class="line">&gt;&gt;&gt;y_pred_rf = rnd_clf.predict(X_test)</span><br></pre></td></tr></table></figure>
+<p>除了一些例外，RandomForestClassifier使用DecisionTreeClassifier的所有超参数（决定数怎么生长），把BaggingClassifier的超参数加起来来控制集成本身</p>
+<p><strong>随机森林算法在树生长时引入了额外的随机；与在节点分裂时需要找到最好分裂特征相反，它在一个随机的特征集中找最好的特征。它导致了树的差异性，并且再一次用高偏差换低方差，总的来说是一个更好的模型</strong>。以下是BaggingClassifier大致相当于之前的randomforestclassifier：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt;bag_clf = BaggingClassifier(DecisionTreeClassifier(splitter=<span class="string">"random"</span>, max_leaf_nodes=<span class="number">16</span>),n_estimators=<span class="number">500</span>, max_samples=<span class="number">1.0</span>, bootstrap=<span class="keyword">True</span>, n_jobs=<span class="number">-1</span>)</span><br></pre></td></tr></table></figure>
+<h2 id="极端随机树"><a href="#极端随机树" class="headerlink" title="极端随机树"></a>极端随机树</h2><p><strong>当你在随机森林上生长树时，在每个结点分裂时只考虑随机特征集上的特征（正如之前讨论过的一样）。相比于找到更好的特征我们可以通过使用对特征使用随机阈值使树更加随机（像规则决策树一样）。</strong></p>
+<p>这种极端随机的树被简称为 Extremely Randomized Trees（极端随机树），或者更简单的称为 Extra-Tree。再一次用高偏差换低方差。它还使得 Extra-Tree 比规则的随机森林更快地训练，因为在每个节点上找到每个特征的最佳阈值是生长树最耗时的任务之一。</p>
+<p>你可以使用 sklearn 的ExtraTreesClassifier来创建一个 Extra-Tree 分类器。他的 API 跟RandomForestClassifier是相同的，相似的， ExtraTreesRegressor 跟RandomForestRegressor也是相同的 API。</p>
+<p><strong>我们很难去分辨ExtraTreesClassifier和RandomForestClassifier到底哪个更好。通常情况下是通过交叉验证来比较它们（使用网格搜索调整超参数）</strong></p>
+<h2 id="特征重要度"><a href="#特征重要度" class="headerlink" title="特征重要度"></a>特征重要度</h2><p><strong>最后，如果你观察一个单一决策树，重要的特征会出现在更靠近根部的位置，而不重要的特征会经常出现在靠近叶子的位置。因此我们可以通过计算一个特征在森林的全部树中出现的平均深度来预测特征的重要性</strong>。sklearn 在训练后会自动计算每个特征的重要度。你可以通过feature_importances_变量来查看结果。例如如下代码在 iris 数据集（第四章介绍）上训练了一个RandomForestClassifier模型，然后输出了每个特征的重要性。看来，最重要的特征是花瓣长度（44%）和宽度（42%），而萼片长度和宽度相对比较是不重要的（分别为 11% 和 2%）：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> sklearn.datasets <span class="keyword">import</span> load_iris </span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>iris = load_iris() </span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>rnd_clf = RandomForestClassifier(n_estimators=<span class="number">500</span>, n_jobs=<span class="number">-1</span>) </span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>rnd_clf.fit(iris[<span class="string">"data"</span>], iris[<span class="string">"target"</span>]) </span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">for</span> name, score <span class="keyword">in</span> zip(iris[<span class="string">"feature_names"</span>], rnd_clf.feature_importances_): </span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>    print(name, score) </span><br><span class="line">sepal length (cm) <span class="number">0.112492250999</span></span><br><span class="line">sepal width (cm) <span class="number">0.0231192882825</span> </span><br><span class="line">petal length (cm) <span class="number">0.441030464364</span> </span><br><span class="line">petal width (cm) <span class="number">0.423357996355</span></span><br></pre></td></tr></table></figure>
+<p>相似的，如果你在 MNIST 数据及上训练随机森林分类器（在第三章上介绍），然后画出每个像素的重要性，你可以得到下图</p>
+<p><img src="/2018/08/04/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（六）：集成学习/21.png" alt=""></p>
+<p>随机森林可以非常方便快速得了解哪些特征实际上是重要的，特别是你需要进行特征选择的时候</p>
+<h2 id="提升"><a href="#提升" class="headerlink" title="提升"></a>提升</h2><p>下图显示连续五次预测的 moons 数据集的决策边界（在本例中，每一个分类器都是高度正则化带有 RBF 核的 SVM）。<strong>第一个分类器误分类了很多实例，所以它们的权重被提升了。第二个分类器因此对这些误分类的实例分类效果更好，以此类推</strong>。右边的图代表了除了学习率减半外（误分类实例权重每次迭代上升一半）相同的预测序列（误分类的样本权重提升速率即学习率）。你可以看出，序列学习技术与梯度下降很相似，除了调整单个预测因子的参数以最小化代价函数之外，AdaBoost 增加了集合的预测器，逐渐使其更好。</p>
+<p><img src="/2018/08/04/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（六）：集成学习/22.png" alt=""></p>
+<p><strong>klearn 通常使用 Adaboost 的多分类版本 SAMME（这就代表了 分段加建模使用多类指数损失函数）。如果只有两类别，那么 SAMME 是与 Adaboost 相同的。如果分类器可以预测类别概率（例如如果它们有predict_proba()），如果 sklearn 可以使用 SAMME 叫做SAMME.R的变量（R 代表“REAL”），这种依赖于类别概率的通常比依赖于分类器的更好。</strong></p>
+<p>接下来的代码训练了使用 sklearn 的AdaBoostClassifier基于 200 个决策树桩 Adaboost 分类器（正如你说期待的，对于回归也有AdaBoostRegressor）。<strong>一个决策树桩是max_depth=1的决策树-换句话说，是一个单一的决策节点加上两个叶子结点。这就是AdaBoostClassifier的默认基分类器</strong>：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt;<span class="keyword">from</span> sklearn.ensemble <span class="keyword">import</span> AdaBoostClassifier</span><br><span class="line">&gt;&gt;&gt;ada_clf = AdaBoostClassifier(DecisionTreeClassifier(max_depth=<span class="number">1</span>), n_estimators=<span class="number">200</span>,algorithm=<span class="string">"SAMME.R"</span>, learning_rate=<span class="number">0.5</span>) </span><br><span class="line">&gt;&gt;&gt;ada_clf.fit(X_train, y_train)</span><br></pre></td></tr></table></figure>
+<p><strong>如果你的 Adaboost 集成过拟合了训练集，你可以尝试减少基分类器的数量或者对基分类器使用更强的正则化。</strong></p>
+<h2 id="梯度提升"><a href="#梯度提升" class="headerlink" title="梯度提升"></a>梯度提升</h2><p>另一个非常著名的提升算法是梯度提升。与 Adaboost 一样，梯度提升也是通过向集成中逐步增加分类器运行的，每一个分类器都修正之前的分类结果。然而，它并不像 Adaboost 那样每一次迭代都更改实例的权重，这个方法<strong>是去使用新的分类器去拟合前面分类器预测的残差 。</strong></p>
+<p>让我们通过一个使用决策树当做基分类器的简单的回归例子（回归当然也可以使用梯度提升）。这被叫做梯度提升回归树（GBRT，Gradient Tree Boosting 或者 Gradient Boosted Regression Trees）。首先我们用DecisionTreeRegressor去拟合训练集（例如一个有噪二次训练集）：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt;<span class="keyword">from</span> sklearn.tree <span class="keyword">import</span> DecisionTreeRegressor </span><br><span class="line">&gt;&gt;&gt;tree_reg1 = DecisionTreeRegressor(max_depth=<span class="number">2</span>) </span><br><span class="line">&gt;&gt;&gt;tree_reg1.fit(X, y)</span><br></pre></td></tr></table></figure>
+<p>现在在第一个分类器的残差上训练第二个分类器：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt;y2 = y - tree_reg1.predict(X) </span><br><span class="line">&gt;&gt;&gt;tree_reg2 = DecisionTreeRegressor(max_depth=<span class="number">2</span>) </span><br><span class="line">&gt;&gt;&gt;tree_reg2.fit(X, y2)</span><br></pre></td></tr></table></figure>
+<p>随后在第二个分类器的残差上训练第三个分类器：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt;y3 = y2 - tree_reg1.predict(X) </span><br><span class="line">&gt;&gt;&gt;tree_reg3 = DecisionTreeRegressor(max_depth=<span class="number">2</span>) </span><br><span class="line">&gt;&gt;&gt;tree_reg3.fit(X, y3)</span><br></pre></td></tr></table></figure>
+<p>现在我们有了一个包含三个回归器的集成。它可以通过集成所有树的预测来在一个新的实例上进行预测。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt;y_pred = sum(tree.predict(X_new) <span class="keyword">for</span> tree <span class="keyword">in</span> (tree_reg1, tree_reg2, tree_reg3))</span><br></pre></td></tr></table></figure>
+<p><strong>下图左栏展示了这三个树的预测，在右栏展示了集成的预测。在第一行，集成只有一个树，所以它与第一个树的预测相似。在第二行，一个新的树在第一个树的残差上进行训练。在右边栏可以看出集成的预测等于前两个树预测的和</strong>。相同的，在第三行另一个树在第二个数的残差上训练。你可以看到集成的预测会变的更好。</p>
+<p><img src="/2018/08/04/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（六）：集成学习/23.png" alt=""></p>
+<p><strong>我们可以使用 sklean 中的GradientBoostingRegressor来训练 GBRT 集成。与RandomForestClassifier相似，它也有超参数去控制决策树的生长（例如max_depth，min_samples_leaf等等），也有超参数去控制集成训练，例如基分类器的数量（n_estimators）</strong>。接下来的代码创建了与之前相同的集成：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt;<span class="keyword">from</span> sklearn.ensemble <span class="keyword">import</span> GradientBoostingRegressor</span><br><span class="line">&gt;&gt;&gt;gbrt = GradientBoostingRegressor(max_depth=<span class="number">2</span>, n_estimators=<span class="number">3</span>, learning_rate=<span class="number">1.0</span>) </span><br><span class="line">&gt;&gt;&gt;gbrt.fit(X, y)</span><br></pre></td></tr></table></figure>
+<p><strong>超参数learning_rate 确立了每个树的贡献。如果你把它设置为一个很小的树，例如 0.1，在集成中就需要更多的树去拟合训练集，但预测通常会更好。这个正则化技术叫做 shrinkage。</strong>下图 展示了两个在低学习率上训练的 GBRT 集成：其中左面是一个没有足够树去拟合训练集的树，右面是有过多的树过拟合训练集的树。</p>
+<p><img src="/2018/08/04/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（六）：集成学习/24.png" alt=""></p>
+<p><strong>为了找到树的最优数量，你可以使用早停技术。最简单使用这个技术的方法就是使用staged_predict()：它在训练的每个阶段（用一棵树，两棵树等）返回一个迭代器。加下来的代码用 120 个树训练了一个 GBRT 集成，然后在训练的每个阶段验证错误以找到树的最佳数量，最后使用 GBRT 树的最优数量训练另一个集成</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt;<span class="keyword">import</span> numpy <span class="keyword">as</span> np </span><br><span class="line">&gt;&gt;&gt;<span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> train_test_split</span><br><span class="line">&gt;&gt;&gt;<span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> mean_squared_error</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt;X_train, X_val, y_train, y_val = train_test_split(X, y)</span><br><span class="line">&gt;&gt;&gt;gbrt = GradientBoostingRegressor(max_depth=<span class="number">2</span>, n_estimators=<span class="number">120</span>) </span><br><span class="line">&gt;&gt;&gt;gbrt.fit(X_train, y_train)</span><br><span class="line">&gt;&gt;&gt;errors = [mean_squared_error(y_val, y_pred)         </span><br><span class="line">     <span class="keyword">for</span> y_pred <span class="keyword">in</span> gbrt.staged_predict(X_val)] </span><br><span class="line">&gt;&gt;&gt;bst_n_estimators = np.argmin(errors)</span><br><span class="line">&gt;&gt;&gt;gbrt_best = GradientBoostingRegressor(max_depth=<span class="number">2</span>,n_estimators=bst_n_estimators) </span><br><span class="line">&gt;&gt;&gt;gbrt_best.fit(X_train, y_train)</span><br></pre></td></tr></table></figure>
+<p>验证错误在图的左面展示，最优模型预测被展示在右面</p>
+<p><img src="/2018/08/04/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（六）：集成学习/25.png" alt=""></p>
+<p><strong>你也可以早早的停止训练来实现早停（与先在一大堆树中训练，然后再回头去找最优数目相反）</strong>。你可以通过设置warm_start=True来实现 ，这使得当fit()方法被调用时 sklearn 保留现有树，并允许增量训练。接下来的代码在当一行中的五次迭代验证错误没有改善时会停止训练：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt;gbrt = GradientBoostingRegressor(max_depth=<span class="number">2</span>, warm_start=<span class="keyword">True</span>)</span><br><span class="line">min_val_error = float(<span class="string">"inf"</span>) </span><br><span class="line">error_going_up = <span class="number">0</span> </span><br><span class="line"><span class="keyword">for</span> n_estimators <span class="keyword">in</span> range(<span class="number">1</span>, <span class="number">120</span>):    </span><br><span class="line">    gbrt.n_estimators = n_estimators    </span><br><span class="line">    gbrt.fit(X_train, y_train)    </span><br><span class="line">    y_pred = gbrt.predict(X_val)    </span><br><span class="line">    val_error = mean_squared_error(y_val, y_pred)    </span><br><span class="line">    <span class="keyword">if</span> val_error &lt; min_val_error:        </span><br><span class="line">        min_val_error = val_error        </span><br><span class="line">        error_going_up = <span class="number">0</span>    </span><br><span class="line">    <span class="keyword">else</span>:        </span><br><span class="line">        error_going_up += <span class="number">1</span>        </span><br><span class="line">        <span class="keyword">if</span> error_going_up == <span class="number">5</span>:            </span><br><span class="line">            <span class="keyword">break</span>  <span class="comment"># early stopping</span></span><br></pre></td></tr></table></figure>
+<p><strong>GradientBoostingRegressor也支持指定用于训练每棵树的训练实例比例的超参数subsample。例如如果subsample=0.25，那么每个树都会在 25% 随机选择的训练实例上训练。你现在也能猜出来，这也是个高偏差换低方差的作用。它同样也加速了训练。这个技术叫做随机梯度提升。</strong></p>
+<p>也可能对其他损失函数使用梯度提升。这是由损失超参数控制（见 sklearn 文档）。</p>
+<h2 id="Stacking"><a href="#Stacking" class="headerlink" title="Stacking"></a>Stacking</h2><p>本章讨论的最后一个集成方法叫做 Stacking（stacked generalization 的缩写）。这个算法基于一个简单的想法：不使用琐碎的函数（如硬投票）来聚合集合中所有分类器的预测，我们为什么不训练一个模型来执行这个聚合？图 展示了这样一个在新的回归实例上预测的集成。底部三个分类器每一个都有不同的值（3.1，2.7 和 2.9），然后最后一个分类器（叫做 blender 或者 meta learner ）把这三个分类器的结果当做输入然后做出最终决策（3.0）</p>
+<p><img src="/2018/08/04/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（六）：集成学习/26.png" alt=""></p>
+<h1 id="练习题"><a href="#练习题" class="headerlink" title="练习题"></a>练习题</h1><ol>
+<li>如果你在相同训练集上训练 5 个不同的模型，它们都有 95% 的准确率，那么你是否可以通过组合这个模型来得到更好的结果？如果可以那怎么做呢？如果不可以请给出理由。</li>
+<li>软投票和硬投票分类器之间有什么区别？</li>
+<li>是否有可能通过分配多个服务器来加速 bagging 集成系统的训练？pasting 集成，boosting 集成，随机森林，或 stacking 集成怎么样？</li>
+<li>out-of-bag 评价的好处是什么？</li>
+<li>是什么使 极端随机树Extra-Tree 比规则随机森林更随机呢？这个额外的随机有什么帮助呢？那这个 Extra-Tree 比规则随机森林谁更快呢？</li>
+<li>如果你的 Adaboost 模型欠拟合，那么你需要怎么调整超参数？</li>
+<li>如果你的梯度提升过拟合，那么你应该调高还是调低学习率呢？</li>
+</ol>
+<hr>
+<p>1、只要模型间多样性较大，组合成一个集合模型，会起到一定的效果。</p>
+<p>2、硬投票分类器只计算集成中每个分类器的投票数，并选择得票最多的类。 软投票分类器计算每个类的平均估计概率，并选择具有最高概率的类。 软投票使概率大的类别权重更高，通常表现更好，但只有在可以估计类概率的分类器时才有效（例如，对于Scikit-Learn中的SVM分类器，您必须设置probability = True）。</p>
+<p>3、 bagging，pasting，随机森林是可以的。boosting 集成因为学习器需要基于先前的学习器构建，因此训练是连续的，故不适合。至于stacking 集成，给定层中的所有预测变量彼此独立，因此可以在多个服务器上并行训练它们。 但是，一层中的预测变量只能在前一层中的预测变量都经过训练后才能进行训练。</p>
+<p>4、未被训练过得实例可以当做验证集</p>
+<p>5、在随机森林中，只考虑特征的随机子集并在每个节点处进行分割。 对于Extra-Trees也是如此，但它们更进一步：不是像常规决策树一样搜索最佳阈值，而是为每个特征使用随机阈值。 这种额外的随机性就像一种正则化的形式：如果随机森林过度拟合训练数据，极端随机树可能表现更好。 此外，由于Extra-Trees不会搜索最佳阈值，因此它们比随机森林训练要快得多。 然而，在做出预测时，它们既不比随机森林更快也不慢。</p>
+<p>6、如果您的AdaBoost集合欠拟合，可以尝试增加学习器的数量或减少基本学习器的正则化超参数。 也可以尝试稍微提高学习率。</p>
+<p>7、如果您的Gradient Boosting过拟合，应该尝试降低学习率。 你也可以使用早期停止法。</p>
+
+      
+    </div>
+    
+    
+    
+    
+    
+	<div>
+    	  <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------<i class="fa fa-heart"></i>Thanks for Reading!<i class="fa fa-heart"></i>-------------</div>
+    
+</div>
+	</div>
+    
+    
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/机器学习/" rel="tag"><i class="fa fa-tag"></i> 机器学习</a>
+          
+            <a href="/tags/CART/" rel="tag"><i class="fa fa-tag"></i> CART</a>
+          
+            <a href="/tags/Adaboost/" rel="tag"><i class="fa fa-tag"></i> Adaboost</a>
+          
+            <a href="/tags/GBDT/" rel="tag"><i class="fa fa-tag"></i> GBDT</a>
+          
+            <a href="/tags/XGBoost/" rel="tag"><i class="fa fa-tag"></i> XGBoost</a>
+          
+            <a href="/tags/Bagging/" rel="tag"><i class="fa fa-tag"></i> Bagging</a>
+          
+            <a href="/tags/随机森林/" rel="tag"><i class="fa fa-tag"></i> 随机森林</a>
+          
+            <a href="/tags/Stacking/" rel="tag"><i class="fa fa-tag"></i> Stacking</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/07/23/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（五）：决策树/" rel="next" title="Sklearn 与 TensorFlow 机器学习实用指南（五）：决策树">
+                <i class="fa fa-chevron-left"></i> Sklearn 与 TensorFlow 机器学习实用指南（五）：决策树
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/08/07/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（七）：降维/" rel="prev" title="Sklearn 与 TensorFlow 机器学习实用指南（七）：降维">
+                Sklearn 与 TensorFlow 机器学习实用指南（七）：降维 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="Mosbyllc" />
+            
+              <p class="site-author-name" itemprop="name">Mosbyllc</p>
+              <p class="site-description motion-element" itemprop="description">Sometimes thing have to fall apart to make way for better things.</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">60</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">73</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/kugua233" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="http://weibo.com/Mosbyllc" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://segmentfault.com/u/kugua233" target="_blank" title="SegmentFault">
+                      
+                        <i class="fa fa-fw fa-strikethrough"></i>SegmentFault</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:1499913789@qq.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Recommended reading
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://plushunter.github.io/" title="Free Will" target="_blank">Free Will</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Boosting"><span class="nav-number">1.</span> <span class="nav-text">Boosting</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Adaboost"><span class="nav-number">1.1.</span> <span class="nav-text">Adaboost</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#算法思想"><span class="nav-number">1.1.1.</span> <span class="nav-text">算法思想</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#算法流程"><span class="nav-number">1.1.2.</span> <span class="nav-text">算法流程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Adaboost算法优缺点"><span class="nav-number">1.1.3.</span> <span class="nav-text">Adaboost算法优缺点</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Adaboost优点"><span class="nav-number">1.1.3.1.</span> <span class="nav-text">Adaboost优点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Adaboost缺点"><span class="nav-number">1.1.3.2.</span> <span class="nav-text">Adaboost缺点</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GBTD"><span class="nav-number">1.2.</span> <span class="nav-text">GBTD</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#提升树Boosting-Decision-Tree"><span class="nav-number">1.2.1.</span> <span class="nav-text">提升树Boosting Decision Tree</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#梯度提升决策树Gradient-Boosting-Decision-Tree"><span class="nav-number">1.2.2.</span> <span class="nav-text">梯度提升决策树Gradient Boosting Decision Tree</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#GBDT回归算法"><span class="nav-number">1.2.2.1.</span> <span class="nav-text">GBDT回归算法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#GBDT分类算法"><span class="nav-number">1.2.2.2.</span> <span class="nav-text">GBDT分类算法</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#二元GBDT分类算法"><span class="nav-number">1.2.2.2.1.</span> <span class="nav-text">二元GBDT分类算法</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#多元GBDT分类算法"><span class="nav-number">1.2.2.2.2.</span> <span class="nav-text">多元GBDT分类算法</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#XGBoost"><span class="nav-number">1.3.</span> <span class="nav-text">XGBoost</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#梯度下降与牛顿法"><span class="nav-number">1.3.1.</span> <span class="nav-text">梯度下降与牛顿法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#XGBoost的推导过程"><span class="nav-number">1.3.2.</span> <span class="nav-text">XGBoost的推导过程</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#定义目标函数"><span class="nav-number">1.3.2.1.</span> <span class="nav-text">定义目标函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#目标函数的最小化"><span class="nav-number">1.3.2.2.</span> <span class="nav-text">目标函数的最小化</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#确定树的结构（贪心法）"><span class="nav-number">1.3.2.3.</span> <span class="nav-text">确定树的结构（贪心法）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#如何使用及参数"><span class="nav-number">1.3.2.4.</span> <span class="nav-text">如何使用及参数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#一些常见的问题"><span class="nav-number">1.3.2.5.</span> <span class="nav-text">一些常见的问题</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Bagging和随机森林"><span class="nav-number">2.</span> <span class="nav-text">Bagging和随机森林</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Bagging"><span class="nav-number">2.1.</span> <span class="nav-text">Bagging</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#随机森林"><span class="nav-number">2.2.</span> <span class="nav-text">随机森林</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#学习器结合策略"><span class="nav-number">3.</span> <span class="nav-text">学习器结合策略</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#应用"><span class="nav-number">4.</span> <span class="nav-text">应用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#投票分类"><span class="nav-number">4.1.</span> <span class="nav-text">投票分类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Bagging-和-Pasting"><span class="nav-number">4.2.</span> <span class="nav-text">Bagging 和 Pasting</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#sklearn-中的-Bagging-和-Pasting"><span class="nav-number">4.3.</span> <span class="nav-text">sklearn 中的 Bagging 和 Pasting</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Out-of-Bag-评价"><span class="nav-number">4.4.</span> <span class="nav-text">Out-of-Bag 评价</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#随机森林-1"><span class="nav-number">4.5.</span> <span class="nav-text">随机森林</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#极端随机树"><span class="nav-number">4.6.</span> <span class="nav-text">极端随机树</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#特征重要度"><span class="nav-number">4.7.</span> <span class="nav-text">特征重要度</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#提升"><span class="nav-number">4.8.</span> <span class="nav-text">提升</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#梯度提升"><span class="nav-number">4.9.</span> <span class="nav-text">梯度提升</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Stacking"><span class="nav-number">4.10.</span> <span class="nav-text">Stacking</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#练习题"><span class="nav-number">5.</span> <span class="nav-text">练习题</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-star"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mosbyllc</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+  
+
+  
+
+</body>
+</html>

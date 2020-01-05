@@ -1,0 +1,1309 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16.ico?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="数据结构," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Mosbyllc" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="五问动态规划问：动态规划是什么？ 答：动态规划是一种通过“大而化小”的思路解决问题的算法。区别于一些固定形式的算法，如二分法，宽度优先搜索法，动态规划没有实际的步骤来规定第一步做什么第二步做什么。所以更加确切的说，动态规划是一种解决问题的思想。这种思想的本质是，一个规模比较大的问题（假如用2-3个参数可以表示），是通过规模比较小的若干问题的结果来得到的（通过取最大，取最小，或者加起来之类的运算）所">
+<meta name="keywords" content="数据结构">
+<meta property="og:type" content="article">
+<meta property="og:title" content="动态规划">
+<meta property="og:url" content="http://yoursite.com/2018/09/24/数据结构与算法/动态规划/index.html">
+<meta property="og:site_name" content="Mosbyllc">
+<meta property="og:description" content="五问动态规划问：动态规划是什么？ 答：动态规划是一种通过“大而化小”的思路解决问题的算法。区别于一些固定形式的算法，如二分法，宽度优先搜索法，动态规划没有实际的步骤来规定第一步做什么第二步做什么。所以更加确切的说，动态规划是一种解决问题的思想。这种思想的本质是，一个规模比较大的问题（假如用2-3个参数可以表示），是通过规模比较小的若干问题的结果来得到的（通过取最大，取最小，或者加起来之类的运算）所">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-12-28T09:25:54.757Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="动态规划">
+<meta name="twitter:description" content="五问动态规划问：动态规划是什么？ 答：动态规划是一种通过“大而化小”的思路解决问题的算法。区别于一些固定形式的算法，如二分法，宽度优先搜索法，动态规划没有实际的步骤来规定第一步做什么第二步做什么。所以更加确切的说，动态规划是一种解决问题的思想。这种思想的本质是，一个规模比较大的问题（假如用2-3个参数可以表示），是通过规模比较小的若干问题的结果来得到的（通过取最大，取最小，或者加起来之类的运算）所">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"right","display":"always","offset":12,"b2t":true,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/09/24/数据结构与算法/动态规划/"/>
+
+
+
+
+
+  <title>动态规划 | Mosbyllc</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Mosbyllc</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+<link href="https://cdn.bootcss.com/KaTeX/0.7.1/katex.min.css" rel="stylesheet">
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/09/24/数据结构与算法/动态规划/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mosbyllc">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Mosbyllc">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">动态规划</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-24T17:06:13+08:00">
+                2018-09-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/数据结构与算法/" itemprop="url" rel="index">
+                    <span itemprop="name">数据结构与算法</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  4,724
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  22
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="五问动态规划"><a href="#五问动态规划" class="headerlink" title="五问动态规划"></a>五问动态规划</h2><p>问：动态规划是什么？</p>
+<p><strong>答：</strong>动态规划是一种通过“大而化小”的思路解决问题的算法。区别于一些固定形式的算法，如二分法，宽度优先搜索法，动态规划没有实际的步骤来规定第一步做什么第二步做什么。所以更加确切的说，动态规划是一种解决问题的思想。这种思想的本质是，一个规模比较大的问题（假如用2-3个参数可以表示），是通过规模比较小的若干问题的结果来得到的（通过取最大，取最小，或者加起来之类的运算）所以我们经常看到的动态规划的核心——状态转移方程都长成这样：</p>
+<script type="math/tex; mode=display">
+f[i][j] = f[i - 1][j] + f[i][j - 1]</script><script type="math/tex; mode=display">
+f[i] = max\{f[j]    if   j < i and …\} + 1</script><script type="math/tex; mode=display">
+f[i][j] = f[0][j - 1] \&\& judge(1,i)   ||   f[1][j - 1] \&\& judge(2,i) ||</script><p>问：动态规划什么时候可以用？</p>
+<p>答：动态规划解决的一定是最优化问题。一个问题必须有重叠的子问题和最优子结构，才能使用动态规划取解决问题。</p>
+<p>问：动态规划的常见类型有哪些？</p>
+<ul>
+<li>矩阵型</li>
+<li>序列型</li>
+<li>双序列型</li>
+<li>划分型</li>
+<li>区间型</li>
+<li>背包型</li>
+</ul>
+<p>问：什么样的问题适合使用动态规划？</p>
+<p><strong>答：</strong>可以使用动态规划的问题一般都有一些特点可以遵循。如题目的问法一般是三种方式：</p>
+<ol>
+<li>求最大值/最小值</li>
+<li>求可不可行</li>
+<li>求方案总数</li>
+</ol>
+<p>如果你碰到一个问题，是问你这三个问题之一的，那么有90%的概率是使用动态规划来求解。要重点说明的是，如果一个问题让你求出“所有的”方案和结果，则肯定不是使用动态规划。</p>
+<p>解决一个动态规划问题的步骤是什么？</p>
+<p><strong>答：</strong>首先判断是否是动态规划的问题，如果是，则尝试将其进行分类常见类型，找到对应的类别和相似的问题。接着从下面的4个要素去逐步剖析解决这道题：</p>
+<ol>
+<li>状态是什么</li>
+<li>状态转移方程是什么</li>
+<li>状态的初始值是什么</li>
+<li>问题要求的最后答案是什么</li>
+</ol>
+<p>每个步骤分析完成之后，就基本上解决了整道动态规划的问题。</p>
+<h2 id="动态规划相关题"><a href="#动态规划相关题" class="headerlink" title="动态规划相关题"></a>动态规划相关题</h2><h3 id="交叉字符串"><a href="#交叉字符串" class="headerlink" title="交叉字符串"></a>交叉字符串</h3><p><strong>题目</strong>：给出三个字符串:s1、s2、s3，判断s3是否由s1和s2交叉构成。</p>
+<p><strong>样例</strong></p>
+<p>比如 s1 = <strong>“aabcc”</strong> s2 = <strong>“dbbca”</strong></p>
+<ul>
+<li>当 s3 = <strong>“aadbbcbcac”</strong>，返回 true.</li>
+</ul>
+<ul>
+<li>当 s3 = <strong>“aadbbbaccc”</strong>， 返回 false.</li>
+</ul>
+<p><strong>思路：</strong></p>
+<p> 1.这题我们利用动态规划加记忆化搜索。如果能够进行交叉组成，利用动态规划，建立 $boolean    dp[i][j]$， 意思是s1的第i为 和s2的第j为是否能够够成s3的i + j 长度的交叉字符串。不一定要每个字符交替插入，s1 = aa, s2 = d 也可以组成s3 = aad。记忆矩阵这里要清楚定义，一个维度是s1的长度，一个维度是s2的长度。 </p>
+<p> 2.因此状态转移方程就可以写成: </p>
+<script type="math/tex; mode=display">
+dp[i][j] = 1) dp[i][j-1] if s3[i+j -1] == s2[j-1] 2) dp[i-1][j] if s3[i+j-1] == s1[i-1]</script><p> 3.初始条件要注意，我们这里是把记忆矩阵建立为$test$，因此第一行就是没有s1的情况下看看s2能不能与s3配对，第一列就是在没有s2的情况下能不能与s3配对。<br>4.最后就是看最右下角的dp。时间复杂度是o(n*m)</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    @params s1, s2, s3: Three strings as description.</span></span><br><span class="line"><span class="string">    @return: return True if s3 is formed by the interleaving of</span></span><br><span class="line"><span class="string">             s1 and s2 or False if not.</span></span><br><span class="line"><span class="string">    @hint: you can use [[True] * m for i in range (n)] to allocate a n*m matrix.</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">isInterleave</span><span class="params">(self, s1, s2, s3)</span>:</span></span><br><span class="line">        <span class="comment"># write your code here</span></span><br><span class="line">        <span class="keyword">if</span> s1 <span class="keyword">is</span> <span class="keyword">None</span> <span class="keyword">or</span> s2 <span class="keyword">is</span> <span class="keyword">None</span> <span class="keyword">or</span> s3 <span class="keyword">is</span> <span class="keyword">None</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">False</span></span><br><span class="line">        <span class="keyword">if</span> len(s1) + len(s2) != len(s3):</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">False</span></span><br><span class="line">        <span class="comment"># 初始边界s1行s2列的false</span></span><br><span class="line">        interleave = [[<span class="keyword">False</span>] * (len(s2) + <span class="number">1</span>) <span class="keyword">for</span> i <span class="keyword">in</span> range(len(s1) + <span class="number">1</span>)]</span><br><span class="line">        interleave[<span class="number">0</span>][<span class="number">0</span>] = <span class="keyword">True</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(len(s1)):</span><br><span class="line">            interleave[i + <span class="number">1</span>][<span class="number">0</span>] = s1[:i + <span class="number">1</span>] == s3[:i + <span class="number">1</span>]</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(len(s2)):</span><br><span class="line">            interleave[<span class="number">0</span>][i + <span class="number">1</span>] = s2[:i + <span class="number">1</span>] == s3[:i + <span class="number">1</span>]</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(len(s1)):</span><br><span class="line">            <span class="keyword">for</span> j <span class="keyword">in</span> range(len(s2)):</span><br><span class="line">                interleave[i + <span class="number">1</span>][j + <span class="number">1</span>] = <span class="keyword">False</span></span><br><span class="line">                <span class="keyword">if</span> s1[i] == s3[i + j + <span class="number">1</span>]:</span><br><span class="line">                    interleave[i + <span class="number">1</span>][j + <span class="number">1</span>] = interleave[i][j + <span class="number">1</span>]</span><br><span class="line">                <span class="keyword">if</span> s2[j] == s3[i + j + <span class="number">1</span>]:</span><br><span class="line">                    interleave[i + <span class="number">1</span>][j + <span class="number">1</span>] |= interleave[i + <span class="number">1</span>][j]</span><br><span class="line">        <span class="keyword">return</span> interleave[len(s1)][len(s2)]</span><br></pre></td></tr></table></figure>
+<h3 id="最长上升子序列"><a href="#最长上升子序列" class="headerlink" title="最长上升子序列"></a>最长上升子序列</h3><p><strong>描述</strong>：给定一个整数序列，找到最长上升子序列（LIS，<strong>不要求一定连续</strong>），返回LIS的长度。例如现在有序列A=\{1,2,3,-1,-2,7,9\}，它的最长上升子序列为\{1,2,3,7,9\}，长度为5.</p>
+<p>思路：dp[i] 表示走到第i个元素时的当前最大连续子序列的长度 ，这样对A[i]有两种可能：</p>
+<p>1、如果A[i]之前的元素A[j]，其中$jdp[i]$，那么可以把A[i]拼接到A[j]的后面</p>
+<p>2、如果之前的元素都比A[i]大，则A[i]自己成为最大的上升自序，长度为1</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    @param nums: The integer array</span></span><br><span class="line"><span class="string">    @return: The length of LIS (longest increasing subsequence)</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">longestIncreasingSubsequence</span><span class="params">(self, nums)</span>:</span></span><br><span class="line">        <span class="comment"># write your code here</span></span><br><span class="line">        <span class="keyword">if</span> nums <span class="keyword">is</span> <span class="keyword">None</span> <span class="keyword">or</span> <span class="keyword">not</span> nums:</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">        dp = [<span class="number">1</span>] * len(nums) <span class="comment"># 边界初始条件</span></span><br><span class="line">        <span class="keyword">for</span> curr, val <span class="keyword">in</span> enumerate(nums):</span><br><span class="line">            <span class="keyword">for</span> prev <span class="keyword">in</span> xrange(curr):</span><br><span class="line">                <span class="keyword">if</span> nums[prev] &lt; val:  <span class="comment"># 如果之前的元素大于等于curr，则dp[curr]为初始的1</span></span><br><span class="line">                    dp[curr] = max(dp[curr], dp[prev] + <span class="number">1</span>) <span class="comment">#状态转移方程</span></span><br><span class="line">        <span class="keyword">return</span> max(dp)</span><br></pre></td></tr></table></figure>
+<h3 id="单词拆分"><a href="#单词拆分" class="headerlink" title="单词拆分 ++"></a>单词拆分 ++</h3><p><strong>描述</strong>：给定字符串 s 和单词字典 dict，确定 s 是否可以分成一个或多个以空格分隔的子串，并且这些子串都在字典中存在。</p>
+<p><strong>样例</strong>：给出s = <strong>“lintcode”</strong>，dict = <strong>[“lint”,”code”]</strong>返回 true 因为<strong>“lintcode”</strong>可以被空格切分成<strong>“lint code”</strong></p>
+<p>思路：如果最大字典长度为k，f[i]的状态由前面i-k到i-1之间决定，这中间任何一段属于dict则f[I]为True</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="comment"># @param s: A string s</span></span><br><span class="line">    <span class="comment"># @param dict: A dictionary of words dict</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">wordBreak</span><span class="params">(self, s, dict)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> len(dict) == <span class="number">0</span>:</span><br><span class="line">            <span class="keyword">return</span> len(s) == <span class="number">0</span></span><br><span class="line">            </span><br><span class="line">        n = len(s)</span><br><span class="line">        f = [<span class="keyword">False</span>] * (n + <span class="number">1</span>)</span><br><span class="line">        f[<span class="number">0</span>] = <span class="keyword">True</span>  <span class="comment"># 初始边界</span></span><br><span class="line">        </span><br><span class="line">        maxLength = max([len(w) <span class="keyword">for</span> w <span class="keyword">in</span> dict]) <span class="comment">#先计算字典中最大长度，减少复杂度</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> xrange(<span class="number">1</span>, n + <span class="number">1</span>):</span><br><span class="line">            <span class="keyword">for</span> j <span class="keyword">in</span> range(<span class="number">1</span>, min(i, maxLength) + <span class="number">1</span>): <span class="comment">#不必遍历i之前的所有j</span></span><br><span class="line">                <span class="keyword">if</span> <span class="keyword">not</span> f[i - j]:</span><br><span class="line">                    <span class="keyword">continue</span></span><br><span class="line">                <span class="keyword">if</span> s[i - j:i] <span class="keyword">in</span> dict:</span><br><span class="line">                    f[i] = <span class="keyword">True</span></span><br><span class="line">                    <span class="keyword">break</span> <span class="comment"># 有一个满足即可判断下一个f[i+1]</span></span><br><span class="line">        <span class="keyword">return</span> f[n]</span><br></pre></td></tr></table></figure>
+<h3 id="数字三角形"><a href="#数字三角形" class="headerlink" title="数字三角形"></a>数字三角形</h3><p><strong>描述</strong>：给定一个数字三角形，找到从顶部到底部的最小路径和。每一步可以移动到下面一行的相邻数字上</p>
+<p><strong>样例</strong>：比如，给出下列数字三角形：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[</span><br><span class="line">     [<span class="number">2</span>],</span><br><span class="line">    [<span class="number">3</span>,<span class="number">4</span>],</span><br><span class="line">   [<span class="number">6</span>,<span class="number">5</span>,<span class="number">7</span>],</span><br><span class="line">  [<span class="number">4</span>,<span class="number">1</span>,<span class="number">8</span>,<span class="number">3</span>]</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+<p>从顶到底部的最小路径和为11 ( 2 + 3 + 5 + 1 = 11)。</p>
+<p><strong>思路</strong>：自底向上的动态规划, 当前位置由左下或者右下最小值决定，时间复杂度O(n), python3 实现 ， triangle数组代表第i行第j个数字</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    @param triangle: a list of lists of integers</span></span><br><span class="line"><span class="string">    @return: An integer, minimum path sum</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">minimumTotal</span><span class="params">(self, triangle)</span>:</span></span><br><span class="line">        rows = len(triangle)</span><br><span class="line">        dp = [[<span class="number">0</span>] * len(triangle[row]) <span class="keyword">for</span> row <span class="keyword">in</span> range(rows)] </span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(len(triangle[rows - <span class="number">1</span>])):</span><br><span class="line">            dp[rows - <span class="number">1</span>][i] = triangle[rows - <span class="number">1</span>][i] <span class="comment">#初始边界</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(rows - <span class="number">2</span>, <span class="number">-1</span>, <span class="number">-1</span>):</span><br><span class="line">            <span class="keyword">for</span> j <span class="keyword">in</span> range(i + <span class="number">1</span>):</span><br><span class="line">                dp[i][j] = min(dp[i + <span class="number">1</span>][j], dp[i + <span class="number">1</span>][j + <span class="number">1</span>]) + triangle[i][j] <span class="comment">#状态转移方程</span></span><br><span class="line">        <span class="keyword">return</span> dp[<span class="number">0</span>][<span class="number">0</span>]</span><br></pre></td></tr></table></figure>
+<h3 id="最小路径和"><a href="#最小路径和" class="headerlink" title="最小路径和"></a>最小路径和</h3><p>描述：给定一个只含非负整数的m×n网格，找到一条<strong>从左上角到右下角</strong>的可以使数字和最小的路径。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    @param grid: a list of lists of integers.</span></span><br><span class="line"><span class="string">    @return: An integer, minimizes the sum of all numbers along its path</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">minPathSum</span><span class="params">(self, grid)</span>:</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(len(grid)): </span><br><span class="line">            <span class="keyword">for</span> j <span class="keyword">in</span> range(len(grid[<span class="number">0</span>])):</span><br><span class="line">                <span class="keyword">if</span> i == <span class="number">0</span> <span class="keyword">and</span> j &gt; <span class="number">0</span>:</span><br><span class="line">                    grid[i][j] += grid[i][j<span class="number">-1</span>] <span class="comment"># 第一行，只在左边</span></span><br><span class="line">                <span class="keyword">elif</span> j == <span class="number">0</span> <span class="keyword">and</span> i &gt; <span class="number">0</span>:</span><br><span class="line">                    grid[i][j] += grid[i<span class="number">-1</span>][j] <span class="comment"># 第一列，只在右边</span></span><br><span class="line">                <span class="keyword">elif</span> i &gt; <span class="number">0</span> <span class="keyword">and</span> j &gt; <span class="number">0</span>:</span><br><span class="line">                    grid[i][j] += min(grid[i<span class="number">-1</span>][j], grid[i][j<span class="number">-1</span>])  <span class="comment"># 由上面和左面的最小路径决定</span></span><br><span class="line">        <span class="keyword">return</span> grid[len(grid) - <span class="number">1</span>][len(grid[<span class="number">0</span>]) - <span class="number">1</span>]</span><br></pre></td></tr></table></figure>
+<h3 id="爬楼梯"><a href="#爬楼梯" class="headerlink" title="爬楼梯 ++"></a>爬楼梯 ++</h3><p>描述：假设你正在爬楼梯，需要n步你才能到达顶部。但每次你只能爬一步或者两步，你能有多少种不同的方法？</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    @param n: An integer</span></span><br><span class="line"><span class="string">    @return: An integer</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">climbStairs</span><span class="params">(self, n)</span>:</span></span><br><span class="line">        <span class="comment"># write your code here</span></span><br><span class="line">        <span class="keyword">if</span> n == <span class="number">0</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="number">1</span></span><br><span class="line">        <span class="keyword">if</span> n &lt;= <span class="number">2</span>:</span><br><span class="line">            <span class="keyword">return</span> n</span><br><span class="line">        result=[<span class="number">1</span>,<span class="number">2</span>]</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(n<span class="number">-2</span>):</span><br><span class="line">            result.append(result[<span class="number">-2</span>]+result[<span class="number">-1</span>])</span><br><span class="line">        <span class="keyword">return</span> result[<span class="number">-1</span>]</span><br></pre></td></tr></table></figure>
+<h3 id="不同的路径"><a href="#不同的路径" class="headerlink" title="不同的路径"></a>不同的路径</h3><p><strong>描述</strong>：有一个机器人的位于一个 m × n 个网格左上角。机器人每一时刻只能向下或者向右移动一步。机器人试图达到网格的右下角。问有多少条不同的路径？</p>
+<p><strong>思路</strong>：有左边一格的路径数和上面一格的路径数决定</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">uniquePaths</span><span class="params">(self, m, n)</span>:</span></span><br><span class="line">        paths = [[<span class="number">0</span>] * n <span class="keyword">for</span> i <span class="keyword">in</span> range(m)] <span class="comment">#初始边界</span></span><br><span class="line">        <span class="comment"># initial rows</span></span><br><span class="line">        paths[<span class="number">0</span>][<span class="number">0</span>] = <span class="number">1</span></span><br><span class="line">        <span class="keyword">for</span> x <span class="keyword">in</span> range(<span class="number">1</span>, m):</span><br><span class="line">            paths[x][<span class="number">0</span>] = paths[x - <span class="number">1</span>][<span class="number">0</span>] <span class="comment">#边界</span></span><br><span class="line">        <span class="comment"># initail columns</span></span><br><span class="line">        <span class="keyword">for</span> y <span class="keyword">in</span> range(<span class="number">1</span>, n):</span><br><span class="line">            paths[<span class="number">0</span>][y] = paths[<span class="number">0</span>][y - <span class="number">1</span>] <span class="comment">#边界</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> x <span class="keyword">in</span> range(<span class="number">1</span>, m):</span><br><span class="line">            <span class="keyword">for</span> y <span class="keyword">in</span> range(<span class="number">1</span>, n):</span><br><span class="line">                paths[x][y] = paths[x <span class="number">-1</span>][y] + paths[x][y - <span class="number">1</span>]</span><br><span class="line">        <span class="keyword">return</span> paths[m - <span class="number">1</span>][n - <span class="number">1</span>]</span><br></pre></td></tr></table></figure>
+<h3 id="编辑距离"><a href="#编辑距离" class="headerlink" title="编辑距离 +"></a>编辑距离 +</h3><p><strong>题目</strong>：给出两个单词word1和word2，计算出将word1 转换为word2的最少操作次数。你总共三种操作方法：</p>
+<ul>
+<li>插入一个字符</li>
+<li>删除一个字符</li>
+<li>替换一个字符</li>
+</ul>
+<p><strong>样例</strong>：给出 work1=”mart” 和 work2=”karma”，返回 3。（先进行2个替换，后面进行1个插入）</p>
+<p>思路：f[i][j代表第一个字符串以i结尾匹配上（编辑成）第二个字符串以j结尾的字符串，最少需要多少次编辑。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    @param word1: A string</span></span><br><span class="line"><span class="string">    @param word2: A string</span></span><br><span class="line"><span class="string">    @return: The minimum number of steps.</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">minDistance</span><span class="params">(self, word1, word2)</span>:</span></span><br><span class="line">        n, m = len(word1), len(word2)</span><br><span class="line">        f = [[<span class="number">0</span>] * (m + <span class="number">1</span>) <span class="keyword">for</span> _ <span class="keyword">in</span> range(n + <span class="number">1</span>)]</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(n + <span class="number">1</span>):</span><br><span class="line">            f[i][<span class="number">0</span>] = i <span class="comment"># 边界</span></span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> range(m + <span class="number">1</span>):</span><br><span class="line">            f[<span class="number">0</span>][j] = j <span class="comment"># 边界</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, n + <span class="number">1</span>):</span><br><span class="line">            <span class="keyword">for</span> j <span class="keyword">in</span> range(<span class="number">1</span>, m + <span class="number">1</span>):</span><br><span class="line">                <span class="keyword">if</span> word1[i - <span class="number">1</span>] == word2[j - <span class="number">1</span>]:</span><br><span class="line">                    f[i][j] = min(f[i - <span class="number">1</span>][j - <span class="number">1</span>], f[i - <span class="number">1</span>][j] + <span class="number">1</span>, f[i][j - <span class="number">1</span>] + <span class="number">1</span>)</span><br><span class="line">                    <span class="comment"># equivalent to f[i][j] = f[i - 1][j - 1]</span></span><br><span class="line">                <span class="keyword">else</span>: <span class="comment">#分别代表替换，插入，删除</span></span><br><span class="line">                    f[i][j] = min(f[i - <span class="number">1</span>][j - <span class="number">1</span>], f[i - <span class="number">1</span>][j], f[i][j - <span class="number">1</span>]) + <span class="number">1</span></span><br><span class="line">                        </span><br><span class="line">        <span class="keyword">return</span> f[n][m]</span><br></pre></td></tr></table></figure>
+<h3 id="正则表达式匹配"><a href="#正则表达式匹配" class="headerlink" title="正则表达式匹配 ++"></a>正则表达式匹配 ++</h3><p><strong>描述</strong>：实现支持<strong>‘.’</strong>和<strong>‘*‘</strong>的正则表达式匹配。’.’匹配任意一个字母。’*’匹配零个或者多个前面的元素。匹配应该覆盖整个输入字符串，而不仅仅是一部分。返回true 和 false</p>
+<p><strong>样例</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">isMatch(<span class="string">"aa"</span>,<span class="string">"a"</span>) → false</span><br><span class="line"></span><br><span class="line">isMatch(<span class="string">"aa"</span>,<span class="string">"aa"</span>) → true</span><br><span class="line"></span><br><span class="line">isMatch(<span class="string">"aaa"</span>,<span class="string">"aa"</span>) → false</span><br><span class="line"></span><br><span class="line">isMatch(<span class="string">"aa"</span>, <span class="string">"a*"</span>) → true</span><br><span class="line"></span><br><span class="line">isMatch(<span class="string">"aa"</span>, <span class="string">".*"</span>) → true</span><br><span class="line"></span><br><span class="line">isMatch(<span class="string">"ab"</span>, <span class="string">".*"</span>) → true</span><br><span class="line"></span><br><span class="line">isMatch(<span class="string">"aab"</span>, <span class="string">"c*a*b"</span>) → true</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="comment"># DP</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">isMatch</span><span class="params">(self, s, p)</span>:</span></span><br><span class="line">        dp = [[<span class="keyword">False</span> <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">0</span>,len(p) + <span class="number">1</span>)] <span class="keyword">for</span> j <span class="keyword">in</span> range(<span class="number">0</span>, len(s) + <span class="number">1</span>)]</span><br><span class="line">        dp[<span class="number">0</span>][<span class="number">0</span>] = <span class="keyword">True</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, len(p) + <span class="number">1</span>):</span><br><span class="line">            <span class="keyword">if</span> (p[i - <span class="number">1</span>] == <span class="string">'*'</span>):</span><br><span class="line">                dp[<span class="number">0</span>][i] = dp[<span class="number">0</span>][i - <span class="number">2</span>]</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, len(s) + <span class="number">1</span>):</span><br><span class="line">            <span class="keyword">for</span> j <span class="keyword">in</span> range(<span class="number">1</span>, len(p) + <span class="number">1</span>):</span><br><span class="line">                <span class="keyword">if</span> p[j - <span class="number">1</span>] == <span class="string">'*'</span>:</span><br><span class="line">                    dp[i][j] = dp[i][j - <span class="number">2</span>]</span><br><span class="line">                    <span class="keyword">if</span> s[i - <span class="number">1</span>] == p[j - <span class="number">2</span>] <span class="keyword">or</span> p[j - <span class="number">2</span>] == <span class="string">'.'</span>:</span><br><span class="line">                        dp[i][j] |= dp[i<span class="number">-1</span>][j]</span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    <span class="keyword">if</span> s[i - <span class="number">1</span>] == p[j - <span class="number">1</span>] <span class="keyword">or</span> p[j - <span class="number">1</span>] == <span class="string">'.'</span>:</span><br><span class="line">                        dp[i][j] = dp[i - <span class="number">1</span>][j - <span class="number">1</span>]</span><br><span class="line">    </span><br><span class="line">        <span class="keyword">return</span> dp[len(s)][len(p)]</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 懒癌版</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">isMatch</span><span class="params">(self, s, p)</span>:</span></span><br><span class="line">        <span class="comment"># '$'字符规则代表匹配字符串的末尾，匹配返回一个Match 对象，否则返回None</span></span><br><span class="line">        <span class="keyword">return</span> re.match(p + <span class="string">'$'</span>, s) != <span class="keyword">None</span></span><br></pre></td></tr></table></figure>
+<h3 id="不同的二叉查找树-II"><a href="#不同的二叉查找树-II" class="headerlink" title="不同的二叉查找树 II"></a>不同的二叉查找树 II</h3><p><strong>描述：</strong>给出n，生成所有由1…n为节点组成的不同的二叉查找树</p>
+<p><strong>样例</strong>：给出n = 3，生成所有5种不同形态的二叉查找树：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span>         <span class="number">3</span>     <span class="number">3</span>       <span class="number">2</span>    <span class="number">1</span></span><br><span class="line"> \       /     /       / \    \</span><br><span class="line">  <span class="number">3</span>     <span class="number">2</span>     <span class="number">1</span>       <span class="number">1</span>   <span class="number">3</span>    <span class="number">2</span></span><br><span class="line"> /     /       \                \</span><br><span class="line"><span class="number">2</span>     <span class="number">1</span>         <span class="number">2</span>                <span class="number">3</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string">Definition of TreeNode:</span></span><br><span class="line"><span class="string">class TreeNode:</span></span><br><span class="line"><span class="string">    def __init__(self, val):</span></span><br><span class="line"><span class="string">        this.val = val</span></span><br><span class="line"><span class="string">        this.left, this.right = None, None</span></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="comment"># @paramn n: An integer</span></span><br><span class="line">    <span class="comment"># @return: A list of root</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">generateTrees</span><span class="params">(self, n)</span>:</span></span><br><span class="line">        <span class="comment"># write your code here</span></span><br><span class="line">        <span class="keyword">return</span> self.dfs(<span class="number">1</span>, n)</span><br><span class="line">        </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">dfs</span><span class="params">(self, start, end)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> start &gt; end: <span class="keyword">return</span> [<span class="keyword">None</span>]</span><br><span class="line">        res = []</span><br><span class="line">        <span class="keyword">for</span> rootval <span class="keyword">in</span> range(start, end+<span class="number">1</span>):</span><br><span class="line">            LeftTree = self.dfs(start, rootval<span class="number">-1</span>)</span><br><span class="line">            RightTree = self.dfs(rootval+<span class="number">1</span>, end)</span><br><span class="line">            <span class="keyword">for</span> i <span class="keyword">in</span> LeftTree:</span><br><span class="line">                <span class="keyword">for</span> j <span class="keyword">in</span> RightTree:</span><br><span class="line">                    root = TreeNode(rootval)</span><br><span class="line">                    root.left = i</span><br><span class="line">                    root.right = j</span><br><span class="line">                    res.append(root)</span><br><span class="line">        <span class="keyword">return</span> res</span><br></pre></td></tr></table></figure>
+<h3 id="乘积最大子序列"><a href="#乘积最大子序列" class="headerlink" title="乘积最大子序列 +"></a>乘积最大子序列 +</h3><p><strong>描述</strong>：找出一个序列中乘积最大的连续子序列（至少包含一个数）</p>
+<p><strong>样例</strong>：比如, 序列 <code>[2,3,-2,4]</code> 中乘积最大的子序列为 <code>[2,3]</code> ，其乘积为<code>6</code>。</p>
+<p>思路：这道题和maximal subarray思路一样，不同的是对于加法加上负数会变小，加上正数会变大；而对于乘法，乘以正数有可能变大也有可能变小（原数是负数的情况下），乘以负数也有可能变大或者变小</p>
+<p>所以需要两个变量：<br>min_p表示行进到当前subarray能得到的最小的积<br>max_p表示行进到当前subarray能得到的最大的积</p>
+<p>对于某一个subarray来说，它最大的积，有可能来自之前的最大积乘以一个正数，或者之前的最小积乘以一个负数，或者nums[i]就是最大的<br>因此 $max_p = max(nums[i], max_p × nums[i], min_p × nums[i])$<br>最小积同理</p>
+<p>最后用res变量跟踪一下全局最大</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    @param nums: An array of integers</span></span><br><span class="line"><span class="string">    @return: An integer</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">maxProduct</span><span class="params">(self, nums)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> nums:</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">None</span></span><br><span class="line">            </span><br><span class="line">        global_max = prev_max = prev_min = nums[<span class="number">0</span>]</span><br><span class="line">        <span class="keyword">for</span> num <span class="keyword">in</span> nums[<span class="number">1</span>:]:</span><br><span class="line">            <span class="keyword">if</span> num &gt; <span class="number">0</span>:</span><br><span class="line">                curt_max = max(num, prev_max * num)</span><br><span class="line">                curt_min = min(num, prev_min * num)</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                curt_max = max(num, prev_min * num)</span><br><span class="line">                curt_min = min(num, prev_max * num)</span><br><span class="line">            </span><br><span class="line">            global_max = max(global_max, curt_max)</span><br><span class="line">            prev_max, prev_min = curt_max, curt_min</span><br><span class="line">            </span><br><span class="line">        <span class="keyword">return</span> global_max</span><br></pre></td></tr></table></figure>
+<h3 id="通配符匹配"><a href="#通配符匹配" class="headerlink" title="通配符匹配"></a>通配符匹配</h3><p><strong>描述</strong>：判断两个可能包含通配符“？”和“*”的字符串是否匹配。匹配规则如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">'?'</span> 可以匹配任何单个字符。</span><br><span class="line"><span class="string">'*'</span> 可以匹配任意字符串（包括空字符串）。</span><br><span class="line">两个串完全匹配才算匹配成功。</span><br></pre></td></tr></table></figure>
+<p>样例：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">isMatch(<span class="string">"aa"</span>,<span class="string">"a"</span>) → false</span><br><span class="line">isMatch(<span class="string">"aa"</span>,<span class="string">"aa"</span>) → true</span><br><span class="line">isMatch(<span class="string">"aaa"</span>,<span class="string">"aa"</span>) → false</span><br><span class="line">isMatch(<span class="string">"aa"</span>, <span class="string">"*"</span>) → true</span><br><span class="line">isMatch(<span class="string">"aa"</span>, <span class="string">"a*"</span>) → true</span><br><span class="line">isMatch(<span class="string">"ab"</span>, <span class="string">"?*"</span>) → true</span><br><span class="line">isMatch(<span class="string">"aab"</span>, <span class="string">"c*a*b"</span>) → false</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    @param s: A string</span></span><br><span class="line"><span class="string">    @param p: A string includes "?" and "*"</span></span><br><span class="line"><span class="string">    @return: A boolean</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">isMatch</span><span class="params">(self, s, p)</span>:</span></span><br><span class="line">        <span class="comment"># write your code here</span></span><br><span class="line">        n = len(s)</span><br><span class="line">        m = len(p)</span><br><span class="line">        f = [[<span class="keyword">False</span>] * (m + <span class="number">1</span>) <span class="keyword">for</span> i <span class="keyword">in</span> range(n + <span class="number">1</span>)]</span><br><span class="line">        f[<span class="number">0</span>][<span class="number">0</span>] = <span class="keyword">True</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> n == <span class="number">0</span> <span class="keyword">and</span> p.count(<span class="string">'*'</span>) == m:</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">True</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">0</span>, n + <span class="number">1</span>):</span><br><span class="line">            <span class="keyword">for</span> j <span class="keyword">in</span> range(<span class="number">0</span>, m + <span class="number">1</span>):</span><br><span class="line">                <span class="keyword">if</span> i &gt; <span class="number">0</span> <span class="keyword">and</span> j &gt; <span class="number">0</span>:</span><br><span class="line">                    f[i][j] |= f[i<span class="number">-1</span>][j<span class="number">-1</span>] <span class="keyword">and</span> (s[i<span class="number">-1</span>] == p[j<span class="number">-1</span>] <span class="keyword">or</span> p[j - <span class="number">1</span>] <span class="keyword">in</span> [<span class="string">'?'</span>, <span class="string">'*'</span>])</span><br><span class="line"></span><br><span class="line">                <span class="keyword">if</span> i &gt; <span class="number">0</span> <span class="keyword">and</span> j &gt; <span class="number">0</span>:</span><br><span class="line">                    f[i][j] |= f[i - <span class="number">1</span>][j] <span class="keyword">and</span> p[j - <span class="number">1</span>] == <span class="string">'*'</span></span><br><span class="line"></span><br><span class="line">                <span class="keyword">if</span> j &gt; <span class="number">0</span>:</span><br><span class="line">                    f[i][j] |= f[i][j - <span class="number">1</span>] <span class="keyword">and</span> p[j - <span class="number">1</span>] == <span class="string">'*'</span></span><br><span class="line">        <span class="keyword">return</span> f[n][m]</span><br></pre></td></tr></table></figure>
+<h3 id="打劫房屋"><a href="#打劫房屋" class="headerlink" title="打劫房屋 ++"></a>打劫房屋 ++</h3><p><strong>描述</strong>：假设你是一个专业的窃贼，准备沿着一条街打劫房屋。每个房子都存放着特定金额的钱。你面临的唯一约束条件是：相邻的房子装着相互联系的防盗系统，且 <strong>当相邻的两个房子同一天被打劫时，该系统会自动报警</strong>。给定一个非负整数列表，表示每个房子中存放的钱， 算一算，如果今晚去打劫，你最多可以得到多少钱 <strong>在不触动报警装置的情况下</strong>。</p>
+<p> <strong>样例</strong>：给定 <code>[3, 8, 4]</code>, 返回 <code>8</code>. </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    @param A: An array of non-negative integers</span></span><br><span class="line"><span class="string">    @return: The maximum amount of money you can rob tonight</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">houseRobber</span><span class="params">(self, A)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> A:</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">        <span class="keyword">if</span> len(A) &lt;= <span class="number">2</span>:</span><br><span class="line">            <span class="keyword">return</span> max(A)</span><br><span class="line">            </span><br><span class="line">        f = [<span class="number">0</span>] * len(A)</span><br><span class="line">        f[<span class="number">0</span>], f[<span class="number">1</span>] = A[<span class="number">0</span>], max(A[<span class="number">0</span>], A[<span class="number">1</span>])</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">2</span>, len(A)):</span><br><span class="line">            f[i] = max(f[i - <span class="number">1</span>], f[i - <span class="number">2</span>] + A[i])</span><br><span class="line">        <span class="keyword">return</span> f[len(A) - <span class="number">1</span>]</span><br><span class="line">        </span><br><span class="line"><span class="comment"># 使用滚动数组版本</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    @param A: An array of non-negative integers</span></span><br><span class="line"><span class="string">    @return: The maximum amount of money you can rob tonight</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">houseRobber</span><span class="params">(self, A)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> A:</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">        <span class="keyword">if</span> len(A) &lt;= <span class="number">2</span>:</span><br><span class="line">            <span class="keyword">return</span> max(A)</span><br><span class="line">            </span><br><span class="line">        f = [<span class="number">0</span>] * <span class="number">3</span></span><br><span class="line">        f[<span class="number">0</span>], f[<span class="number">1</span>] = A[<span class="number">0</span>], max(A[<span class="number">0</span>], A[<span class="number">1</span>])</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">2</span>, len(A)):</span><br><span class="line">            f[i % <span class="number">3</span>] = max(f[(i - <span class="number">1</span>) % <span class="number">3</span>], f[(i - <span class="number">2</span>) % <span class="number">3</span>] + A[i])</span><br><span class="line">            </span><br><span class="line">        <span class="keyword">return</span> f[(len(A) - <span class="number">1</span>) % <span class="number">3</span>]</span><br></pre></td></tr></table></figure>
+<h3 id="买卖股票的最佳时机"><a href="#买卖股票的最佳时机" class="headerlink" title="买卖股票的最佳时机"></a>买卖股票的最佳时机</h3><p><strong>描述</strong>：假设你有一个数组，它的第i个元素是一支给定的股票在第i天的价格。设计一个算法来找到最大的利润。你最多可以完成 <code>k</code> 笔交易。你不可以同时参与多笔交易(你必须在再次购买前出售掉之前的股票)</p>
+<p>样例：给定价格 = <code>[4,4,6,1,1,4,2,5]</code>, 且 k = <code>2</code>, 返回 <code>6</code>.（1买4卖，2买5卖）</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    @param k: an integer</span></span><br><span class="line"><span class="string">    @param prices: an integer array</span></span><br><span class="line"><span class="string">    @return: an integer which is maximum profit</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">maxProfit</span><span class="params">(self, k, prices)</span>:</span></span><br><span class="line">        <span class="comment"># write your code here</span></span><br><span class="line">        size = len(prices)</span><br><span class="line">        <span class="keyword">if</span> k &gt;= size / <span class="number">2</span>:</span><br><span class="line">            <span class="keyword">return</span> self.quickSolve(size, prices)</span><br><span class="line">        dp = [<span class="keyword">None</span>] * (<span class="number">2</span> * k + <span class="number">1</span>)</span><br><span class="line">        dp[<span class="number">0</span>] = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(size):</span><br><span class="line">            <span class="keyword">for</span> j <span class="keyword">in</span> range(min(<span class="number">2</span> * k, i + <span class="number">1</span>) , <span class="number">0</span> , <span class="number">-1</span>):</span><br><span class="line">                dp[j] = max(dp[j], dp[j - <span class="number">1</span>] + prices[i] * [<span class="number">1</span>, <span class="number">-1</span>][j % <span class="number">2</span>])</span><br><span class="line">        <span class="keyword">return</span> max(dp)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">quickSolve</span><span class="params">(self, size, prices)</span>:</span></span><br><span class="line">        sum = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> x <span class="keyword">in</span> range(size - <span class="number">1</span>):</span><br><span class="line">            <span class="keyword">if</span> prices[x + <span class="number">1</span>] &gt; prices[x]:</span><br><span class="line">                sum += prices[x + <span class="number">1</span>] - prices[x]</span><br><span class="line">        <span class="keyword">return</span> sum</span><br></pre></td></tr></table></figure>
+<h3 id="解码方法"><a href="#解码方法" class="headerlink" title="解码方法+"></a>解码方法+</h3><p><strong>描述</strong>：有一个消息包含<code>A-Z</code>通过以下规则编码，现在给你一个加密过后的消息，问有几种解码的方式</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">'A' -&gt; 1</span><br><span class="line">'B' -&gt; 2</span><br><span class="line">...</span><br><span class="line">'Z' -&gt; 26</span><br></pre></td></tr></table></figure>
+<p><strong>样例</strong>：给你的消息为<code>12</code>，有两种方式解码 AB(12) 或者 L(12). 所以返回 <code>2</code></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="comment"># @param &#123;string&#125; s a string,  encoded message</span></span><br><span class="line">    <span class="comment"># @return &#123;int&#125; an integer, the number of ways decoding</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">numDecodings</span><span class="params">(self, s)</span>:</span></span><br><span class="line">        <span class="comment"># Write your code here</span></span><br><span class="line">        <span class="keyword">if</span> s == <span class="string">""</span> <span class="keyword">or</span> s[<span class="number">0</span>] == <span class="string">'0'</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line"></span><br><span class="line">        dp=[<span class="number">1</span>,<span class="number">1</span>]</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">2</span>,len(s) + <span class="number">1</span>):</span><br><span class="line">            <span class="keyword">if</span> <span class="number">10</span> &lt;= int(s[i - <span class="number">2</span> : i]) &lt;=<span class="number">26</span> <span class="keyword">and</span> s[i - <span class="number">1</span>] != <span class="string">'0'</span>:</span><br><span class="line">                dp.append(dp[i - <span class="number">1</span>] + dp[i - <span class="number">2</span>])</span><br><span class="line">            <span class="keyword">elif</span> int(s[i<span class="number">-2</span> : i]) == <span class="number">10</span> <span class="keyword">or</span> int(s[i - <span class="number">2</span> : i]) == <span class="number">20</span>:</span><br><span class="line">                dp.append(dp[i - <span class="number">2</span>])</span><br><span class="line">            <span class="keyword">elif</span> s[i<span class="number">-1</span>] != <span class="string">'0'</span>:</span><br><span class="line">                dp.append(dp[i<span class="number">-1</span>])</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> dp[len(s)]</span><br></pre></td></tr></table></figure>
+<h3 id="完美平方"><a href="#完美平方" class="headerlink" title="完美平方"></a>完美平方</h3><p><strong>描述</strong>：给一个正整数 n, 找到若干个完全平方数(比如1, 4, 9, … )使得他们的和等于 n。你需要让平方数的个数最少。</p>
+<p><strong>样例</strong>：</p>
+<p>给出 n = <code>12</code>, 返回 <code>3</code> 因为 <code>12 = 4 + 4 + 4</code>。<br>给出 n = <code>13</code>, 返回 <code>2</code> 因为 <code>13 = 4 + 9</code></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">numSquares</span><span class="params">(self, n)</span>:</span></span><br><span class="line">        <span class="comment"># write your code here</span></span><br><span class="line">        dp = []</span><br><span class="line">        <span class="keyword">import</span> sys</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(n+<span class="number">1</span>):</span><br><span class="line">            dp.append(sys.maxint)</span><br><span class="line">        i = <span class="number">0</span></span><br><span class="line">        <span class="keyword">while</span> i * i &lt;= n:</span><br><span class="line">            dp[i*i] = <span class="number">1</span></span><br><span class="line">            i += <span class="number">1</span></span><br><span class="line"></span><br><span class="line">        </span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(n+<span class="number">1</span>):</span><br><span class="line">            j = <span class="number">1</span></span><br><span class="line">            <span class="keyword">while</span> j * j &lt;= i:</span><br><span class="line">                dp[i] = min(dp[i], dp[i-j*j] + <span class="number">1</span>)</span><br><span class="line">                j += <span class="number">1</span></span><br><span class="line">        <span class="keyword">return</span> dp[n]</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+    
+    
+	<div>
+    	  <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------<i class="fa fa-heart"></i>Thanks for Reading!<i class="fa fa-heart"></i>-------------</div>
+    
+</div>
+	</div>
+    
+    
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/数据结构/" rel="tag"><i class="fa fa-tag"></i> 数据结构</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/09/21/数据结构与算法/重点掌握/" rel="next" title="重点掌握">
+                <i class="fa fa-chevron-left"></i> 重点掌握
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/11/01/数据挖掘概念与技术/数据挖掘概念与技术笔记（1）：数据认识/" rel="prev" title="数据挖掘概念与技术笔记（1）：数据认识">
+                数据挖掘概念与技术笔记（1）：数据认识 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="Mosbyllc" />
+            
+              <p class="site-author-name" itemprop="name">Mosbyllc</p>
+              <p class="site-description motion-element" itemprop="description">Sometimes thing have to fall apart to make way for better things.</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">60</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">73</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/kugua233" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="http://weibo.com/Mosbyllc" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://segmentfault.com/u/kugua233" target="_blank" title="SegmentFault">
+                      
+                        <i class="fa fa-fw fa-strikethrough"></i>SegmentFault</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:1499913789@qq.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Recommended reading
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://plushunter.github.io/" title="Free Will" target="_blank">Free Will</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#五问动态规划"><span class="nav-number">1.</span> <span class="nav-text">五问动态规划</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#动态规划相关题"><span class="nav-number">2.</span> <span class="nav-text">动态规划相关题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#交叉字符串"><span class="nav-number">2.1.</span> <span class="nav-text">交叉字符串</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#最长上升子序列"><span class="nav-number">2.2.</span> <span class="nav-text">最长上升子序列</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#单词拆分"><span class="nav-number">2.3.</span> <span class="nav-text">单词拆分 ++</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数字三角形"><span class="nav-number">2.4.</span> <span class="nav-text">数字三角形</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#最小路径和"><span class="nav-number">2.5.</span> <span class="nav-text">最小路径和</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#爬楼梯"><span class="nav-number">2.6.</span> <span class="nav-text">爬楼梯 ++</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#不同的路径"><span class="nav-number">2.7.</span> <span class="nav-text">不同的路径</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#编辑距离"><span class="nav-number">2.8.</span> <span class="nav-text">编辑距离 +</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#正则表达式匹配"><span class="nav-number">2.9.</span> <span class="nav-text">正则表达式匹配 ++</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#不同的二叉查找树-II"><span class="nav-number">2.10.</span> <span class="nav-text">不同的二叉查找树 II</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#乘积最大子序列"><span class="nav-number">2.11.</span> <span class="nav-text">乘积最大子序列 +</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#通配符匹配"><span class="nav-number">2.12.</span> <span class="nav-text">通配符匹配</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#打劫房屋"><span class="nav-number">2.13.</span> <span class="nav-text">打劫房屋 ++</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#买卖股票的最佳时机"><span class="nav-number">2.14.</span> <span class="nav-text">买卖股票的最佳时机</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解码方法"><span class="nav-number">2.15.</span> <span class="nav-text">解码方法+</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#完美平方"><span class="nav-number">2.16.</span> <span class="nav-text">完美平方</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-star"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mosbyllc</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+  
+
+  
+
+</body>
+</html>

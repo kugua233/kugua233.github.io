@@ -1,0 +1,1313 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16.ico?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="正则化,深度学习,梯度消失/爆炸," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Mosbyllc" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="前面介绍了人工神经网络，并训练了我们的第一个深度神经网络。 但它是一个非常浅的 DNN，只有两个隐藏层。 如果你需要解决非常复杂的问题，例如检测高分辨率图像中的数百种类型的对象，该怎么办？ 你可能需要训练更深的 DNN，也许有 10 层，每层包含数百个神经元，通过数十万个连接来连接。 这会相当困难  首先，你将面临棘手的梯度消失问题（或相关的梯度爆炸问题），这会影响深度神经网络，并使较低层难以训练">
+<meta name="keywords" content="正则化,深度学习,梯度消失&#x2F;爆炸">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深度学习（二）：训练深层神经网络">
+<meta property="og:url" content="http://yoursite.com/2018/12/11/深度学习/深度学习（二）：训练深层神经网络/index.html">
+<meta property="og:site_name" content="Mosbyllc">
+<meta property="og:description" content="前面介绍了人工神经网络，并训练了我们的第一个深度神经网络。 但它是一个非常浅的 DNN，只有两个隐藏层。 如果你需要解决非常复杂的问题，例如检测高分辨率图像中的数百种类型的对象，该怎么办？ 你可能需要训练更深的 DNN，也许有 10 层，每层包含数百个神经元，通过数十万个连接来连接。 这会相当困难  首先，你将面临棘手的梯度消失问题（或相关的梯度爆炸问题），这会影响深度神经网络，并使较低层难以训练">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/2018/12/11/深度学习/深度学习（二）：训练深层神经网络/01.png">
+<meta property="og:image" content="http://yoursite.com/2018/12/11/深度学习/深度学习（二）：训练深层神经网络/02.png">
+<meta property="og:image" content="http://yoursite.com/2018/12/11/深度学习/深度学习（二）：训练深层神经网络/03.png">
+<meta property="og:image" content="http://yoursite.com/2018/12/11/深度学习/深度学习（二）：训练深层神经网络/04.png">
+<meta property="og:image" content="http://yoursite.com/2018/12/11/深度学习/深度学习（二）：训练深层神经网络/05.jpg">
+<meta property="og:image" content="http://yoursite.com/2018/12/11/深度学习/深度学习（二）：训练深层神经网络/05.png">
+<meta property="og:updated_time" content="2019-12-29T00:59:26.023Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="深度学习（二）：训练深层神经网络">
+<meta name="twitter:description" content="前面介绍了人工神经网络，并训练了我们的第一个深度神经网络。 但它是一个非常浅的 DNN，只有两个隐藏层。 如果你需要解决非常复杂的问题，例如检测高分辨率图像中的数百种类型的对象，该怎么办？ 你可能需要训练更深的 DNN，也许有 10 层，每层包含数百个神经元，通过数十万个连接来连接。 这会相当困难  首先，你将面临棘手的梯度消失问题（或相关的梯度爆炸问题），这会影响深度神经网络，并使较低层难以训练">
+<meta name="twitter:image" content="http://yoursite.com/2018/12/11/深度学习/深度学习（二）：训练深层神经网络/01.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"right","display":"always","offset":12,"b2t":true,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/12/11/深度学习/深度学习（二）：训练深层神经网络/"/>
+
+
+
+
+
+  <title>深度学习（二）：训练深层神经网络 | Mosbyllc</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Mosbyllc</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+<link href="https://cdn.bootcss.com/KaTeX/0.7.1/katex.min.css" rel="stylesheet">
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/12/11/深度学习/深度学习（二）：训练深层神经网络/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mosbyllc">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Mosbyllc">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">深度学习（二）：训练深层神经网络</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-12-11T17:06:13+08:00">
+                2018-12-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/深度学习/" itemprop="url" rel="index">
+                    <span itemprop="name">深度学习</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  5,637
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  20
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>前面介绍了人工神经网络，并训练了我们的第一个深度神经网络。 但它是一个非常浅的 DNN，只有两个隐藏层。 如果你需要解决非常复杂的问题，例如检测高分辨率图像中的数百种类型的对象，该怎么办？ 你可能需要训练更深的 DNN，也许有 10 层，每层包含数百个神经元，通过数十万个连接来连接。 这会相当困难</p>
+<ul>
+<li>首先，你将面临棘手的梯度消失问题（或相关的梯度爆炸问题），这会影响深度神经网络，并使较低层难以训练。</li>
+<li>其次，对于如此庞大的网络，训练将非常缓慢。</li>
+<li>第三，具有数百万参数的模型将会有严重的过拟合训练集的风险。</li>
+</ul>
+<p>在本章中，我们将从解释<strong>梯度消失</strong>问题开始，并探讨解决这个问题的一些最流行的解决方案。 接下来我们将看看<strong>各种优化器，它们可以加速大型模型的训练</strong>。 最后，我们将浏览一些流行的<strong>大型神经网络正则化技术</strong>。 使用这些工具，你将能够训练非常深的网络：欢迎来到深度学习的世界！</p>
+<h2 id="梯度消失-爆炸问题"><a href="#梯度消失-爆炸问题" class="headerlink" title="梯度消失/爆炸问题"></a>梯度消失/爆炸问题</h2><p>反向传播算法的工作原理是从输出层到输入层，传播误差的梯度。 一旦该算法已经计算了网络中每个参数的损失函数的梯度，它就使用这些梯度来用梯度下降步骤来更新每个参数。</p>
+<p>不幸的是，梯度往往变得越来越小，随着算法进展到较低层。 结果，梯度下降更新使得低层连接权重实际上保持不变，并且训练永远不会收敛到良好的解决方案。 这被称为梯度消失问题。 在某些情况下，可能会发生相反的情况：梯度可能变得越来越大，许多层得到了非常大的权重更新，算法发散。这是梯度爆炸的问题，在循环神经网络中最为常见 。</p>
+<h3 id="Xavier初始化和-He-初始化"><a href="#Xavier初始化和-He-初始化" class="headerlink" title="Xavier初始化和 He 初始化"></a>Xavier初始化和 He 初始化</h3><p>虽然这种不幸的行为已经经过了相当长的一段时间的实验观察 但直到 2010 年左右，人们才有了明显的进步。 Xavier Glorot 和 Yoshua Bengio 发表的题为《Understanding the Difficulty of Training Deep Feedforward Neural Networks》的论文分析了一些疑问，包括流行的 sigmoid 激活函数和当时最受欢迎的<strong>默认权重参数初始化技术的组合，即随机初始化时使用平均值为 0，标准差为 1 的正态分布 。</strong></p>
+<p>简而言之，他们表明，用这个激活函数和这个初始化方案，每层输出的方差远大于其输入的方差。网络正向，每层的方差持续增加，直到激活函数在顶层饱和。这实际上是因为logistic函数的平均值为 0.5 而不是 0（双曲正切函数的平均值为 0，表现略好于深层网络中的logistic函数） 。看一下logistic 激活函数，可以看到当输入变大（负或正）时，函数饱和在 0 或 1，导数非常接近 0。因此，当反向传播开始时， 它几乎没有梯度通过网络传播回来，而且由于反向传播通过顶层向下传递，所以存在的小梯度不断地被稀释，因此较低层确实没有任何东西可用。</p>
+<p>Glorot 和 Bengio 在他们的论文中提出了一种显著缓解这个问题的方法。 我们需要信号在两个方向上正确地流动：在进行预测时是正向的，在反向传播梯度时是反向的。 我们不希望信号消失，也不希望它爆炸并饱和。 <strong>为了使信号正确流动，作者认为，我们需要每层输出的方差等于其输入的方差</strong>。</p>
+<p>实际上不可能保证两者都是一样的，除非这个层具有相同数量的输入和输出连接，但是他们提出了一个很好的折衷办法，在实践中证明这个折中办法非常好<strong>：随机初始化连接权重必须如下面公式所描述的那样</strong>。其中<code>n_inputs</code>和<code>n_outputs</code>是权重正在被初始化的层（也称为扇入和扇出）的输入和输出连接的数量。 <strong>这种初始化策略通常被称为Xavier初始化（在作者的名字之后）</strong> 。很多初始化策略也都是为了保持每层的分布不变 ，这样利于传递信息 。</p>
+<p><img src="/2018/12/11/深度学习/深度学习（二）：训练深层神经网络/01.png" alt=""></p>
+<p> 使用 Xavier 初始化策略可以大大加快训练速度，这是导致深度学习目前取得成功的技巧之一。 最近的一些论文针对不同的激活函数提供了类似的策略，如下表所示。 ReLU 激活函数（及其变体，包括简称 ELU 激活）的初始化策略有时称为 He 初始化（在其作者的姓氏之后）。 </p>
+<p><img src="/2018/12/11/深度学习/深度学习（二）：训练深层神经网络/02.png" alt=""></p>
+<h3 id="非饱和激活函数"><a href="#非饱和激活函数" class="headerlink" title="非饱和激活函数"></a>非饱和激活函数</h3><p>激活函数在深度神经网络中表现得更好，特别是 ReLU 激活函数，主要是因为它对正值不会饱和（也因为它的计算速度很快）。</p>
+<p>不幸的是，<strong>ReLU</strong>激活功能并不完美。 它有一个被称为 “ReLU 死区” 的问题：在训练过程中，一些神经元有效地死亡，意味着它们停止输出 0 以外的任何东西。在某些情况下，你可能会发现你网络的一半神经元已经死亡，特别是如果你使用大学习率。 在训练期间，如果神经元的权重得到更新，使得神经元输入的加权和为负，则它将开始输出 0 。当这种情况发生时，由于当输入为负时，ReLU函数的梯度为0，神经元不可能恢复生机。</p>
+<p>为了解决这个问题，你可能需要使用 ReLU 函数的一个变体，比如 <strong>leaky ReLU</strong>。这个函数定义为<code>LeakyReLUα(z)= max(αz，z)</code> 。超参数<code>α</code>定义了函数“leaks”的程度：它是<code>z &lt; 0</code>时函数的斜率，通常设置为 0.01。这个小斜坡确保 leaky ReLU 永不死亡；他们可能会长期昏迷，但他们有机会最终醒来。 事实上，设定<code>α= 0.2</code>（巨大 leak）似乎导致比<code>α= 0.01</code>（小 leak）更好的性能。</p>
+<p><img src="/2018/12/11/深度学习/深度学习（二）：训练深层神经网络/03.png" alt=""></p>
+<p> 最后，Djork-Arné Clevert 等人在 2015 年的一篇论文中提出了一种称为指数线性单元（exponential linear unit，ELU）的新的激活函数，在他们的实验中表现优于所有的 ReLU 变体：训练时间减少，神经网络在测试集上表现的更好，如下所示。 </p>
+<p><img src="/2018/12/11/深度学习/深度学习（二）：训练深层神经网络/04.png" alt=""></p>
+<p>它看起来很像 ReLU 函数，但有一些区别，主要区别在于：</p>
+<ul>
+<li>首先它在<code>z &lt; 0</code>时取负值，这使得该单元的平均输出接近于 0。这有助于减轻梯度消失问题，如前所述。 超参数<code>α</code>定义为当<code>z</code>是一个大的负数时，ELU 函数接近的值。它通常设置为 1，但是如果你愿意，你可以像调整其他超参数一样调整它。</li>
+<li>其次，它对<code>z &lt; 0</code>有一个非零的梯度，避免了神经元死亡的问题。</li>
+<li>第三，函数在任何地方都是平滑的，包括<code>z = 0</code>左右，这有助于加速梯度下降，因为它不会弹回<code>z = 0</code>的左侧和右侧。</li>
+</ul>
+<p>ELU 激活函数的主要缺点是计算速度慢于 ReLU 及其变体（由于使用指数函数），但是在训练过程中，这是通过更快的收敛速度来补偿的。 然而，在测试时间，ELU 网络将比 ReLU 网络慢。</p>
+<p>那么你应该使用哪个激活函数来处理深层神经网络的隐藏层？ 虽然你的里程会有所不同，一般 ELU &gt; leaky ReLU（及其变体）&gt; ReLU &gt; tanh &gt; sigmoid。 如果您关心运行时性能，那么您可能喜欢 leaky ReLU超过ELU。</p>
+<h3 id="批量标准化"><a href="#批量标准化" class="headerlink" title="批量标准化"></a>批量标准化</h3><p>尽管使用 He初始化和 ELU（或任何 ReLU 变体）可以显著减少训练开始阶段的梯度消失/爆炸问题，但不保证在训练期间问题不会回来。</p>
+<p>在 2015 年的一篇论文中，Sergey Ioffe 和 Christian Szegedy 提出了一种称为批量标准化（Batch Normalization，BN）的技术来解决梯度消失/爆炸问题，每层输入的分布在训练期间改变的问题，更普遍的问题是当前一层的参数改变，每层输入的分布会在训练过程中发生变化（他们称之为内部协变量偏移问题）。</p>
+<p>该技术包括在每层的激活函数之前在模型中添加操作，简单地对输入进行zero-centering和规范化，然后每层使用两个新参数（一个用于尺度变换，另一个用于偏移）对结果进行尺度变换和偏移。 换句话说，这个操作可以让模型学习到每层输入值的最佳尺度,均值。为了对输入进行归零和归一化，算法需要估计输入的均值和标准差。 它通过评估当前小批量输入的均值和标准差（因此命名为“批量标准化”）来实现。</p>
+<p><img src="/2018/12/11/深度学习/深度学习（二）：训练深层神经网络/05.jpg" alt=""></p>
+<p>在测试时，没有小批量计算经验均值和标准差，所以您只需使用整个训练集的均值和标准差。 这些通常在训练期间使用移动平均值进行有效计算。 因此，总的来说，每个批次标准化的层次都学习了四个参数：<code>γ</code>（标度），<code>β</code>（偏移），<code>μ</code>（平均值）和<code>σ</code>（标准差）</p>
+<p>作者证明，这项技术大大改善了他们试验的所有深度神经网络。梯度消失问题大大减少了，他们可以使用饱和激活函数，如 tanh 甚至 sigmoid 激活函数。网络对权重初始化也不那么敏感。他们能够使用更大的学习率，显著加快了学习过程。 由于每层所需的额外计算，神经网络的预测速度较慢。 所以，如果你需要预测闪电般快速，你可能想要检查普通ELU + He初始化执行之前如何执行批量标准化。您可能会发现，训练起初相当缓慢，而渐变下降正在寻找每层的最佳尺度和偏移量，但一旦找到合理的好值，它就会加速。</p>
+<p>当然，如果你训练的时间越长，准确性就越好，但是由于这样一个浅的网络，批量范数和 ELU 不太可能产生非常积极的影响：它们大部分都是为了更深的网络而发光。</p>
+<p>批量标准化和初始化权重参数的意义差不多，更深的理解可以看这篇 <a href="https://plushunter.github.io/2017/05/14/深度学习系列（9）：Batch Normalization/" target="_blank" rel="noopener">批量标准化</a></p>
+<h3 id="梯度裁剪"><a href="#梯度裁剪" class="headerlink" title="梯度裁剪"></a>梯度裁剪</h3><p>减少梯度爆炸问题的一种常用技术是在反向传播过程中<strong>简单地剪切梯度，使它们不超过某个阈值</strong>（这对于递归神经网络是非常有用的）。 这就是所谓的梯度裁剪。一般来说，人们更喜欢批量标准化，但了解梯度裁剪以及如何实现它仍然是有用的。</p>
+<h2 id="复用预训练层"><a href="#复用预训练层" class="headerlink" title="复用预训练层"></a>复用预训练层</h2><p>从零开始训练一个非常大的 DNN 通常不是一个好主意，相反，您应该总是尝试找到一个现有的神经网络来完成与您正在尝试解决的任务类似的任务，然后复用这个网络的较低层：这就是所谓的迁移学习。这不仅会大大加快训练速度，还将需要更少的训练数据。 一般包括三个步骤</p>
+<p>1、冻结较低层：在训练过程中变量不会发生变化（通常称为冻结层）。</p>
+<p>2、缓存冻结层：由于冻结层不会改变，因此可以为每个训练实例缓存最上面的冻结层的输出。 由于训练贯穿整个数据集很多次，这将给你一个巨大的速度提升</p>
+<p>3、调整，删除或替换较高层：对于新任务来说最有用的高层特征可能与对原始任务最有用的高层特征明显不同。 你需要找到正确的层数来复用。 一般拥有的训练数据越多，您可以解冻的层数就越多。</p>
+<h3 id="Model-Zoos"><a href="#Model-Zoos" class="headerlink" title="Model Zoos"></a>Model Zoos</h3><p>你在哪里可以找到一个类似于你想要解决的任务训练的神经网络？ 首先看看显然是在你自己的模型目录。 这是保存所有模型并组织它们的一个很好的理由，以便您以后可以轻松地检索它们。 另一个选择是在模型动物园中搜索。 许多人为了各种不同的任务而训练机器学习模型，并且善意地向公众发布预训练模型。</p>
+<p>TensorFlow 在 <a href="https://github.com/tensorflow/models" target="_blank" rel="noopener">https://github.com/tensorflow/models</a> 中有自己的模型动物园。 特别是，它包含了大多数最先进的图像分类网络，如 VGG，Inception 和 ResNet（参见第 13 章，检查<code>model/slim</code>目录），包括代码，预训练模型和 工具来下载流行的图像数据集。</p>
+<p>另一个流行的模型动物园是 Caffe 模型动物园。 它还包含许多在各种数据集（例如，ImageNet，Places 数据库，CIFAR10 等）上训练的计算机视觉模型（例如，LeNet，AlexNet，ZFNet，GoogLeNet，VGGNet，开始）。 Saumitro Dasgupta 写了一个转换器，可以在 <a href="https://github.com/ethereon/caffetensorflow。" target="_blank" rel="noopener">https://github.com/ethereon/caffetensorflow。</a></p>
+<h2 id="更快的优化器"><a href="#更快的优化器" class="headerlink" title="更快的优化器"></a>更快的优化器</h2><p>练一个非常大的深度神经网络可能会非常缓慢。 到目前为止，我们已经看到了四种加速训练的方法（并且达到更好的解决方案）：对连接权重应用良好的初始化策略，使用良好的激活函数，使用批量规范化以及重用预训练网络的部分。 另一个巨大的速度提升来自使用比普通渐变下降优化器更快的优化器。 在本节中，我们将介绍最流行的：动量优化，Nesterov 加速梯度，AdaGrad，RMSProp，最后是 Adam 优化。</p>
+<p>剧透：<strong>本节的结论是，您几乎总是应该使用<code>Adam_optimization</code></strong>，所以如果您不关心它是如何工作的，只需使用<code>AdamOptimizer</code>替换您的<code>GradientDescentOptimizer</code>，然后跳到下一节！ 只需要这么小的改动，训练通常会快几倍。 <strong>但是，Adam 优化确实有三个可以调整的超参数（加上学习率）。 默认值通常工作的不错，但如果您需要调整它们，知道他们怎么实现的可能会有帮助</strong>。</p>
+<p>理解这些优化器可以看这篇 <a href="https://plushunter.github.io/2017/05/11/深度学习系列（7）：神经网络的优化方法/" target="_blank" rel="noopener">神经网络的优化方法</a></p>
+<h3 id="训练稀疏模型"><a href="#训练稀疏模型" class="headerlink" title="训练稀疏模型"></a>训练稀疏模型</h3><p>上面所有刚刚提出的优化算法都会产生密集的模型，这意味着大多数参数都是非零的。 如果你在运行时需要一个非常快速的模型，或者如果你需要它占用较少的内存，你可能更喜欢用一个稀疏模型优化器来代替。</p>
+<p>这时可以使用FTRL 优化器，一种由尤里·涅斯捷罗夫（Yurii Nesterov）提出的技术。 当与 l1 正则化一起使用时，这种技术通常导致非常稀疏的模型。</p>
+<h2 id="学习率调整"><a href="#学习率调整" class="headerlink" title="学习率调整"></a>学习率调整</h2><p>自适应下降的学习速率会更好。有三种流行的方法：</p>
+<ul>
+<li>性能调度：每 N 步测量验证误差（就像提前停止一样），当误差下降时，将学习率降低一个因子<code>λ</code>。</li>
+<li>指数调度：将学习率设置为<strong>迭代次数<code>t</code></strong>的函数$\eta(t)=\eta_0\cdot10^{-t/r}$： 这很好，但它需要调整初始速率<code>η0</code>和<strong>总迭代次数</strong><code>r</code>。 学习率将由每<code>r</code>步下降 10 倍。</li>
+<li>幂调度：设学习率为$\eta(t)=\eta_0(1+t/r)^{-c}$。 超参数<code>c</code>通常被设置为 1。这与指数调度类似，但是学习率下降要慢得多。</li>
+</ul>
+<p>根据Andrew Senior 等2013年的论文。 比较了使用动量优化训练深度神经网络进行语音识别时一些最流行的学习率调整的性能。 作者得出结论：在这种情况下，性能调度和指数调度都表现良好，但他们更喜欢指数调度，因为它实现起来比较简单，容易调整，收敛速度略快于最佳解决方案 。</p>
+<h2 id="通过正则化避免过拟合"><a href="#通过正则化避免过拟合" class="headerlink" title="通过正则化避免过拟合"></a>通过正则化避免过拟合</h2><p>1、早起停止法</p>
+<p>2、L1和L2正则化：注意不需要对bias正则，只对权重</p>
+<p>3、Dropout</p>
+<p>深度神经网络最流行的正则化技术可以说是 dropout。 它由 GE Hinton 于 2012 年提出，并在 Nitish Srivastava 等人的论文中进一步详细描述，并且已被证明是非常成功的：即使是最先进的神经网络，仅仅通过增加丢失就可以提高1-2％的准确度。</p>
+<p>是一个相当简单的算法：在每个训练步骤中，每个神经元（包括输入神经元，但不包括输出神经元）都有一个暂时“丢弃”的概率<code>p</code>，这意味着在这个训练步骤中它将被完全忽略， 在下一步可能会激活（见下图 ）。 超参数<code>p</code>称为丢失率，通常设为 50%。 训练后，神经元不会再下降。</p>
+<p><img src="/2018/12/11/深度学习/深度学习（二）：训练深层神经网络/05.png" alt=""></p>
+<p>如果观察到模型过拟合，则可以增加 dropout 率（即，减少<code>keep_prob</code>超参数）。 相反，如果模型欠拟合训练集，则应尝试降低 dropout 率（即增加<code>keep_prob</code>）。 它也可以帮助增加大层的 dropout 率，并减少小层的 dropout 率。</p>
+<p>dropout 似乎减缓了收敛速度，但通常会在调整得当时使模型更好。 所以，这通常值得花费额外的时间和精力。</p>
+<p>Dropconnect是dropout的变体，其中单个连接随机丢弃而不是整个神经元。 一般而言，dropout表现会更好。</p>
+<h2 id="最大范数正则化"><a href="#最大范数正则化" class="headerlink" title="最大范数正则化"></a>最大范数正则化</h2><p>另一种在神经网络中非常流行的正则化技术被称为最大范数正则化：对于每个神经元，它约束输入连接的权重<code>w</code>，使得$\Vert w\Vert_2 \leq r$，其中<code>r</code>是最大范数超参数，$\Vert \cdot \Vert$是 L2 范数。</p>
+<p>我们通常通过在每个训练步骤之后计算 $\Vert w\Vert_2$来实现这个约束，并且如果需要的话可以剪切<code>W</code> ，即$w\leftarrow w\frac{r}{\Vert w\Vert_2}$。</p>
+<p>减少<code>r</code>增加了正则化的数量(经常剪切<code>W</code>)，并有助于减少过拟合。 最大范数正则化还可以帮助减轻梯度消失/爆炸问题（如果您不使用批量标准化）。</p>
+<h2 id="数据增强"><a href="#数据增强" class="headerlink" title="数据增强"></a>数据增强</h2><p>最后一个正则化技术，数据增强，包括从现有的训练实例中产生新的训练实例，人为地增加了训练集的大小。 这将减少过拟合，使之成为正则化技术。 诀窍是生成逼真的训练实例;</p>
+<p>例如，如果您的模型是为了分类蘑菇图片，您可以稍微移动，旋转和调整训练集中的每个图片的大小，并将结果图片添加到训练集。 这迫使模型更能容忍图片中蘑菇的位置，方向和大小。 如果您希望模型对光照条件更加宽容，则可以类似地生成具有各种对比度的许多图像。 假设蘑菇是对称的，你也可以水平翻转图片。 通过结合这些转换，可以大大增加训练集的大小。</p>
+<h2 id="实践指南"><a href="#实践指南" class="headerlink" title="实践指南"></a>实践指南</h2><p>当然，如果你能找到解决类似问题的方法，你应该尝试重用预训练的神经网络的一部分。</p>
+<p>这个默认配置可能需要调整：</p>
+<ul>
+<li>如果你找不到一个好的学习率（收敛速度太慢，所以你增加了训练速度，现在收敛速度很快，但是网络的准确性不是最理想的），那么你可以尝试添加一个学习率调整，如指数衰减。</li>
+<li>如果你的训练集太小，你可以实现数据增强。</li>
+<li>如果你需要一个稀疏的模型，你可以添加 l1 正则化混合（并可以选择在训练后将微小的权重归零）。 如果您需要更稀疏的模型，您可以尝试使用 FTRL 而不是 Adam 优化以及 l1 正则化。</li>
+<li>如果在运行时需要快速模型，则可能需要删除批量标准化，并可能用 leakyReLU 替换 ELU 激活函数。 有一个稀疏的模型也将有所帮助。</li>
+</ul>
+<hr>
+<ol>
+<li>使用 He 初始化随机选择权重，是否可以将所有权重初始化为相同的值？</li>
+</ol>
+<p>答：不，所有的权值都应该独立采样;它们的初值不应该相同。如果任意一层的所有神经元都有相同的权值。这就像每层只有一个神经元，而且速度要慢得多。</p>
+<ol>
+<li>可以将偏置初始化为 0 吗？</li>
+</ol>
+<p>答：可以</p>
+<ol>
+<li>说出 ELU 激活功能与 ReLU 相比的三个优点。</li>
+</ol>
+<p>答：</p>
+<ul>
+<li>它可以取负值，所以任意一层神经元的<strong>平均输出</strong>通常比使用relu激活函数(从不输出负值)时<strong>更接近于0</strong>。这有助于缓解渐变消失的问题。</li>
+<li>它总是有一个非零的导数，这避免了神经元死亡的问题。</li>
+<li>处处平滑，而Relu的斜率在z = 0时突然从0跳到1。这样的骤减使梯度下降效果降低，因为它会在z =0附近反弹.</li>
+</ul>
+<ol>
+<li>在哪些情况下，您想要使用以下每个激活函数：ELU，leaky ReLU（及其变体），ReLU，tanh，logistic 以及 softmax？</li>
+</ol>
+<p>答：ELU是一个不错的默认选择。如果想要训练速度更快一些可以采用 leaky ReLU（及其变体）</p>
+<ol>
+<li>dropout 是否会减慢训练？ 它是否会减慢推断（即预测新的实例）？</li>
+</ol>
+<p>答：dropout确实会减慢训练速度，总的来说大概是两倍。然而，它没有对推断（预测新的实例）的影响，因为它只在训练期间打开。</p>
+
+      
+    </div>
+    
+    
+    
+    
+    
+	<div>
+    	  <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------<i class="fa fa-heart"></i>Thanks for Reading!<i class="fa fa-heart"></i>-------------</div>
+    
+</div>
+	</div>
+    
+    
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/正则化/" rel="tag"><i class="fa fa-tag"></i> 正则化</a>
+          
+            <a href="/tags/深度学习/" rel="tag"><i class="fa fa-tag"></i> 深度学习</a>
+          
+            <a href="/tags/梯度消失-爆炸/" rel="tag"><i class="fa fa-tag"></i> 梯度消失/爆炸</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/12/09/深度学习/深度学习（一）：神经网络与反向传播/" rel="next" title="深度学习（一）：神经网络与反向传播">
+                <i class="fa fa-chevron-left"></i> 深度学习（一）：神经网络与反向传播
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/12/14/深度学习/深度学习（三）：卷积神经网络/" rel="prev" title="深度学习（三）：卷积神经网络">
+                深度学习（三）：卷积神经网络 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="Mosbyllc" />
+            
+              <p class="site-author-name" itemprop="name">Mosbyllc</p>
+              <p class="site-description motion-element" itemprop="description">Sometimes thing have to fall apart to make way for better things.</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">60</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">73</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/kugua233" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="http://weibo.com/Mosbyllc" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://segmentfault.com/u/kugua233" target="_blank" title="SegmentFault">
+                      
+                        <i class="fa fa-fw fa-strikethrough"></i>SegmentFault</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:1499913789@qq.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Recommended reading
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://plushunter.github.io/" title="Free Will" target="_blank">Free Will</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#梯度消失-爆炸问题"><span class="nav-number">1.</span> <span class="nav-text">梯度消失/爆炸问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Xavier初始化和-He-初始化"><span class="nav-number">1.1.</span> <span class="nav-text">Xavier初始化和 He 初始化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#非饱和激活函数"><span class="nav-number">1.2.</span> <span class="nav-text">非饱和激活函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#批量标准化"><span class="nav-number">1.3.</span> <span class="nav-text">批量标准化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#梯度裁剪"><span class="nav-number">1.4.</span> <span class="nav-text">梯度裁剪</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#复用预训练层"><span class="nav-number">2.</span> <span class="nav-text">复用预训练层</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Model-Zoos"><span class="nav-number">2.1.</span> <span class="nav-text">Model Zoos</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#更快的优化器"><span class="nav-number">3.</span> <span class="nav-text">更快的优化器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#训练稀疏模型"><span class="nav-number">3.1.</span> <span class="nav-text">训练稀疏模型</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#学习率调整"><span class="nav-number">4.</span> <span class="nav-text">学习率调整</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#通过正则化避免过拟合"><span class="nav-number">5.</span> <span class="nav-text">通过正则化避免过拟合</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#最大范数正则化"><span class="nav-number">6.</span> <span class="nav-text">最大范数正则化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据增强"><span class="nav-number">7.</span> <span class="nav-text">数据增强</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实践指南"><span class="nav-number">8.</span> <span class="nav-text">实践指南</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-star"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mosbyllc</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+  
+
+  
+
+</body>
+</html>

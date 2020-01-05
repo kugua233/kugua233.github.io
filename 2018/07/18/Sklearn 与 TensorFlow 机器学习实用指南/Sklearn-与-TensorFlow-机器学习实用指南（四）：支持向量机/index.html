@@ -1,0 +1,1480 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16.ico?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="机器学习,SVM," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Mosbyllc" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="推导支持向量机条件描述样本分类Y∈{+1， -1}是样本的标签，分别代表两个不同的类。这里我们需要用这些样本去训练学习一个线性分类器（超平面）：$f(x)=sgn(w^Tx + b)$，也就是$w^Tx + b$大于0的时候，输出+1，小于0的时候，输出-1。sgn()表示取符号。而$g(x) =w^Tx + b=0$就是我们要寻找的分类超平面 也就是，对于任何一个正样本$y_i$=+1，它都要处">
+<meta name="keywords" content="机器学习,SVM">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Sklearn 与 TensorFlow 机器学习实用指南（四）：支持向量机">
+<meta property="og:url" content="http://yoursite.com/2018/07/18/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（四）：支持向量机/index.html">
+<meta property="og:site_name" content="Mosbyllc">
+<meta property="og:description" content="推导支持向量机条件描述样本分类Y∈{+1， -1}是样本的标签，分别代表两个不同的类。这里我们需要用这些样本去训练学习一个线性分类器（超平面）：$f(x)=sgn(w^Tx + b)$，也就是$w^Tx + b$大于0的时候，输出+1，小于0的时候，输出-1。sgn()表示取符号。而$g(x) =w^Tx + b=0$就是我们要寻找的分类超平面 也就是，对于任何一个正样本$y_i$=+1，它都要处">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/2018/07/18/Sklearn%20与%20TensorFlow%20机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（四）：支持向量机/08.jpg">
+<meta property="og:image" content="http://yoursite.com/2018/07/18/Sklearn%20与%20TensorFlow%20机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（四）：支持向量机/09.png">
+<meta property="og:image" content="http://yoursite.com/2018/07/18/Sklearn%20与%20TensorFlow%20机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（四）：支持向量机/01.jpg">
+<meta property="og:image" content="http://yoursite.com/2018/07/18/Sklearn%20与%20TensorFlow%20机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（四）：支持向量机/02.JPG">
+<meta property="og:image" content="http://yoursite.com/2018/07/18/Sklearn%20与%20TensorFlow%20机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（四）：支持向量机/03.jpg">
+<meta property="og:image" content="http://yoursite.com/2018/07/18/Sklearn%20与%20TensorFlow%20机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（四）：支持向量机/04.JPG">
+<meta property="og:image" content="http://yoursite.com/2018/07/18/Sklearn%20与%20TensorFlow%20机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（四）：支持向量机/05.jpg">
+<meta property="og:image" content="http://yoursite.com/2018/07/18/Sklearn%20与%20TensorFlow%20机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（四）：支持向量机/06.jpg">
+<meta property="og:image" content="http://yoursite.com/2018/07/18/Sklearn%20与%20TensorFlow%20机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（四）：支持向量机/07.jpg">
+<meta property="og:image" content="http://yoursite.com/2018/07/18/Sklearn%20与%20TensorFlow%20机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（四）：支持向量机/10.png">
+<meta property="og:image" content="http://yoursite.com/2018/07/18/Sklearn%20与%20TensorFlow%20机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（四）：支持向量机/11.png">
+<meta property="og:image" content="http://yoursite.com/2018/07/18/Sklearn%20与%20TensorFlow%20机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（四）：支持向量机/12.png">
+<meta property="og:image" content="http://yoursite.com/2018/07/18/Sklearn%20与%20TensorFlow%20机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（四）：支持向量机/13.png">
+<meta property="og:image" content="http://yoursite.com/2018/07/18/Sklearn%20与%20TensorFlow%20机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（四）：支持向量机/14.png">
+<meta property="og:image" content="http://yoursite.com/2018/07/18/Sklearn%20与%20TensorFlow%20机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（四）：支持向量机/15.jpg">
+<meta property="og:image" content="http://yoursite.com/2018/07/18/Sklearn%20与%20TensorFlow%20机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（四）：支持向量机/16.jpg">
+<meta property="og:image" content="http://yoursite.com/2018/07/18/Sklearn%20与%20TensorFlow%20机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（四）：支持向量机/17.jpg">
+<meta property="og:updated_time" content="2018-07-22T14:17:18.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Sklearn 与 TensorFlow 机器学习实用指南（四）：支持向量机">
+<meta name="twitter:description" content="推导支持向量机条件描述样本分类Y∈{+1， -1}是样本的标签，分别代表两个不同的类。这里我们需要用这些样本去训练学习一个线性分类器（超平面）：$f(x)=sgn(w^Tx + b)$，也就是$w^Tx + b$大于0的时候，输出+1，小于0的时候，输出-1。sgn()表示取符号。而$g(x) =w^Tx + b=0$就是我们要寻找的分类超平面 也就是，对于任何一个正样本$y_i$=+1，它都要处">
+<meta name="twitter:image" content="http://yoursite.com/2018/07/18/Sklearn%20与%20TensorFlow%20机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（四）：支持向量机/08.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"right","display":"always","offset":12,"b2t":true,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/07/18/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（四）：支持向量机/"/>
+
+
+
+
+
+  <title>Sklearn 与 TensorFlow 机器学习实用指南（四）：支持向量机 | Mosbyllc</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Mosbyllc</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+<link href="https://cdn.bootcss.com/KaTeX/0.7.1/katex.min.css" rel="stylesheet">
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/18/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（四）：支持向量机/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mosbyllc">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Mosbyllc">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Sklearn 与 TensorFlow 机器学习实用指南（四）：支持向量机</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-18T14:18:23+08:00">
+                2018-07-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Sklearn-与-TensorFlow-机器学习实用指南/" itemprop="url" rel="index">
+                    <span itemprop="name">Sklearn 与 TensorFlow 机器学习实用指南</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  9,757
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  36
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="推导"><a href="#推导" class="headerlink" title="推导"></a>推导</h1><h2 id="支持向量机条件描述"><a href="#支持向量机条件描述" class="headerlink" title="支持向量机条件描述"></a>支持向量机条件描述</h2><h3 id="样本分类"><a href="#样本分类" class="headerlink" title="样本分类"></a>样本分类</h3><p>Y∈{+1， -1}是样本的标签，分别代表两个不同的类。这里我们需要用这些样本去训练学习一个线性分类器（超平面）：$f(x)=sgn(w^Tx + b)$，也就是$w^Tx + b$大于0的时候，输出+1，小于0的时候，输出-1。sgn()表示取符号。而$g(x) =w^Tx + b=0$就是我们要寻找的分类超平面</p>
+<p>也就是，对于任何一个正样本$y_i$=+1，它都要处于超平面的一边，也就是要保证：$y= w^Tx + b&gt;0$。对于任何一个负样本$y_i=-1$，它都要处于超平面的另一边，也就是要保证：$y = w^Tx + b&lt;0$这两个约束，其实可以合并成同一个式子：$y_i (w^Tx_i+b)\geq0$</p>
+<h3 id="最大间隔"><a href="#最大间隔" class="headerlink" title="最大间隔"></a>最大间隔</h3><p>点到直线距离距离引理：设直线 L 的方程为Ax+By+C=0，点 P 的坐标为（Xo，Yo），则点 P 到直线 L 的距离为</p>
+<script type="math/tex; mode=display">
+\frac{\vert Ax_0+By_0+c\vert}{\sqrt{A^2+B^2}}</script><p><strong>间隔:间隔表示距离划分超平面最近的样本到划分超平面距离的两倍</strong>,即($x_i$为离直线最近的样本i)</p>
+<script type="math/tex; mode=display">
+\gamma=2\min_i \frac{1}{\Vert w \Vert}\vert w^Tx_i+b \vert</script><h3 id="约束条件"><a href="#约束条件" class="headerlink" title="约束条件"></a>约束条件</h3><p>所以，线性支持向量机的目标是找到一组合适的参数(<strong>w</strong>, b), 在满足分割样本的条件下，使得上诉间隔最大</p>
+<script type="math/tex; mode=display">
+\max_{w,b} \min_i \frac{2}{\Vert w \Vert}\vert w^Tx_i+b \vert \\ \\ \\s.t. \quad y_i(w^T+b)>0, i=1,2,...,m</script><p><strong>上面的优化问题十分复杂, 难以处理. 为了能在现实中应用, 我们希望能对其做一些简化, 使其变为可以求解的, 经典的凸二次规划 (QP) 问题</strong></p>
+<blockquote>
+<p>凸二次规划的优化问题是指目标函数是凸二次函数, 约束是线性约束的一类优化问题</p>
+</blockquote>
+<p>支持向量机的缩放引理：若（w* ,b*）是上面优化问题的解，那么对任何的r&gt;0,(rw*,rb*)仍是该问题的解。</p>
+<p>由于对 (w, b) 的放缩不影响解, 为了简化优化问题,我们约束 (w, b) 使得最短距离固定为1.</p>
+<script type="math/tex; mode=display">
+\min_i \quad \vert w^Tx_i+b \vert = 1</script><p><strong>所以最后我们的优化目标可以等价为下面优化目标</strong>：</p>
+<script type="math/tex; mode=display">
+\min_{w,b} \quad \frac{1}{2}w^Tw \\ \\ \\s.t. \quad y_i(w^T+b)\geq1, i=1,2,...,m</script><p><strong>这是一个凸二次规划问题，除了用解决QP问题的常规方法之外，还可以应用拉格朗日对偶性，通过求解对偶问题得到最优解，这就是线性可分条件下支持向量机的对偶算法，这样做的优点在于：一是对偶问题往往更容易求解；二者可以自然的引入核函数，进而推广到非线性分类问题</strong>。</p>
+<h2 id="拉格朗日函数与对偶形式"><a href="#拉格朗日函数与对偶形式" class="headerlink" title="拉格朗日函数与对偶形式"></a>拉格朗日函数与对偶形式</h2><h4 id="拉格朗日函数"><a href="#拉格朗日函数" class="headerlink" title="拉格朗日函数"></a>拉格朗日函数</h4><p>对于优化问题</p>
+<script type="math/tex; mode=display">
+\min_{u} \quad f(u) \\ \\ \\s.t. \quad g_i(u)\leq 0, i=1,2,...,m \\ \\ \\ \qquad  \ \ \ h_j(u)=0, j=1,2,...,n \qquad（6）</script><p>定义其拉格朗日函数为</p>
+<script type="math/tex; mode=display">
+L(u,\alpha,\beta):=f(u)+\sum_{i=1}^m\alpha_ig_i(u)+\sum_{j=1}^n\beta_jh_j(u)\\ \\ \\s.t.\quad \alpha_i\geq0</script><p><strong>公式6的优化问题等价于</strong></p>
+<script type="math/tex; mode=display">
+\min \limits_{u} \max \limits_{\alpha,\beta} \quad L(u,\alpha,\beta) \\ \\ \\ s.t. \alpha_i\geq0, \ \ i=1,2,...,m \qquad(8)</script><p>其证明过程如下</p>
+<p><img src="/2018/07/18/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（四）：支持向量机/08.jpg" alt=""></p>
+<p>其中，当$g_i$不满足约束时，即$g_i(u)&gt;0$,我们可以取$\alpha_i=\infty $;当$h_j$不满足约束时, 即$h_j(u)\neq 0$, 我们可以取$\beta_j=sign(h_j(u))\infty$，使得$\beta_jh_j(u)=\infty$. 当u满足约束时，由于$\alpha_i\geq 0,g_i(u)\leq 0$,则$\alpha_ig_i(u) \leq 0$.因此$\alpha_ig_i(u)$的最大值为0.</p>
+<h4 id="KKT条件和对偶形式"><a href="#KKT条件和对偶形式" class="headerlink" title="KKT条件和对偶形式"></a>KKT条件和对偶形式</h4><p>公式8描述的优化问题在最优值必须满足如下条件(KKT完整条件放后面)</p>
+<ul>
+<li>主问题可行：$g_i(u)\leq 0,h_i(u)=0$;</li>
+<li>对偶问题可行：$\alpha_i \geq 0$;</li>
+<li>互补松弛：$\alpha_i g_i(u)=0$.</li>
+</ul>
+<p>主问题可行和对偶问题可行是公式6和公式8描述的优化问题的约束项。松弛互补是在主问题和对偶问题都可行的条件下的最大值</p>
+<p>在对偶问题里，公式6描述的优化问题，其等价形式公式8称为主问题，其对偶问题为(最大最小条件互换)</p>
+<script type="math/tex; mode=display">
+\max \limits_{\alpha,\beta} \min \limits_{u}  \quad L(u,\alpha,\beta) \\ \\ \\ s.t. \alpha_i\geq0, \ \ i=1,2,...,m</script><ul>
+<li>引理一：对偶问题是主 (primal) 问题的下界（最大值里取最小值肯定会大于最小值里取最大值）</li>
+</ul>
+<script type="math/tex; mode=display">
+\max \limits_{\alpha,\beta} \min \limits_{u}  \quad L(u,\alpha,\beta)\leq \min \limits_{u} \max \limits_{\alpha,\beta} \quad L(u,\alpha,\beta)</script><ul>
+<li>引理二(Slater条件)：当主问题为凸优化问题，即$f$和$g_i$ 为凸函数，$h_j$为仿射函数(类似于kx+b的一类函数)，且可行域中至少有一点使不等式约束严格成立时，对偶问题等价于原问题。(支持向量机的优化函数和约束函数都为凸函数)</li>
+</ul>
+<h2 id="线性支持向量机"><a href="#线性支持向量机" class="headerlink" title="线性支持向量机"></a>线性支持向量机</h2><p>线性支持向量机的拉格朗日函数为</p>
+<script type="math/tex; mode=display">
+L(w,b,\alpha):=\frac{1}{2}w^tw+\sum_{i=1}^m\alpha_i(1-y_i(w^Tx_i+b))</script><p>其对偶问题为（并非主问题）</p>
+<script type="math/tex; mode=display">
+\max \limits_{\alpha}\min\limits_{w,b}\frac{1}{2}w^Tw+\sum_{i=1}^m\alpha_i(1-y_i(w^Tx_i+b)) \\ \\ \\ s.t.\quad \alpha_i\geq0,\quad i=1,2,...,m. \qquad(12)</script><p>因为其内层的(w,b)属于无约束优化问题，我们可以通过令偏导等于0的方法得到(w,b)的最优值</p>
+<script type="math/tex; mode=display">
+\frac{\partial L}{\partial w}=0\Rightarrow w=\sum_{i=1}^m{a_iy_ix_i}</script><script type="math/tex; mode=display">
+\frac{\partial L}{\partial b}=0\Rightarrow \sum_{i=1}^m{a_iy_i=0}</script><p>将上面公式带入(12)消去(w,b)即可得(变为min是因为化简过程有个负号，转为求最小)</p>
+<script type="math/tex; mode=display">
+L\left( w,b,a \right) =\frac{1}{2}\sum_{i=1}^m{\sum_{j=1}^m{a_ia_jy_iy_j\left( x_i·x_j \right) -\sum_{i=1}^m{a_iy_i\left( \left( \sum_{j=1}^m{a_jy_jx_j} \right) ·x_i+b \right) +\sum_{i=1}^m{a_i}}}}  \\ \\ \\ =-\frac{1}{2}\sum_{i=1}^m{\sum_{j=1}^m{a_ia_jy_iy_j\left( x_i·x_j \right) +\sum_{i=1}^m{a_i}}}</script><p><strong>故最终化简得到线性支持向量机对偶型</strong></p>
+<script type="math/tex; mode=display">
+\min \limits_{\alpha} \frac{1}{2}\sum_{i=1}^m\sum_{j=1}^m\alpha_i\alpha_jy_iy_jx_i^Tx_j-\sum_{i=1}^m\alpha_i \\ \\ \\ s.t.\sum_{i=1}^m\alpha_iy_i=0, \\ \\ \\ \alpha_i\geq 0,\quad i=1,2,...,m.</script><p>上诉为线性支持向量机的最终化简对偶问题，其优化模型还要满足以下的KKT条件</p>
+<ul>
+<li>主问题可行：$1-y_i(w^Tx_i+b)\leq0$</li>
+<li>对偶问题可行：$\alpha_i\geq0$</li>
+<li>互补松弛：$\alpha_i(1-y_i(w^Tx_i+b))=0$</li>
+</ul>
+<p>根据KKT条件，我们可以得到两个非常重要的结论（这么多证明得出两个结论，不容易啊）</p>
+<ul>
+<li>结论一：落在间隔边界上的支持向量，其对应的样本的对偶变量$\alpha_i&gt;0$</li>
+</ul>
+<p>证明：由KKT可知，根据$\alpha_i(1-y_i(w^Tx_i+b))=0$ 当;$\alpha_i&gt;0$时，有$1-y_i(w^Tx_i+b)=0$ ，即$y_i(w^Tx_i+b)=1$</p>
+<ul>
+<li>结论二：支持向量机的参数(w,b)仅仅由支持向量决定，与其他样本无关</li>
+</ul>
+<p>证明：由于对偶变量$\alpha_i&gt;0$对应的样本是支持向量，</p>
+<script type="math/tex; mode=display">
+w=\sum_{i=1}^m\alpha_iy_ix_i=\sum_{i:\alpha_i=0}^m0\cdot y_ix_i+\sum_{i:\alpha_i>0}^m\alpha_iy_ix_i=\sum_{i\in SV}\alpha_iy_ix_i</script><p>其中SV代表所有支持向量的集合.b可以由互补松弛算出，对于某一支持向量$x_s$ 及其标记$y_s$，由于$y_s(w^Tx_s+b)=1$,</p>
+<p>则有</p>
+<script type="math/tex; mode=display">
+b=y_s-w^Tx_s=y_s-\sum_{i\in SV}\alpha_iy_ix_i^Tx_s</script><p><strong>根据对偶公式(16)先计算最优解$\alpha_1,\alpha_2,…,\alpha_m$， 然后可以得到w和b，这样我们就可以写出分类超平面$w^\ast\cdot x+b^\ast=0$ 和分类决策函数$f(x)=sign(w^\ast·x+b^\ast)$</strong> </p>
+<blockquote>
+<p> 在实践中，为了得到对b更稳健的估计,通常使用对所有支持向量求解得到b的平均值</p>
+</blockquote>
+<h2 id="软间隔支持向量机"><a href="#软间隔支持向量机" class="headerlink" title="软间隔支持向量机"></a>软间隔支持向量机</h2><p>对每个样本点引进一个松弛变量$\xi \geqslant 0 $，使函数间隔加上松弛变量大于等于1.这样，<strong>约束条件</strong>变成</p>
+<script type="math/tex; mode=display">
+y_i\left( w·x_i+b \right) \geqslant 1-\xi _i</script><p>当然，如果我们允许$\xi \geqslant 0 $任意大的话，那任意的超平面都是符合条件的了。这里我们引入松弛变量$\xi$，松弛变量值越大，当样本违背约束的程度越大，当松弛变量为0时，样本分类正确。所以，我们在原来的目标函数后面加上一项，使得这些 $\xi \geqslant 0 $的总和也要最小，<strong>优化最大间隔和违背约束程度越小</strong>，<strong>目标函数</strong>由原来的$\frac{1}{2}||w||^2$变成</p>
+<script type="math/tex; mode=display">
+\frac{1}{2}||w||^2+C\sum_{i=1}^N{\xi _i}</script><p>这里，$C&gt;0$称为惩罚参数，一般事先由应用问题决定，用于权衡优化间隔和少量样本违背大间隔约束这两个目标，C越大时(看重这一项)对误分类的惩罚增大，，有更多的样本满足大间隔约束。C值小时对误分类的惩罚减小，允许有一些样本不满足大间隔约束.。最小化目标函数包含两层含义：使$\frac{1}{2}||w||^2$尽量最小间隔尽量大，同时使误分类点的个数尽量小，C是调和二者的系数。</p>
+<p><strong>则有软间隔支持向量机基本型</strong>：软间隔支持向量机旨在找到一组合适的参数 (w, b), 使得</p>
+<script type="math/tex; mode=display">
+\underset{w,b,\xi}{\min}\ \frac{1}{2}||w||^2+C\sum_{i=1}^m{\xi _i} \\ \\ \\ s.t.\ \ y_i\left( w^T·x_i+b \right) \geqslant 1-\xi _i\ ,\ i=1,2,···,m \\ \\ \\ \xi _i\geqslant 0,\ i=1,2,···\mathrm{，}m  \qquad(21)</script><p>可证明w的解是唯一的，但b的解不唯一，b的解存在于一个区间。</p>
+<p>用之前的方法将限制加入到目标函数中，得到如下<strong>原始最优化问题的拉格朗日函数</strong>(不等式为大于转为负号形式)：</p>
+<script type="math/tex; mode=display">
+L\left( w,b,\xi ,\alpha,\beta \right) =\frac{1}{2}||w||^2+C\sum_{i=1}^m{\xi _i-\sum_{i=1}^m{\alpha_i\left( y_i\left( w^T·x_i+b \right) -1+\xi _i \right) -\sum_{i=1}^m{\beta_i\xi _i}}} \\ \\ \\ s.t.\alpha\geq0 ,\beta\geq0.</script><p>其对偶问题为</p>
+<script type="math/tex; mode=display">
+\max_\limits{\alpha,\beta}\min_\limits{w,b,\xi} L\left( \alpha,\beta,w,b,\xi \right) \qquad(23)</script><p>首先求拉格朗日函数针对$w,b,\xi$求极小</p>
+<script type="math/tex; mode=display">
+\frac{\partial L}{\partial w}=0\Rightarrow w=\sum_{i=1}^m{a_iy_ix_i} \\ \\ \\ \frac{\partial L}{\partial b}=0\Rightarrow \sum_{i=1}^m{\alpha_iy_i=0} \\ \\ \\ \frac{\partial L}{\partial \xi _i}=0\Rightarrow C-\alpha_i-\beta_i=0，i=1,2,3···,m \qquad(24)</script><p>其中，有$\alpha\geq0,\beta\geq0$。因为$\beta_i=C-\alpha_i\geq0$，不失一般性，我们可以约束$0\leq\alpha_i\leq C$，从而<strong>去掉变量</strong>$\beta_i$.将这些求解变量带入拉格朗日对偶型即公式(23)，得到和原来一样的目标函数，唯一的区别就是现在拉格朗日乘子$\alpha$多了一个上限C。</p>
+<p><strong>最终化简的软间隔支持向量机对偶型</strong>问题(软间隔支持向量机的对偶问题等价于找到一组合适的$\alpha$使得)</p>
+<script type="math/tex; mode=display">
+\underset{\alpha}{\min}\ \ \frac{1}{2}\sum_{i=1}^m{\sum_{j=1}^m{\alpha_i\alpha_jy_iy_j⟨x_i·x_j ⟩-\sum_{i=1}^m{\alpha_i}}} \\ \\ \\ s.t.\ \sum_{i=1}^m{a_iy_i=0} \\ \\ \\ 0\le a_i\le C\ ,\ \ i=1,2,···,m</script><p>上诉为最终化简的软间隔支持向量机对偶型问题，其优化模型还要满足以下的KKT条件</p>
+<ul>
+<li>主问题可行：$1-\xi_i-y_i(w^Tx_i+b)\leq0$,$-\xi\leq0$;</li>
+<li>对偶问题可行：$\alpha_i\geq0$, $\beta_i\geq0$;</li>
+<li>互补松弛：$\alpha_i(1-\xi_i-y_i(w^Tx_i+b))=0$,$\beta_i\xi_i=0$.</li>
+</ul>
+<p>根据KKT条件，我们也可以得到两个结论：</p>
+<ul>
+<li>结论一：软间隔支持向量机中, 支持向量落在最大间隔边界, 内部, 或被错误分类的样本</li>
+</ul>
+<p>证明：由软间隔支持向量机的 KKT 条件可知，$\alpha_i(1-\xi_i-y_i(w^Tx_i+b))=0$且$\beta_i\xi_i=0$。当$\alpha_i&gt;0$时，$1-\xi_i-y_i(w^Tx_i+b)=0$，进一步可以分为两种情况：</p>
+<p>第一：$0&lt;\alpha_i&lt;’C$， 此时$\beta_i$=C-$\alpha_i$&gt;0(公式24的偏导约束)。因此$\xi_i$=0，即样本恰好落在最大间隔边界上。</p>
+<p>第二：$\alpha_i=C$， 此时$\beta_i=C-\alpha_i=0$. 若$\xi$ &lt;1’则分类正确，该样本落在最大间隔内部(间隔边界与分离超平面之间)；若$\xi$=1，该样本在分隔超面上。若$\xi$&gt;0样本位于分离超平面误分的一侧。</p>
+<ul>
+<li>结论二：支持向量机的参数 (w, b) 仅由支持向量决定,与其他样本无关。</li>
+</ul>
+<p>证明：和线性支持向量机证明方式相同.</p>
+<p>求解w，b的方式也与线性支持向量机相同。注意：对任一适合条件0&lt;a&lt;C都可求得一个$b^∗$，即这些点正好是位于分隔边界上的点来求出b点的。但是由于原始问题对b的求解并不唯一，所以实际计算时可以取在所有符合条件的样本点上的平均值。</p>
+<script type="math/tex; mode=display">
+w^*=\sum_{i=1}^N{a_{i}^{*}y_ix_i}</script><p>选择a的一个分量的一个分量$a_i$适合约束条件适合约束条件0&lt;$a_i$&lt;C,计算</p>
+<script type="math/tex; mode=display">
+b^*=y_j-\sum_{i=1}^N{a_{i}^{*}y_i⟨x_i·x_j ⟩}</script><h2 id="Hinge损失函数"><a href="#Hinge损失函数" class="headerlink" title="Hinge损失函数"></a>Hinge损失函数</h2><p>线性支持向量机学习除了原始最优化问题，还有另外一种解释，就是最优化以下目标函数.下标”+”表示以下取正值的函数z=max(0，z)：</p>
+<script type="math/tex; mode=display">
+\sum_i^{m}[1-y_i(w·x_i+b)]_++\lambda||w||^2</script><p>目标函数的第一项是经验损失或经验风险，函数$L(y·(w·x+b))=[1-y(w·x+b)]_+$ ,称为<strong>合页损失函数（hinge loss function）</strong>.这就是说，当样本点$(x_i,y_i)$被分类正确且函数间隔（确信度）$y_i(w\cdot x_i+b)$大于1时，损失是0，否则损失是$1-y_i(w\cdot x_i+b)$。目标函数目标函数的第二项是系数的L2范数，是正则项。下面要证明上面的公式等价于线性支持向量机原始最优化问题，即(公式21)</p>
+<p>证明：先令$[1-y_i(w·x_i+b)]_+=\xi_i$， 则可以写成$\xi_i=\max(0, 1-y_i(w·x_i+b) )$ 。当样本满足约束分类正确时，$y_i(w\cdot x_i+b)&gt;1$， 有$1-y_i(w\cdot x_i+b)\leq0$，得$\xi_i=0$; 当当样本不满足约束时分类错误时， 有$\xi_i=1-y_i(w\cdot x_i+b)$ </p>
+<p>故公式21的两个约束条件满足，其最优问题可以写作</p>
+<script type="math/tex; mode=display">
+\underset{w,b}{min}\sum_{i=1}^m\xi_i+\lambda||w||^2</script><p>若取$\lambda =\frac{1}{2C}$， 则$\underset{w,b}{min} \frac{1}{C}(\frac{1}{2} ||w||^2+C\sum_{i=1}^N \xi_i)$ 与原始最优问题等价</p>
+<p><img src="/2018/07/18/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（四）：支持向量机/09.png" alt=""></p>
+<p>图中还画出了0-1损失函数，可以认为它是一个二类分类问题的真正的损失函数，而合页损失函数是0-1损失函数的上界。由于0-1损失函数不是连续可导的，直接优化其构成的目标函数比较困难，可以认为线性支持向量机是优化由0-1损失函数的上界（合页损失函数）构成的目标函数。这时的上界损失函数又称为代理损失函数（surrogate function）。</p>
+<p>图中虚线显示的是感知机的损失函数，相比之下，合页损失函数不仅要分类正确，而且确信度足够高时损失才是0，也就是说，合页损失函数对学习有更高的要求。</p>
+<h2 id="核函数"><a href="#核函数" class="headerlink" title="核函数"></a>核函数</h2><p>线性可分问题：既然在原始的特征空间$R^d$不是线性可分的, 支持向量机希望通过一个映射 $\phi$ :$R^d$ →<br> $R^{\widetilde{d}}$,使得数据在新的空间 $R^{\widetilde{d}}$ 是线性可分的.</p>
+<p>令 $\phi$(x)代表将样本 x 映射到 $R^{\widetilde{d}}$中的特征向量,参数 w 的维数也要相应变为 $\widetilde{d}$维.</p>
+<p>在上面的支持向量机对偶公式中，注意到，被映射到高维的特征向量总是以成对内积的形式存在，即 $\phi (x_i)^T\phi(x_j)$ ,如果先计算特征在$R^{\widetilde{d}}$ 空间的映射, 再计算内积, 复杂度是O($\widetilde{d}$) ,当特征被映射到非常高维的空间, 甚至是无穷维空间时, 这将会是沉重的存储和计算负担.</p>
+<p>核技巧旨在将特征映射和内积这两步运算压缩为一步, 并且使复杂度由O($\widetilde{d}$)降为O($d$),即, 核技巧希望构造一个核函数 $\kappa (x_i,x_j) $ ,使得</p>
+<script type="math/tex; mode=display">
+\kappa(x_i,x_j)=\phi (x_i)^T\phi(x_j)</script><p>并且，$\kappa (x_i,x_j) $ 的计算复杂度是 O($d$) .</p>
+<h1 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h1><h2 id="软间隔分类"><a href="#软间隔分类" class="headerlink" title="软间隔分类"></a>软间隔分类</h2><p>如果我们严格地规定所有的数据都不在“街道”上，都在正确地两边，称为<strong>硬间隔分类</strong>，硬间隔分类有两个问题，第一，只对线性可分的数据起作用，第二，对异常点敏感。</p>
+<p>为了避免上述的问题，我们更倾向于使用更加软性的模型。目的在保持“街道”尽可能大和避免间隔违规（例如：数据点出现在“街道”中央或者甚至在错误的一边）之间找到一个良好的平衡。这就是软间隔分类。</p>
+<p><strong>在 Scikit-Learn 库的 SVM 类，你可以用C超参数（惩罚系数）来控制这种平衡：较小的C会导致更宽的“街道”，但更多的间隔违规</strong>。下图显示了在非线性可分隔的数据集上，两个软间隔SVM分类器的判定边界。左边图中，使用了较大的C值，导致更少的间隔违规，但是间隔较小。右边的图，使用了较小的C值，间隔变大了，但是许多数据点出现在了“街道”上。然而，<strong>第二个分类器似乎泛化地更好</strong>：事实上，在这个训练数据集上减少了预测错误，因为实际上大部分的间隔违规点出现在了判定边界正确的一侧</p>
+<p><img src="/2018/07/18/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（四）：支持向量机/01.jpg" alt=""></p>
+<blockquote>
+<p>如果你的 SVM 模型过拟合，你可以尝试通过减小超参数C去调整(街道更宽)</p>
+<p>SVM 特别适合复杂的分类，而中小型的数据集分类中很少用到。另外，SVM 对特征缩放比较敏感，要先做数据缩放处理。</p>
+</blockquote>
+<p>以下的 Scikit-Learn 代码加载了内置的鸢尾花（Iris）数据集，缩放特征，并训练一个线性 SVM 模型（使用<code>LinearSVC</code>类，超参数<code>C=1</code>，hinge 损失函数）来检测 Virginica 鸢尾花。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">from</span> sklearn <span class="keyword">import</span> datasets</span><br><span class="line"><span class="keyword">from</span> sklearn.pipeline <span class="keyword">import</span> Pipeline</span><br><span class="line"><span class="keyword">from</span> sklearn.preprocessing <span class="keyword">import</span> StandardScaler</span><br><span class="line"><span class="keyword">from</span> sklearn.svm <span class="keyword">import</span> LinearSVC</span><br><span class="line"></span><br><span class="line">iris = datasets.load_iris()</span><br><span class="line">X = iris[<span class="string">"data"</span>][:, (<span class="number">2</span>, <span class="number">3</span>)] <span class="comment"># petal length, petal width</span></span><br><span class="line">y = (iris[<span class="string">"target"</span>] == <span class="number">2</span>).astype(np.float64) <span class="comment"># Iris-Virginica</span></span><br><span class="line"></span><br><span class="line">svm_clf = Pipeline((</span><br><span class="line">        (<span class="string">"scaler"</span>, StandardScaler()),</span><br><span class="line">        (<span class="string">"linear_svc"</span>, LinearSVC(C=<span class="number">1</span>, loss=<span class="string">"hinge"</span>)),</span><br><span class="line">    ))</span><br><span class="line"></span><br><span class="line">svm_clf.fit(X_scaled, y)</span><br><span class="line"></span><br><span class="line">Then, <span class="keyword">as</span> usual, you can use the model to make predictions:</span><br><span class="line"></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>svm_clf.predict([[<span class="number">5.5</span>, <span class="number">1.7</span>]])</span><br><span class="line">array([ <span class="number">1.</span>])</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>不同于 Logistic 回归分类器，SVM 分类器不会输出每个类别的概率。</p>
+<p>SVM的分类器为SVC类，回归则为SVR类。</p>
+</blockquote>
+<p>作为一种选择，你可以在 SVC 类，使用<code>SVC(kernel=&quot;linear&quot;, C=1)</code>，但是它比较慢，尤其在较大的训练集上，所以一般不被推荐。另一个选择是使用<code>SGDClassifier</code>类，即<code>SGDClassifier(loss=&quot;hinge&quot;, alpha=1/(m*C))</code>。它应用了随机梯度下降（SGD 见第四章）来训练一个线性 SVM 分类器。尽管它不会和<code>LinearSVC</code>一样快速收敛，但是对于处理那些不适合放在内存的大数据集是非常有用的，或者处理在线分类任务同样有用。</p>
+<blockquote>
+<p><code>LinearSVC</code>要使偏置项规范化，首先你应该集中训练集减去它的平均数，完成数据中心化。如果你使用了<code>StandardScaler</code>，那么它会自动处理。此外，确保你设置<code>loss</code>参数为<code>hinge</code>，因为它不是默认值。最后，为了得到更好的效果，你需要将<code>dual</code>参数设置为<code>False</code>，除非特征数比样本量多。</p>
+</blockquote>
+<h2 id="常用损失函数"><a href="#常用损失函数" class="headerlink" title="常用损失函数"></a>常用损失函数</h2><ol>
+<li><strong>铰链损失（Hinge Loss）</strong>：主要用于支持向量机（SVM） 中， 二分类<em>SVM</em>等于Hinge损失+ L2正则化。</li>
+<li><strong>互熵损失 （Cross Entropy Loss，Softmax Loss ）</strong>：用于Logistic 回归与Softmax 分类中； </li>
+<li><strong>平方损失（Square Loss）</strong>：主要是最小二乘法（OLS）中； </li>
+<li><strong>指数损失（Exponential Loss）</strong> ：主要用于Adaboost 集成学习算法中； </li>
+</ol>
+<p>Hinge loss 的叫法来源于其损失函数的图形，为一个折线，通用的函数表达式为：</p>
+<script type="math/tex; mode=display">
+L(m_i) = max(0,1-m_i(w)) =\max(0, 1-y\tilde{y}), 其中y=\pm 1</script><p>表示如果被正确分类，损失是0，否则损失就是 $1-m_i(w)​$</p>
+<p><img src="/2018/07/18/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（四）：支持向量机/02.JPG" alt=""></p>
+<p>在机器学习中，Hing 可以用来解 <strong>间距最大化</strong> 的问题，最有代表性的就是SVM 问题，最初的SVM 优化函数如下： </p>
+<script type="math/tex; mode=display">
+\underset{w,\zeta}{argmin} \frac{1}{2}||w||^2+ C\sum_i \zeta_i \\
+st.\quad \forall y_iw^Tx_i \geq 1- \zeta_i \\
+\zeta_i \geq 0</script><p>将约束项进行变形，则为： </p>
+<script type="math/tex; mode=display">
+\zeta_i \geq 1-y_iw^Tx_i</script><p>则损失函数可以进一步写为： </p>
+<script type="math/tex; mode=display">
+\begin{equation}\begin{split}J(w)&=\frac{1}{2}||w||^2 + C\sum_i max(0,1-y_iw^Tx_i) \\
+&= \frac{1}{2}||w||^2 + C\sum_i max(0,1-m_i(w)) \\
+&= \frac{1}{2}||w||^2 + C\sum_i L_{Hinge}(m_i)
+\end{split}\end{equation}</script><p>因此， <strong>SVM 的损失函数可以看作是 L2-norm 和 Hinge loss 之和</strong>。</p>
+<h2 id="非线性支持向量机分类"><a href="#非线性支持向量机分类" class="headerlink" title="非线性支持向量机分类"></a>非线性支持向量机分类</h2><h3 id="创建多项式特征"><a href="#创建多项式特征" class="headerlink" title="创建多项式特征"></a>创建多项式特征</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.datasets <span class="keyword">import</span> make_moons</span><br><span class="line"><span class="keyword">from</span> sklearn.pipeline <span class="keyword">import</span> Pipeline</span><br><span class="line"><span class="keyword">from</span> sklearn.preprocessing <span class="keyword">import</span> PolynomialFeatures</span><br><span class="line"></span><br><span class="line">polynomial_svm_clf = Pipeline((</span><br><span class="line">        (<span class="string">"poly_features"</span>, PolynomialFeatures(degree=<span class="number">3</span>)),</span><br><span class="line">        (<span class="string">"scaler"</span>, StandardScaler()),</span><br><span class="line">        (<span class="string">"svm_clf"</span>, LinearSVC(C=<span class="number">10</span>, loss=<span class="string">"hinge"</span>))</span><br><span class="line">    ))</span><br><span class="line"></span><br><span class="line">polynomial_svm_clf.fit(X, y)</span><br></pre></td></tr></table></figure>
+<h3 id="多项式核"><a href="#多项式核" class="headerlink" title="多项式核"></a>多项式核</h3><p>添加多项式特征很容易实现，不仅仅在 SVM，在各种机器学习算法都有不错的表现，但是<strong>低次数的多项式不能处理非常复杂的数据集，而高次数的多项式却产生了大量的特征，会使模型变得慢.</strong></p>
+<p>幸运的是，当你使用 SVM 时，你可<strong>以运用一个被称为“核技巧”（kernel trick）的神奇数学技巧。它可以取得就像你添加了许多多项式，甚至有高次数的多项式，一样好的结果。所以不会大量特征导致的组合爆炸，因为你并没有增加任何特征</strong>。超参数<code>coef0</code>控制了高阶多项式与低阶多项式对模型的影响。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.svm <span class="keyword">import</span> SVC</span><br><span class="line">poly_kernel_svm_clf = Pipeline((</span><br><span class="line">        (<span class="string">"scaler"</span>, StandardScaler()),</span><br><span class="line">        (<span class="string">"svm_clf"</span>, SVC(kernel=<span class="string">"poly"</span>, degree=<span class="number">3</span>, coef0=<span class="number">1</span>, C=<span class="number">5</span>))</span><br><span class="line">    ))</span><br><span class="line">poly_kernel_svm_clf.fit(X, y)</span><br></pre></td></tr></table></figure>
+<h3 id="增加相似特征"><a href="#增加相似特征" class="headerlink" title="增加相似特征"></a>增加相似特征</h3><p><strong>另一种解决非线性问题的方法是使用相似函数（similarity funtion）计算每个样本与特定地标（landmark）的相似度。</strong>例如，让我们来看看前面讨论过的一维数据集，<strong>并在x1=-2和x1=1之间增加两个地标</strong>。接下来，我们定义一个相似函数，即高斯径向基函数（Gaussian Radial Basis Function，RBF），设置γ = 0.3。</p>
+<script type="math/tex; mode=display">
+RBF:\quad \phi_{\gamma}(x, \ell) = exp(-\gamma \|x - \ell \|^2)</script><p>它是个从 0 到 1 的钟型函数，值为 0 的离地标很远，值为 1 的在地标上。<strong>现在我们准备计算新特征。例如，我们看一下样本x0=-1：它距离第一个地标距离(x1=-2)是 1，距离第二个地标(x1=1)是 2。因此它的新特征为x2=exp((-0.3 × 1)^2)≈0.74和x3=exp((-0.3 × 2)^2)≈0.30</strong>。右边的图显示了特征转换后的数据集（删除了原始特征），正如你看到的，它现在是线性可分了。</p>
+<p><img src="/2018/07/18/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（四）：支持向量机/03.jpg" alt=""></p>
+<p><strong>你可能想知道如何选择地标。最简单的方法是在数据集中的每一个样本的位置创建地标。这将产生更多的维度从而增加了转换后数据集是线性可分的可能性</strong>。<strong>但缺点是，m个样本，n个特征的训练集被转换成了m个实例，m个特征的训练集（假设你删除了原始特征）。这样一来，如果你的训练集非常大，你最终会得到同样大的特征</strong></p>
+<h3 id="高斯-RBF-核"><a href="#高斯-RBF-核" class="headerlink" title="高斯 RBF 核"></a>高斯 RBF 核</h3><p>就像多项式特征法一样，相似特征法对各种机器学习算法同样也有不错的表现。但是在所有额外特征上的计算成本可能很高，特别是在大规模的训练集上。然而，“核” 技巧再一次显现了它在 SVM 上的神奇之处：<strong>高斯核让你可以获得同样好的结果成为可能，就像你在相似特征法添加了许多相似特征一样</strong>，但事实上，你并不需要在RBF添加它们。我们使用 SVC 类的高斯 RBF 核来检验一下。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">rbf_kernel_svm_clf = Pipeline((</span><br><span class="line">        (<span class="string">"scaler"</span>, StandardScaler()),</span><br><span class="line">        (<span class="string">"svm_clf"</span>, SVC(kernel=<span class="string">"rbf"</span>, gamma=<span class="number">5</span>, C=<span class="number">0.001</span>))</span><br><span class="line">    ))</span><br><span class="line">rbf_kernel_svm_clf.fit(X, y)</span><br></pre></td></tr></table></figure>
+<p>下图显示了用不同的超参数gamma (γ)和C训练的模型<strong>。增大γ使钟型曲线更窄，导致每个样本的影响范围变得更小：即判定边界最终变得更不规则，在单个样本周围环绕。相反的，较小的γ值使钟型曲线更宽，样本有更大的影响范围，判定边界最终则更加平滑。所以γ是可调整的超参数：如果你的模型过拟合，你应该减小γ值，若欠拟合，则增大γ（与超参数C相似）。</strong></p>
+<p><img src="/2018/07/18/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（四）：支持向量机/04.JPG" alt=""></p>
+<p>还有其他的核函数，但很少使用。例如，一些核函数是专门用于特定的数据结构。在对文本文档或者 DNA 序列进行分类时，有时会使用字符串核（String kernels）（例如，使用 SSK 核（string subsequence kernel）或者基于编辑距离（Levenshtein distance）的核函数）</p>
+<blockquote>
+<p>这么多可供选择的核函数，你如何决定使用哪一个？一般来说，你应该先尝试线性核函数（记住LinearSVC比SVC(kernel=”linear”)要快得多），尤其是当训练集很大或者有大量的特征的情况下。如果训练集不太大，你也可以尝试高斯径向基核（Gaussian RBF Kernel），它在大多数情况下都很有效。如果你有空闲的时间和计算能力，你还可以使用交叉验证和网格搜索来试验其他的核函数，特别是有专门用于你的训练集数据结构的核函数</p>
+</blockquote>
+<h2 id="计算复杂性"><a href="#计算复杂性" class="headerlink" title="计算复杂性"></a>计算复杂性</h2><p><strong>LinearSVC类基于liblinear库，它实现了线性 SVM 的优化算法。它并不支持核技巧</strong>，但是它样本和特征的数量几乎是线性的：训练时间复杂度大约为O(m × n)。</p>
+<p>如果你要非常高的精度，这个算法需要花费更多时间。这是由容差值超参数ϵ（在 Scikit-learn 称为tol）控制的。大多数分类任务中，使用默认容差值的效果是已经可以满足一般要求。</p>
+<p><strong>SVC 类基于libsvm库，它实现了支持核技巧的算法</strong>。训练时间复杂度通常介于O(m^2 × n)和O(m^3 × n)之间。不幸的是，<strong>这意味着当训练样本变大时，它将变得极其慢</strong>（例如，成千上万个样本）。这个算法对于复杂但小型或中等数量的数据集表现是完美的。然而，它能对特征数量很好的缩放，尤其对稀疏特征来说（sparse features）（即每个样本都有一些非零特征）。在这个情况下，算法对每个样本的非零特征的平均数量进行大概的缩放。下表对 Scikit-learn 的 SVM 分类模型进行比较。</p>
+<p><img src="/2018/07/18/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（四）：支持向量机/05.jpg" alt=""></p>
+<h2 id="SVM-回归"><a href="#SVM-回归" class="headerlink" title="SVM 回归"></a>SVM 回归</h2><p>正如我们之前提到的，<strong>SVM 算法应用广泛：不仅仅支持线性和非线性的分类任务，还支持线性和非线性的回归任务</strong>。技巧在于逆转我们的目标：限制间隔违规的情况下，<strong>不是试图在两个类别之间找到尽可能大的“街道”（即间隔）。SVM 回归任务是限制间隔违规情况下，尽量放置更多的样本在“街道”上</strong>。“街道”的宽度由超参数ϵ控制。下图显示了在一些随机生成的线性数据上，两个线性 SVM 回归模型的训练情况。一个有较大的间隔（ϵ=1.5），另一个间隔较小（ϵ=0.5）</p>
+<p><img src="/2018/07/18/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（四）：支持向量机/06.jpg" alt=""></p>
+<p>添加更多的数据样本在间隔之内并不会影响模型的预测，因此，这个模型认为是不敏感的（ϵ-insensitive）。</p>
+<p>你可以使用 Scikit-Learn 的LinearSVR类去实现线性 SVM 回归。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.svm <span class="keyword">import</span> LinearSVR</span><br><span class="line">svm_reg = LinearSVR(epsilon=<span class="number">1.5</span>)</span><br><span class="line">svm_reg.fit(X, y)</span><br></pre></td></tr></table></figure>
+<p><strong>处理非线性回归任务，你可以使用核化的 SVM 模型</strong>。比如，图显示了在随机二次方的训练集，使用二次方多项式核函数的 SVM 回归。左图是较小的正则化（即更大的C值），右图则是更大的正则化（即小的C值）。</p>
+<p><img src="/2018/07/18/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（四）：支持向量机/07.jpg" alt=""></p>
+<p>下面的代码使用了 Scikit-Learn 的SVR类（支持核技巧）。在回归任务上，SVR类和SVC类是一样的，并且LinearSVR是和LinearSVC等价。LinearSVR类和训练集的大小成线性（就像LinearSVC类），当训练集变大，SVR会变的很慢（就像SVC类）</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.svm <span class="keyword">import</span> SVR</span><br><span class="line"></span><br><span class="line">svm_poly_reg = SVR(kernel=<span class="string">"poly"</span>, degree=<span class="number">2</span>, C=<span class="number">100</span>, epsilon=<span class="number">0.1</span>)</span><br><span class="line">svm_poly_reg.fit(X, y)</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>SVM 也可以用来做异常值检测，详情见 Scikit-Learn 文档</p>
+</blockquote>
+<h1 id="补充"><a href="#补充" class="headerlink" title="补充"></a>补充</h1><h2 id="拉格朗日子乘与KKT"><a href="#拉格朗日子乘与KKT" class="headerlink" title="拉格朗日子乘与KKT"></a>拉格朗日子乘与KKT</h2><h3 id="等式约束问题"><a href="#等式约束问题" class="headerlink" title="等式约束问题"></a>等式约束问题</h3><p><img src="/2018/07/18/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（四）：支持向量机/10.png" alt=""></p>
+<p><img src="/2018/07/18/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（四）：支持向量机/11.png" alt=""></p>
+<p><strong>可以得到一个重要的结论：▽f(x)一定与▽h(x)平行，故其关系可以写成▽f(x) =λ ▽h(x).</strong></p>
+<p>扩展到高维度等式：f(x)为目标优化函数，hi(x)为约束等式，其表达式恒等于0。F(x)为等价的拉格朗日子乘函数。</p>
+<p><img src="/2018/07/18/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（四）：支持向量机/12.png" alt=""></p>
+<p>计算 F 对x与$\lambda$ 的偏导数并令其为零，可得最优解的必要条件：</p>
+<p><img src="/2018/07/18/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（四）：支持向量机/13.png" alt=""></p>
+<p><strong>其中第一式为定常方程式(stationary equation)</strong>，第二式为约束条件。也就是之前已经证明过得结果</p>
+<p><strong>故等式约束要满足的条件</strong>为</p>
+<p><img src="/2018/07/18/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（四）：支持向量机/14.png" alt=""></p>
+<h3 id="不等式约束问题"><a href="#不等式约束问题" class="headerlink" title="不等式约束问题"></a>不等式约束问题</h3><p><img src="/2018/07/18/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（四）：支持向量机/15.jpg" alt=""></p>
+<p>这两种情况的最佳解具有两种不同的必要条件</p>
+<ol>
+<li>内部解：h(x)&lt;0，不满足h(x)的等式约束，故不在边界上，在可行域的内部。在约束条件无效的情形下， h(x)不起作用，约束优化问题退化为无约束优化问题，因此驻点(最优解)<strong>满足▽f(x)=0且$\lambda$=0</strong> ($\lambda$为0才能消去F(x)的约束项)。</li>
+<li>边界解：在约束条件有效的情形下，约束不等式变成等式约束，有h(x)=0。和等式约束做相同的处理。另外，存在$\lambda$ 使得$\bigtriangledown f=-\lambda \bigtriangledown g$，但这里$\lambda$ 的正负号是有其意义的。<strong>因为我们希望最小化</strong> f，梯度$\bigtriangledown f$ <strong>(函数</strong> f<strong>在点</strong>x<strong>的最陡上升方向)应该指向可行域的内部(因为你的最优解最小值是在边界取得的)，但</strong> $\bigtriangledown g$<strong>指向可行域的的外部(即 g(x)&gt;0的区域，因为你的约束是小于等于0)，因此$\lambda \geq0$，称为对偶可行性(dual feasibility)</strong>。</li>
+</ol>
+<p>所以，不论是内部解或边界解，$\lambda h(x)=0$恒成立(不同情况总有一个为0)，称为互补松弛性(complementary slackness)。整合上述两种情况，最佳解的必要条件包括拉格朗日函数常定方程式、主问题可行，对偶可行，和互补松弛。</p>
+<p><img src="/2018/07/18/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（四）：支持向量机/16.jpg" alt=""></p>
+<h2 id="对偶性"><a href="#对偶性" class="headerlink" title="对偶性"></a>对偶性</h2><p>一个优化问题，通过求出它的 dual problem ，在只有 weak duality 成立的情况下，我们至少可以得到原始问题的一个下界。而如果 strong duality 成立，则可以直接求解 dual problem 来解决原始问题，就如同经典的 SVM 的求解过程一样。有可能 dual problem 比 primal problem 更容易求解，或者 dual problem 有一些优良的结构（例如 SVM 中通过 dual problem 我们可以将问题表示成数据的内积形式从而使得 kernel trick 的应用成为可能）。此外，还有一些情况会同时求解 dual 和 primal problem ，比如在迭代求解的过程中，通过判断 duality gap 的大小，可以得出一个有效的迭代停止条件.</p>
+<h2 id="支持向量机的其他变体"><a href="#支持向量机的其他变体" class="headerlink" title="支持向量机的其他变体"></a>支持向量机的其他变体</h2><h3 id="Prob-SVM"><a href="#Prob-SVM" class="headerlink" title="Prob SVM."></a>Prob SVM.</h3><p><strong>Prob SVM</strong>. 对数几率回归可以估计出样本属于正类的概率, 而支持向量机只能判断样本属于正类或负类,无法得到概率.Prob SVM 先训练一个支持向量机, 得到参数(w,b)。再令$s_i:=y_iw^Tx_i+b$，将${(s_1,y_1),(s_2,y_2),…,(s_m,y_m)}$当做新的训练数据训练一个对数几率回归模型，得到参数$(\theta_1,\theta_0)$.因此，ProbSVM 的假设函数为</p>
+<script type="math/tex; mode=display">
+h(x):=sigm(\theta_1(w^Tx_i+b)+\theta_0)</script><p>对数几率回归模型可以认为是对训练得到的支持向量机的微调, 包括尺度 (对应$\theta_1)$和平移(对应$\theta_0$).</p>
+<h3 id="多分类支持向量机"><a href="#多分类支持向量机" class="headerlink" title="多分类支持向量机"></a>多分类支持向量机</h3><p>支持向量机也可以扩展到多分类问题中. 对于 K 分类问题, 多分类支持向量机有 K组参数 ${(w_1,b_1),(w_2,b_2),…,(w_K,b_K)}$并希望模型对于属于正确标记的结果以 1 的间隔高于其他类的结果, 形式化如下</p>
+<script type="math/tex; mode=display">
+\min \limits_{W,b} \frac{1}{m}\sum_{i=1}^m\sum_{k=1}^Kmax(0,(w_{yi}^Tx_i+b_{yi})-(w_{k}^Tx_i+b_{k}+1)+\frac{2}{\lambda}\sum_{k=1}^Kw_k^Tw_k</script><h3 id="支持向量回归-SVR"><a href="#支持向量回归-SVR" class="headerlink" title="支持向量回归 (SVR)"></a>支持向量回归 (SVR)</h3><p>支持向量回归 (SVR). 经典回归模型的损失函数度量了模型的预测 $h(x_i)$与$y_i$的差别, 支持向量回归能够容忍$h(x_i)$与$y_i$之间小于$\epsilon$ 的偏差.令$s:=y-w^Tx+b$，我们定义$\epsilon$不敏感损失为</p>
+<p><img src="/2018/07/18/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（四）：支持向量机/17.jpg" alt=""></p>
+<h2 id="支持向量机和LR的异同"><a href="#支持向量机和LR的异同" class="headerlink" title="支持向量机和LR的异同"></a>支持向量机和LR的异同</h2><h3 id="SVM与LR的相同点"><a href="#SVM与LR的相同点" class="headerlink" title="SVM与LR的相同点"></a>SVM与LR的相同点</h3><ol>
+<li>LR和SVM都是分类算法，都是监督学习算法。</li>
+<li>如果不考虑核函数，LR和SVM都是线性分类算法，也就是说他们的分类决策面都是线性的。LR也是可以用核函数的，至于为什么通常在SVM中运用核函数而不在LR中运用，后面讲到他们之间区别的时候会重点分析。总之，原始的LR和SVM都是线性分类器，这也是为什么通常没人问你决策树和LR什么区别，决策树和SVM什么区别，你说一个非线性分类器和一个线性分类器有什么区别？</li>
+<li>LR和SVM都是判别模型。判别模型会生成一个表示P(Y|X)的判别函数（或预测模型），而生成模型先计算联合概率p(Y,X)然后通过贝叶斯公式转化为条件概率。简单来说，在计算判别模型时，不会计算联合概率，而在计算生成模型时，必须先计算联合概率。或者这样理解：生成算法尝试去找到底这个数据是怎么生成的（产生的），然后再对一个信号进行分类。基于你的生成假设，那么那个类别最有可能产生这个信号，这个信号就属于那个类别。判别模型不关心数据是怎么生成的，它只关心信号之间的差别，然后用差别来简单对给定的一个信号进行分类。常见的判别模型有：KNN、SVM、LR，常见的生成模型有：朴素贝叶斯，隐马尔可夫模型。当然，这也是为什么很少有人问你朴素贝叶斯和LR以及朴素贝叶斯和SVM有什么区别。</li>
+<li>LR和SVM在学术界和工业界都广为人知并且应用广泛。</li>
+</ol>
+<h3 id="SVM与LR的不同点"><a href="#SVM与LR的不同点" class="headerlink" title="SVM与LR的不同点"></a>SVM与LR的不同点</h3><p>1.损失函数</p>
+<p>SVM的处理方法是只考虑support vectors，也就是和分类最相关的少数点，去学习分类器。而逻辑回归通过非线性映射，大大减小了离分类平面较远的点的权重，相对提升了与分类最相关的数据点的权重,两者的根本目的都是一样的。即支持向量机只考虑局部的边界线附近的点，而逻辑回归考虑全局（远离的点对边界线的确定也起作用）。</p>
+<p>影响SVM决策面的样本点只有少数的支持向量，当在支持向量外添加或减少任何样本点对分类决策面没有任何影响；而在LR中，每个样本点都会影响决策面的结果</p>
+<p>2.核技巧</p>
+<p>在解决非线性问题时，支持向量机采用核函数的机制，而LR通常不采用核函数的方法。</p>
+<p>这个问题理解起来非常简单。分类模型的结果就是计算决策面，模型训练的过程就是决策面的计算过程。通过上面的第二点不同点可以了解，在计算决策面时，SVM转化为对偶问题后，只有少数几个代表支持向量的样本参与了计算，也就是只有少数几个样本需要参与核计算（即kernal machine解的系数是稀疏的），这个在进行复杂核函数计算时优势很明显，能够大大简化模型和计算量。。然而，LR算法里，每个样本点都必须参与决策面的计算过程，也就是说，假设我们在LR里也运用核函数的原理，那么每个样本点都必须参与核计算，这带来的计算复杂度是相当高的。所以，在具体应用时，LR很少运用核函数机制。</p>
+<p>3.正则项</p>
+<p>根据需要，两个方法都可以增加不同的正则化项，如l1,l2等等。所以在很多实验中，两种算法的结果是很接近的。但是逻辑回归相对来说模型更简单，好理解，实现起来，特别是大规模线性分类时比较方便。而SVM的理解和优化相对来说复杂一些。但是SVM的理论基础更加牢固，有一套结构化风险最小化的理论基础，虽然一般使用的人不太会去关注。</p>
+<p>4.异常值</p>
+<p>两者对异常的敏感度也不一样。同样的线性分类情况下，如果异常点较多的话，无法剔除，首先LR，LR中每个样本都是有贡献的，最大似然后会自动压制异常的贡献，SVM+软间隔对异常还是比较敏感，因为其训练只需要支持向量，有效样本本来就不高，一旦被干扰，预测结果难以预料。</p>
+<p>5.normalization</p>
+<p>两个模型对数据和参数的敏感程度不同，Linear SVM比较依赖penalty的系数和数据表达空间的测度，而（带正则项的）LR比较依赖对参数做L1 regularization的系数。但是由于他们或多或少都是线性分类器，所以实际上对低维度数据overfitting的能力都比较有限，相比之下对高维度数据，LR的表现会更加稳定，为什么呢？</p>
+<p>因为Linear SVM在计算margin有多“宽”的时候是依赖数据表达上的距离测度的，换句话说如果这个测度不好（badly scaled，这种情况在高维数据尤为显著），所求得的所谓Large margin就没有意义了，这个问题即使换用kernel trick（比如用Gaussian kernel）也无法完全避免。所以使用Linear SVM之前一般都需要先对数据做normalization，而求解LR（without regularization）时则不需要或者结果不敏感。</p>
+<h1 id="练习题"><a href="#练习题" class="headerlink" title="练习题"></a>练习题</h1><ol>
+<li>支持向量机背后的基本思想是什么</li>
+<li>什么是支持向量</li>
+<li>当使用 SVM 时，为什么标准化输入很重要？</li>
+<li>分类一个样本时，SVM 分类器能够输出一个置信值吗？概率呢？</li>
+<li>在一个有数百万训练样本和数百特征的训练集上，你是否应该使用 SVM 原始形式或对偶形式来训练一个模型？</li>
+<li>假设你用 RBF 核来训练一个 SVM 分类器，如果对训练集欠拟合：你应该增大或者减小<code>γ</code>吗？调整参数<code>C</code>呢？</li>
+</ol>
+<hr>
+<p>1、支持向量机背后的基本目标是在训练实例中分隔两个类的决策边界之间具有最大可能的间隔。 当执行软间隔分类时，SVM在完全分离两个类和具有尽可能宽的街道之间搜索折衷。 另一个关键思想是在训练非线性数据集时使用核技巧。</p>
+<p>2、在训练SVM之后，支持向量是位于“街道”上的任何实例，包括其边界。 决策边界完全由支持向量决定。 任何不是支持向量的实例（即街道外）都没有任何影响; 你可以删除它们，添加更多实例或移动它们，只要它们离开街道它们就不会影响决策边界。 计算预测仅涉及支持向量，而不是整个训练集。</p>
+<p>3、SVM尝试适应类之间最大可能的“街道”，因此如果训练集未缩放，SVM将倾向于忽略数值小的特征。</p>
+<p>4、SVM分类器可以输出测试实例与决策边界之间的距离，您可以将其用作置信度分数。 但是，这个分数不能直接转换为类概率的估计。 如果在Scikit-Learn中创建SVM时设置probability = True，则在训练之后，它将使用SVM分数的Logistic回归校准概率（通过对训练数据进行额外的5折交叉验证进行训练）。 这会将predict_proba（）和predict_log_proba（）方法添加到SVM。</p>
+<p>5、此问题仅适用于线性SVM，因为进行核化kernelized需要用到对偶形式(对偶问题就是为了可以进行核化)。 SVM问题的原始形式的计算复杂度与训练实例m的数量成比例，而对偶形式的计算复杂度与m2和m3之间的数量成比例。 所以如果有数百万个实例，你肯定应该使用原始形式，因为对偶形式会太慢。</p>
+<p>6、如果使用RBF内核训练的SVM分类器不适合训练集，则可能存在正则化强度过高。 要减少它，您需要增加gamma或C（或两者）。</p>
+
+      
+    </div>
+    
+    
+    
+    
+    
+	<div>
+    	  <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------<i class="fa fa-heart"></i>Thanks for Reading!<i class="fa fa-heart"></i>-------------</div>
+    
+</div>
+	</div>
+    
+    
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/机器学习/" rel="tag"><i class="fa fa-tag"></i> 机器学习</a>
+          
+            <a href="/tags/SVM/" rel="tag"><i class="fa fa-tag"></i> SVM</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/07/14/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（三）：回归/" rel="next" title="Sklearn 与 TensorFlow 机器学习实用指南（三）：回归">
+                <i class="fa fa-chevron-left"></i> Sklearn 与 TensorFlow 机器学习实用指南（三）：回归
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/07/23/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（五）：决策树/" rel="prev" title="Sklearn 与 TensorFlow 机器学习实用指南（五）：决策树">
+                Sklearn 与 TensorFlow 机器学习实用指南（五）：决策树 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="Mosbyllc" />
+            
+              <p class="site-author-name" itemprop="name">Mosbyllc</p>
+              <p class="site-description motion-element" itemprop="description">Sometimes thing have to fall apart to make way for better things.</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">60</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">73</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/kugua233" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="http://weibo.com/Mosbyllc" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://segmentfault.com/u/kugua233" target="_blank" title="SegmentFault">
+                      
+                        <i class="fa fa-fw fa-strikethrough"></i>SegmentFault</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:1499913789@qq.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Recommended reading
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://plushunter.github.io/" title="Free Will" target="_blank">Free Will</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#推导"><span class="nav-number">1.</span> <span class="nav-text">推导</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#支持向量机条件描述"><span class="nav-number">1.1.</span> <span class="nav-text">支持向量机条件描述</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#样本分类"><span class="nav-number">1.1.1.</span> <span class="nav-text">样本分类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#最大间隔"><span class="nav-number">1.1.2.</span> <span class="nav-text">最大间隔</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#约束条件"><span class="nav-number">1.1.3.</span> <span class="nav-text">约束条件</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#拉格朗日函数与对偶形式"><span class="nav-number">1.2.</span> <span class="nav-text">拉格朗日函数与对偶形式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#拉格朗日函数"><span class="nav-number">1.2.0.1.</span> <span class="nav-text">拉格朗日函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#KKT条件和对偶形式"><span class="nav-number">1.2.0.2.</span> <span class="nav-text">KKT条件和对偶形式</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#线性支持向量机"><span class="nav-number">1.3.</span> <span class="nav-text">线性支持向量机</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#软间隔支持向量机"><span class="nav-number">1.4.</span> <span class="nav-text">软间隔支持向量机</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Hinge损失函数"><span class="nav-number">1.5.</span> <span class="nav-text">Hinge损失函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#核函数"><span class="nav-number">1.6.</span> <span class="nav-text">核函数</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#应用"><span class="nav-number">2.</span> <span class="nav-text">应用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#软间隔分类"><span class="nav-number">2.1.</span> <span class="nav-text">软间隔分类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#常用损失函数"><span class="nav-number">2.2.</span> <span class="nav-text">常用损失函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#非线性支持向量机分类"><span class="nav-number">2.3.</span> <span class="nav-text">非线性支持向量机分类</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#创建多项式特征"><span class="nav-number">2.3.1.</span> <span class="nav-text">创建多项式特征</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#多项式核"><span class="nav-number">2.3.2.</span> <span class="nav-text">多项式核</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#增加相似特征"><span class="nav-number">2.3.3.</span> <span class="nav-text">增加相似特征</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#高斯-RBF-核"><span class="nav-number">2.3.4.</span> <span class="nav-text">高斯 RBF 核</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#计算复杂性"><span class="nav-number">2.4.</span> <span class="nav-text">计算复杂性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SVM-回归"><span class="nav-number">2.5.</span> <span class="nav-text">SVM 回归</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#补充"><span class="nav-number">3.</span> <span class="nav-text">补充</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#拉格朗日子乘与KKT"><span class="nav-number">3.1.</span> <span class="nav-text">拉格朗日子乘与KKT</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#等式约束问题"><span class="nav-number">3.1.1.</span> <span class="nav-text">等式约束问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#不等式约束问题"><span class="nav-number">3.1.2.</span> <span class="nav-text">不等式约束问题</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#对偶性"><span class="nav-number">3.2.</span> <span class="nav-text">对偶性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#支持向量机的其他变体"><span class="nav-number">3.3.</span> <span class="nav-text">支持向量机的其他变体</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Prob-SVM"><span class="nav-number">3.3.1.</span> <span class="nav-text">Prob SVM.</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#多分类支持向量机"><span class="nav-number">3.3.2.</span> <span class="nav-text">多分类支持向量机</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#支持向量回归-SVR"><span class="nav-number">3.3.3.</span> <span class="nav-text">支持向量回归 (SVR)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#支持向量机和LR的异同"><span class="nav-number">3.4.</span> <span class="nav-text">支持向量机和LR的异同</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#SVM与LR的相同点"><span class="nav-number">3.4.1.</span> <span class="nav-text">SVM与LR的相同点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SVM与LR的不同点"><span class="nav-number">3.4.2.</span> <span class="nav-text">SVM与LR的不同点</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#练习题"><span class="nav-number">4.</span> <span class="nav-text">练习题</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-star"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mosbyllc</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+  
+
+  
+
+</body>
+</html>
