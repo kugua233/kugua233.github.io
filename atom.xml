@@ -180,9 +180,9 @@
       <category term="数据挖掘" scheme="http://yoursite.com/categories/%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98/"/>
     
     
-      <category term="聚类" scheme="http://yoursite.com/tags/%E8%81%9A%E7%B1%BB/"/>
-    
       <category term="DBSCAN聚类" scheme="http://yoursite.com/tags/DBSCAN%E8%81%9A%E7%B1%BB/"/>
+    
+      <category term="聚类" scheme="http://yoursite.com/tags/%E8%81%9A%E7%B1%BB/"/>
     
       <category term="STING聚类" scheme="http://yoursite.com/tags/STING%E8%81%9A%E7%B1%BB/"/>
     

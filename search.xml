@@ -69,8 +69,8 @@
         <category>数据挖掘</category>
       </categories>
       <tags>
-        <tag>聚类</tag>
         <tag>DBSCAN聚类</tag>
+        <tag>聚类</tag>
         <tag>STING聚类</tag>
         <tag>DPCA聚类</tag>
         <tag>谱聚类</tag>
