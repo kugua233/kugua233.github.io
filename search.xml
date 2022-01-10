@@ -2866,11 +2866,11 @@ X_{recovered} = X_{d-proj} \cdot W_d^T</script><h3 id="增量-PCA（Incremental-
         <category>Sklearn 与 TensorFlow 机器学习实用指南</category>
       </categories>
       <tags>
+        <tag>机器学习</tag>
         <tag>PCA</tag>
         <tag>MDS</tag>
         <tag>LLE</tag>
         <tag>Isomap</tag>
-        <tag>机器学习</tag>
       </tags>
   </entry>
   <entry>
@@ -4330,8 +4330,8 @@ TNR = \frac{TN}{N} = \frac{TN}{TN+FP}</script><p><img src="/2018/07/11/Sklearn �
         <category>Sklearn 与 TensorFlow 机器学习实用指南</category>
       </categories>
       <tags>
-        <tag>机器学习</tag>
         <tag>拆分数据</tag>
+        <tag>机器学习</tag>
         <tag>数据预处理</tag>
         <tag>K折交叉验证</tag>
         <tag>格子搜索</tag>
