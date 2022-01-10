@@ -298,6 +298,466 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/30/python编程进阶/python编程进阶（8）：容器Collections/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mosbyllc">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Mosbyllc">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/06/30/python编程进阶/python编程进阶（8）：容器Collections/" itemprop="url">python编程进阶（8）：容器Collections</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-30T16:14:32+08:00">
+                2018-06-30
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python编程进阶/" itemprop="url" rel="index">
+                    <span itemprop="name">python编程进阶</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  2,945
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  13
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="容器-Collections"><a href="#容器-Collections" class="headerlink" title="容器(Collections)"></a>容器(Collections)</h1><p>Python附带一个模块，它包含许多容器数据类型，名字叫作<code>collections</code>。我们将讨论它的作用和用法。</p>
+<p>我们将讨论的是：</p>
+<ul>
+<li>defaultdict</li>
+<li>counter</li>
+<li>deque</li>
+<li>namedtuple</li>
+<li>enum.Enum (包含在Python 3.4以上)</li>
+</ul>
+<h2 id="defaultdict"><a href="#defaultdict" class="headerlink" title="defaultdict"></a>defaultdict</h2><p>众所周知，在Python中如果访问字典中不存在的键，会引发KeyError异常（JavaScript中如果对象中不存在某个属性，则返回undefined）。<strong>但是有时候，字典中的每个键都存在默认值是非常方便的</strong>。例如下面的例子：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">strings = (<span class="string">'puppy'</span>, <span class="string">'kitten'</span>, <span class="string">'puppy'</span>, <span class="string">'puppy'</span>,</span><br><span class="line">           <span class="string">'weasel'</span>, <span class="string">'puppy'</span>, <span class="string">'kitten'</span>, <span class="string">'puppy'</span>)</span><br><span class="line">counts = &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> kw <span class="keyword">in</span> strings:</span><br><span class="line">    counts[kw] += <span class="number">1</span>	<span class="comment"># 第一次统计时没有键对应的默认值</span></span><br></pre></td></tr></table></figure>
+<p>该例子统计strings中某个单词出现的次数，并在counts字典中作记录。单词每出现一次，在counts相对应的键所存的值数字加1。<strong>但是事实上，运行这段代码会抛出KeyError异常，出现的时机是每个单词第一次统计的时候，因为Python的dict中不存在默认值的说法</strong>，可以在Python命令行中验证：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>counts = dict()</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>counts</span><br><span class="line">&#123;&#125;</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>counts[<span class="string">'puppy'</span>] += <span class="number">1</span></span><br><span class="line">Traceback (most recent call last):</span><br><span class="line">  File <span class="string">"&lt;stdin&gt;"</span>, line <span class="number">1</span>, <span class="keyword">in</span> &lt;module&gt;</span><br><span class="line">KeyError: <span class="string">'puppy'</span></span><br></pre></td></tr></table></figure>
+<h3 id="使用判断语句检查"><a href="#使用判断语句检查" class="headerlink" title="使用判断语句检查"></a>使用判断语句检查</h3><p>既然如此，首先可能想到的方法是在单词第一次统计的时候，<strong>在counts中相应的键存下默认值1</strong>。这需要在处理的时候添加一个判断语句：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">strings = (<span class="string">'puppy'</span>, <span class="string">'kitten'</span>, <span class="string">'puppy'</span>, <span class="string">'puppy'</span>,</span><br><span class="line">           <span class="string">'weasel'</span>, <span class="string">'puppy'</span>, <span class="string">'kitten'</span>, <span class="string">'puppy'</span>)</span><br><span class="line">counts = &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> kw <span class="keyword">in</span> strings:</span><br><span class="line">    <span class="keyword">if</span> kw <span class="keyword">not</span> <span class="keyword">in</span> counts:</span><br><span class="line">        counts[kw] = <span class="number">1</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        counts[kw] += <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># counts:</span></span><br><span class="line"><span class="comment"># &#123;'puppy': 5, 'weasel': 1, 'kitten': 2&#125;</span></span><br></pre></td></tr></table></figure>
+<h3 id="使用dict-setdefault-方法"><a href="#使用dict-setdefault-方法" class="headerlink" title="使用dict.setdefault()方法"></a>使用<code>dict.setdefault()</code>方法</h3><p>也可以通过<code>dict.setdefault()</code>方法来设置默认值：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">strings = (<span class="string">'puppy'</span>, <span class="string">'kitten'</span>, <span class="string">'puppy'</span>, <span class="string">'puppy'</span>,</span><br><span class="line">           <span class="string">'weasel'</span>, <span class="string">'puppy'</span>, <span class="string">'kitten'</span>, <span class="string">'puppy'</span>)</span><br><span class="line">counts = &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> kw <span class="keyword">in</span> strings:</span><br><span class="line">    counts.setdefault(kw, <span class="number">0</span>)</span><br><span class="line">    counts[kw] += <span class="number">1</span></span><br></pre></td></tr></table></figure>
+<p><strong><code>dict.setdefault()</code>方法接收两个参数，第一个参数是健的名称，第二个参数是默认值。假如字典中不存在给定的键，则返回参数中提供的默认值；反之，则返回字典中保存的值</strong>。利用<code>dict.setdefault()</code>方法的返回值可以重写for循环中的代码，使其更加简洁：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">strings = (<span class="string">'puppy'</span>, <span class="string">'kitten'</span>, <span class="string">'puppy'</span>, <span class="string">'puppy'</span>,</span><br><span class="line">           <span class="string">'weasel'</span>, <span class="string">'puppy'</span>, <span class="string">'kitten'</span>, <span class="string">'puppy'</span>)</span><br><span class="line">counts = &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> kw <span class="keyword">in</span> strings:</span><br><span class="line">    counts[kw] = counts.setdefault(kw, <span class="number">0</span>) + <span class="number">1</span></span><br></pre></td></tr></table></figure>
+<h3 id="使用collections-defaultdict类"><a href="#使用collections-defaultdict类" class="headerlink" title="使用collections.defaultdict类"></a>使用<code>collections.defaultdict</code>类</h3><p>以上的方法虽然在一定程度上解决了dict中不存在默认值的问题，但是这时候我们会想，有没有一种字典它本身提供了默认值的功能呢？答案是肯定的，那就是<code>collections.defaultdict</code>。</p>
+<p><strong>defaultdict类就好像是一个dict，但是它是使用一个类型来初始化的</strong>：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> collections <span class="keyword">import</span> defaultdict</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>dd = defaultdict(list)	<span class="comment"># 接受一个list类型作为初始化参数</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>dd</span><br><span class="line">defaultdict(&lt;type <span class="string">'list'</span>&gt;, &#123;&#125;)</span><br></pre></td></tr></table></figure>
+<p><strong>defaultdict类的初始化函数接受一个类型作为参数，当所访问的键不存在的时候，可以实例化一个值作为默认值：</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>dd[<span class="string">'foo'</span>]</span><br><span class="line">[]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>dd</span><br><span class="line">defaultdict(&lt;type <span class="string">'list'</span>&gt;, &#123;<span class="string">'foo'</span>: []&#125;)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>dd[<span class="string">'bar'</span>].append(<span class="string">'quux'</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>dd</span><br><span class="line">defaultdict(&lt;type <span class="string">'list'</span>&gt;, &#123;<span class="string">'foo'</span>: [], <span class="string">'bar'</span>: [<span class="string">'quux'</span>]&#125;)</span><br></pre></td></tr></table></figure>
+<p>需<strong>要注意的是，这种形式的默认值只有在通过<code>dict[key]</code>或者<code>dict.__getitem__(key)</code>访问的时候才有效</strong>，这其中的原因在下文会介绍。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> collections <span class="keyword">import</span> defaultdict</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>dd = defaultdict(list)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="string">'something'</span> <span class="keyword">in</span> dd</span><br><span class="line"><span class="literal">False</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>dd.pop(<span class="string">'something'</span>)</span><br><span class="line">Traceback (most recent call last):</span><br><span class="line">  File <span class="string">"&lt;stdin&gt;"</span>, line <span class="number">1</span>, <span class="keyword">in</span> &lt;module&gt;</span><br><span class="line">KeyError: <span class="string">'pop(): dictionary is empty'</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>dd.get(<span class="string">'something'</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>dd[<span class="string">'something'</span>]</span><br><span class="line">[]</span><br></pre></td></tr></table></figure>
+<p><strong>该类除了接受类型名称作为初始化函数的参数之外，还可以使用任何不带参数的可调用函数，到时该函数的返回结果作为默认值</strong>，这样使得默认值的取值更加灵活。下面用一个例子来说明，如何用自定义的不带参数的函数zero()作为初始化函数的参数：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> collections <span class="keyword">import</span> defaultdict</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="function"><span class="keyword">def</span> <span class="title">zero</span><span class="params">()</span>:</span></span><br><span class="line"><span class="meta">... </span>    <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">...</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>dd = defaultdict(zero)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>dd</span><br><span class="line">defaultdict(&lt;function zero at <span class="number">0xb7ed2684</span>&gt;, &#123;&#125;)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>dd[<span class="string">'foo'</span>]</span><br><span class="line"><span class="number">0</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>dd</span><br><span class="line">defaultdict(&lt;function zero at <span class="number">0xb7ed2684</span>&gt;, &#123;<span class="string">'foo'</span>: <span class="number">0</span>&#125;)</span><br></pre></td></tr></table></figure>
+<p>利用<code>collections.defaultdict</code>来解决最初的单词统计问题，代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> defaultdict</span><br><span class="line"></span><br><span class="line">strings = (<span class="string">'puppy'</span>, <span class="string">'kitten'</span>, <span class="string">'puppy'</span>, <span class="string">'puppy'</span>,</span><br><span class="line">           <span class="string">'weasel'</span>, <span class="string">'puppy'</span>, <span class="string">'kitten'</span>, <span class="string">'puppy'</span>)</span><br><span class="line">counts = defaultdict(<span class="keyword">lambda</span>: <span class="number">0</span>)  <span class="comment"># 使用lambda来定义简单的函数</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> s <span class="keyword">in</span> strings:</span><br><span class="line">    counts[s] += <span class="number">1</span></span><br></pre></td></tr></table></figure>
+<h3 id="defaultdict-类是如何实现的"><a href="#defaultdict-类是如何实现的" class="headerlink" title="defaultdict 类是如何实现的"></a>defaultdict 类是如何实现的</h3><p>通过上面的内容，想必大家已经了解了defaultdict类的用法，那么在defaultdict类中又是如何来实现默认值的功能呢？<strong>这其中的关键是使用了看<code>__missing__()</code>这个方法</strong>：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> collections <span class="keyword">import</span> defaultdict</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">print</span> defaultdict.__missing__.__doc__</span><br><span class="line">__missing__(key) <span class="comment"># Called by __getitem__ for missing key; pseudo-code:</span></span><br><span class="line">  <span class="keyword">if</span> self.default_factory <span class="keyword">is</span> <span class="literal">None</span>: <span class="keyword">raise</span> KeyError(key)</span><br><span class="line">  self[key] = value = self.default_factory()</span><br><span class="line">  <span class="keyword">return</span> value</span><br></pre></td></tr></table></figure>
+<p><strong>通过查看<code>__missing__()</code>方法的docstring，可以看出当使用<code>__getitem__()</code>方法访问一个不存在的键时(dict[key]这种形式实际上是<code>__getitem__()</code>方法的简化形式)，会调用<code>__missing__()</code>方法获取默认值，并将该键添加到字典中去</strong>。</p>
+<h2 id="counter"><a href="#counter" class="headerlink" title="counter"></a>counter</h2><p>Counter是一个计数器，它可以帮助我们针对某项数据进行计数。比如它可以用来计算每个人喜欢多少种颜色：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> Counter</span><br><span class="line"></span><br><span class="line">colours = (</span><br><span class="line">    (<span class="string">'Yasoob'</span>, <span class="string">'Yellow'</span>),</span><br><span class="line">    (<span class="string">'Ali'</span>, <span class="string">'Blue'</span>),</span><br><span class="line">    (<span class="string">'Arham'</span>, <span class="string">'Green'</span>),</span><br><span class="line">    (<span class="string">'Ali'</span>, <span class="string">'Black'</span>),</span><br><span class="line">    (<span class="string">'Yasoob'</span>, <span class="string">'Red'</span>),</span><br><span class="line">    (<span class="string">'Ahmed'</span>, <span class="string">'Silver'</span>),</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">favs = Counter(name <span class="keyword">for</span> name, colour <span class="keyword">in</span> colours)</span><br><span class="line">print(favs)</span><br><span class="line"></span><br><span class="line"><span class="comment">## 输出:</span></span><br><span class="line"><span class="comment">## Counter(&#123;</span></span><br><span class="line"><span class="comment">##     'Yasoob': 2,</span></span><br><span class="line"><span class="comment">##     'Ali': 2,</span></span><br><span class="line"><span class="comment">##     'Arham': 1,</span></span><br><span class="line"><span class="comment">##     'Ahmed': 1</span></span><br><span class="line"><span class="comment">##  &#125;)</span></span><br></pre></td></tr></table></figure>
+<p>我们也可以在利用它统计一个文件，例如：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> open(<span class="string">'filename'</span>, <span class="string">'rb'</span>) <span class="keyword">as</span> f:</span><br><span class="line">    line_count = Counter(f)</span><br><span class="line">print(line_count)</span><br></pre></td></tr></table></figure>
+<p>还有</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> collections <span class="keyword">import</span> Counter</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>c = Counter()</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">for</span> ch <span class="keyword">in</span> <span class="string">'programming'</span>:</span><br><span class="line"><span class="meta">... </span>    c[ch] = c[ch] + <span class="number">1</span></span><br><span class="line">...</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>c</span><br><span class="line">Counter(&#123;<span class="string">'g'</span>: <span class="number">2</span>, <span class="string">'m'</span>: <span class="number">2</span>, <span class="string">'r'</span>: <span class="number">2</span>, <span class="string">'a'</span>: <span class="number">1</span>, <span class="string">'i'</span>: <span class="number">1</span>, <span class="string">'o'</span>: <span class="number">1</span>, <span class="string">'n'</span>: <span class="number">1</span>, <span class="string">'p'</span>: <span class="number">1</span>&#125;)</span><br></pre></td></tr></table></figure>
+<h2 id="deque"><a href="#deque" class="headerlink" title="deque"></a>deque</h2><p>deque提供了一个双端队列，你可以从头/尾两端添加或删除元素。要想使用它，首先我们要从<code>collections</code>中导入<code>deque</code>模块：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> deque</span><br></pre></td></tr></table></figure>
+<p>现在，你可以创建一个<code>deque</code>对象。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">d = deque()</span><br></pre></td></tr></table></figure>
+<p>它的用法就像python的<code>list</code>，并且提供了类似的方法，例如：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">d = deque()</span><br><span class="line">d.append(<span class="string">'1'</span>)</span><br><span class="line">d.append(<span class="string">'2'</span>)</span><br><span class="line">d.append(<span class="string">'3'</span>)</span><br><span class="line"></span><br><span class="line">print(len(d))</span><br><span class="line"></span><br><span class="line"><span class="comment">## 输出: 3</span></span><br><span class="line"></span><br><span class="line">print(d[<span class="number">0</span>])</span><br><span class="line"></span><br><span class="line"><span class="comment">## 输出: '1'</span></span><br><span class="line"></span><br><span class="line">print(d[<span class="number">-1</span>])</span><br><span class="line"></span><br><span class="line"><span class="comment">## 输出: '3'</span></span><br></pre></td></tr></table></figure>
+<p>你可以从两端取出(pop)数据：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">d = deque(range(<span class="number">5</span>))</span><br><span class="line">print(len(d))</span><br><span class="line"></span><br><span class="line"><span class="comment">## 输出: 5</span></span><br><span class="line"></span><br><span class="line">d.popleft()</span><br><span class="line"></span><br><span class="line"><span class="comment">## 输出: 0</span></span><br><span class="line"></span><br><span class="line">d.pop()</span><br><span class="line"></span><br><span class="line"><span class="comment">## 输出: 4</span></span><br><span class="line"></span><br><span class="line">print(d)</span><br><span class="line"></span><br><span class="line"><span class="comment">## 输出: deque([1, 2, 3])</span></span><br></pre></td></tr></table></figure>
+<p>我们也可以限制这个列表的大小，当超出你设定的限制时，数据会从对队列另一端被挤出去(pop)。<br>最好的解释是给出一个例子：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">d = deque(maxlen=<span class="number">30</span>)</span><br></pre></td></tr></table></figure>
+<p>现在当你插入30条数据时，最左边一端的数据将从队列中删除。</p>
+<p>你还可以从任一端扩展这个队列中的数据：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">d = deque([<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>])</span><br><span class="line">d.extendleft([<span class="number">0</span>])</span><br><span class="line">d.extend([<span class="number">6</span>,<span class="number">7</span>,<span class="number">8</span>])</span><br><span class="line">print(d)</span><br><span class="line"></span><br><span class="line"><span class="comment">## 输出: deque([0, 1, 2, 3, 4, 5, 6, 7, 8])</span></span><br></pre></td></tr></table></figure>
+<h2 id="namedtuple"><a href="#namedtuple" class="headerlink" title="namedtuple"></a>namedtuple</h2><p>您可能已经熟悉元组。<br>一个元组是一个不可变的列表，你可以存储一个数据的序列，它和命名元组(<code>namedtuples</code>)非常像，但有几个关键的不同。<br><strong>主要相似点是都不像列表，你不能修改元组中的数据。为了获取元组中的数据，你需要使用整数作为索引</strong>：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">man = (<span class="string">'Ali'</span>, <span class="number">30</span>)</span><br><span class="line">print(man[<span class="number">0</span>])</span><br><span class="line"></span><br><span class="line"><span class="comment">## 输出: Ali</span></span><br></pre></td></tr></table></figure>
+<p><strong>嗯，那<code>namedtuples</code>是什么呢？它把元组变成一个针对简单任务的容器。你不必使用整数索引来访问一个<code>namedtuples</code>的数据。你可以像字典(<code>dict</code>)一样访问<code>namedtuples</code>，但<code>namedtuples</code>是不可变的</strong>。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> namedtuple</span><br><span class="line"></span><br><span class="line">Animal = namedtuple(<span class="string">'Animal'</span>, <span class="string">'name age type'</span>)</span><br><span class="line">perry = Animal(name=<span class="string">"perry"</span>, age=<span class="number">31</span>, type=<span class="string">"cat"</span>)</span><br><span class="line"></span><br><span class="line">print(perry)</span><br><span class="line"></span><br><span class="line"><span class="comment">## 输出: Animal(name='perry', age=31, type='cat')</span></span><br><span class="line"></span><br><span class="line">print(perry.name)</span><br><span class="line"></span><br><span class="line"><span class="comment">## 输出: 'perry'</span></span><br></pre></td></tr></table></figure>
+<p>现在你可以看到，我们可以用名字来访问<code>namedtuple</code>中的数据。我们再继续分析它。<strong>一个命名元组(<code>namedtuple</code>)有两个必需的参数。它们是元组名称和字段名称。</strong></p>
+<p><strong>在上面的例子中，我们的元组名称是<code>Animal</code>，字段名称是’name’，’age’和’type’。</strong><br><code>namedtuple</code>让你的元组变得<strong>自文档</strong>了。你只要看一眼就很容易理解代码是做什么的。<br><strong>你也不必使用整数索引来访问一个命名元组，这让你的代码更易于维护</strong>。<br>而且，<strong>namedtuple的每个实例没有对象字典</strong>，<strong>所以它们很轻量</strong>，与普通的元组比，并不需要更多的内存。这使得它们比字典更快。</p>
+<p><strong>然而，要记住它是一个元组，属性值在<code>namedtuple</code>中是不可变的，所以下面的代码不能工作</strong>：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> namedtuple</span><br><span class="line"></span><br><span class="line">Animal = namedtuple(<span class="string">'Animal'</span>, <span class="string">'name age type'</span>)</span><br><span class="line">perry = Animal(name=<span class="string">"perry"</span>, age=<span class="number">31</span>, type=<span class="string">"cat"</span>)</span><br><span class="line">perry.age = <span class="number">42</span></span><br><span class="line"></span><br><span class="line"><span class="comment">## 输出:</span></span><br><span class="line"><span class="comment">## Traceback (most recent call last):</span></span><br><span class="line"><span class="comment">##     File "", line 1, in</span></span><br><span class="line"><span class="comment">## AttributeError: can't set attribute</span></span><br></pre></td></tr></table></figure>
+<p>你应该使用命名元组来让代码<strong>自文档</strong>，<strong>它们向后兼容于普通的元组</strong>，<strong>这意味着你可以既使用整数索引，也可以使用名称来访问<code>namedtuple</code>：</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> namedtuple</span><br><span class="line"></span><br><span class="line">Animal = namedtuple(<span class="string">'Animal'</span>, <span class="string">'name age type'</span>)</span><br><span class="line">perry = Animal(name=<span class="string">"perry"</span>, age=<span class="number">31</span>, type=<span class="string">"cat"</span>)</span><br><span class="line">print(perry[<span class="number">0</span>])</span><br><span class="line"></span><br><span class="line"><span class="comment">## 输出: perry</span></span><br></pre></td></tr></table></figure>
+<p>最后，你可以将一个命名元组转换为字典，方法如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> namedtuple</span><br><span class="line"></span><br><span class="line">Animal = namedtuple(<span class="string">'Animal'</span>, <span class="string">'name age type'</span>)</span><br><span class="line">perry = Animal(name=<span class="string">"Perry"</span>, age=<span class="number">31</span>, type=<span class="string">"cat"</span>)</span><br><span class="line">print(perry._asdict())</span><br><span class="line"></span><br><span class="line"><span class="comment">## 输出: OrderedDict([('name', 'Perry'), ('age', 31), ...</span></span><br></pre></td></tr></table></figure>
+<h2 id="enum-Enum-Python-3-4"><a href="#enum-Enum-Python-3-4" class="headerlink" title="enum.Enum (Python 3.4+)"></a>enum.Enum (Python 3.4+)</h2><p>另一个有用的容器是枚举对象，它属于<code>enum</code>模块，存在于Python 3.4以上版本中（同时作为一个独立的PyPI包<code>enum34</code>供老版本使用）。Enums(枚举类型)基本上是一种组织各种东西的方式。</p>
+<p>让我们回顾一下上一个’Animal’命名元组的例子。它有一个type字段，问题是，type是一个字符串。那么问题来了，万一程序员输入了<code>Cat</code>，因为他按到了Shift键，或者输入了’CAT’，甚至’kitten’？解决的方法是为这样的枚举类型定义一个class类型，然后，<strong>每个常量都是class的一个唯一实例</strong>。Python提供了<code>Enum</code>类来实现这个功能：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> enum <span class="keyword">import</span> Enum</span><br><span class="line"></span><br><span class="line">Month = Enum(<span class="string">'Month'</span>, (<span class="string">'Jan'</span>, <span class="string">'Feb'</span>, <span class="string">'Mar'</span>, <span class="string">'Apr'</span>, <span class="string">'May'</span>, <span class="string">'Jun'</span>, <span class="string">'Jul'</span>, <span class="string">'Aug'</span>, <span class="string">'Sep'</span>, <span class="string">'Oct'</span>, <span class="string">'Nov'</span>, <span class="string">'Dec'</span>))</span><br></pre></td></tr></table></figure>
+<p>这样我们就获得了<code>Month</code>类型的枚举类，可以直接使用<code>Month.Jan</code>来引用一个常量，或者枚举它的所有成员：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> name, member <span class="keyword">in</span> Month.__members__.items():</span><br><span class="line">    print(name, <span class="string">'=&gt;'</span>, member, <span class="string">','</span>, member.value)</span><br></pre></td></tr></table></figure>
+<p><code>value</code>属性则是自动赋给成员的<code>int</code>常量，默认从<code>1</code>开始计数。</p>
+<p>如果需要更精确地控制枚举类型，可以从<code>Enum</code>派生出自定义类：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> namedtuple</span><br><span class="line"><span class="keyword">from</span> enum <span class="keyword">import</span> Enum</span><br><span class="line"></span><br><span class="line"><span class="meta">@unique		# @unique装饰器可以帮助我们检查保证没有重复值。</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Species</span><span class="params">(Enum)</span>:</span></span><br><span class="line">    cat = <span class="number">1</span></span><br><span class="line">    dog = <span class="number">2</span></span><br><span class="line">    horse = <span class="number">3</span></span><br><span class="line">    aardvark = <span class="number">4</span></span><br><span class="line">    butterfly = <span class="number">5</span></span><br><span class="line">    owl = <span class="number">6</span></span><br><span class="line">    platypus = <span class="number">7</span></span><br><span class="line">    dragon = <span class="number">8</span></span><br><span class="line">    unicorn = <span class="number">9</span></span><br><span class="line">    <span class="comment"># 依次类推</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 但我们并不想关心同一物种的年龄，所以我们可以使用一个别名</span></span><br><span class="line">    kitten = <span class="number">1</span>  <span class="comment"># (译者注：幼小的猫咪)</span></span><br><span class="line">    puppy = <span class="number">2</span>   <span class="comment"># (译者注：幼小的狗狗)</span></span><br><span class="line"></span><br><span class="line">Animal = namedtuple(<span class="string">'Animal'</span>, <span class="string">'name age type'</span>)</span><br><span class="line">perry = Animal(name=<span class="string">"Perry"</span>, age=<span class="number">31</span>, type=Species.cat)</span><br><span class="line">drogon = Animal(name=<span class="string">"Drogon"</span>, age=<span class="number">4</span>, type=Species.dragon)</span><br><span class="line">tom = Animal(name=<span class="string">"Tom"</span>, age=<span class="number">75</span>, type=Species.cat)</span><br><span class="line">charlie = Animal(name=<span class="string">"Charlie"</span>, age=<span class="number">2</span>, type=Species.kitten)</span><br></pre></td></tr></table></figure>
+<p>现在，我们进行一些测试：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>charlie.type == tom.type</span><br><span class="line"><span class="literal">True</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>charlie.type</span><br><span class="line">&lt;Species.cat: <span class="number">1</span>&gt;</span><br></pre></td></tr></table></figure>
+<p><strong>这样就没那么容易错误，我们必须更明确，而且我们应该只使用定义后的枚举类型</strong>。</p>
+<p>有三种方法访问枚举数据，例如以下方法都可以获取到’cat’的值：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Species(<span class="number">1</span>)</span><br><span class="line">Species[<span class="string">'cat'</span>]</span><br><span class="line">Species.cat</span><br></pre></td></tr></table></figure>
+<p>参考资料</p>
+<p>【1】：<a href="http://kodango.com/understand-defaultdict-in-python" target="_blank" rel="noopener">http://kodango.com/understand-defaultdict-in-python</a></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+    
+    
+    
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/30/python编程进阶/python编程进阶（7）：可变对象和slots/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mosbyllc">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Mosbyllc">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/06/30/python编程进阶/python编程进阶（7）：可变对象和slots/" itemprop="url">python编程进阶（7）：可变对象和slots</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-30T10:46:27+08:00">
+                2018-06-30
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python编程进阶/" itemprop="url" rel="index">
+                    <span itemprop="name">python编程进阶</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1,567
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  6
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="对象变动-Mutation"><a href="#对象变动-Mutation" class="headerlink" title="对象变动(Mutation)"></a>对象变动(Mutation)</h1><p>当你将一个变量赋值为另一个可变类型的变量时，<strong>对这个数据的任意改动会同时反映到这两个变量上去。新变量只不过是老变量的一个别名而已。对象可变与不可变性，是对内存地址而言的</strong>。现在讲述的这个情况只是针对可变数据类型。</p>
+<h2 id="不可变对象（需要复制到新内存）"><a href="#不可变对象（需要复制到新内存）" class="headerlink" title="不可变对象（需要复制到新内存）"></a>不可变对象（需要复制到新内存）</h2><blockquote>
+<p>常见不可变对象类型：int，string，float，tuple，bool ，frozenset，bytes</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">int_test</span><span class="params">()</span>:</span> </span><br><span class="line">    i = <span class="number">77</span></span><br><span class="line">    j = <span class="number">77</span></span><br><span class="line">    print(id(<span class="number">77</span>))                  <span class="comment">#140396579590760</span></span><br><span class="line">    print(<span class="string">'i id:'</span> + str(id(i)))      <span class="comment">#i id:140396579590760</span></span><br><span class="line">    print(<span class="string">'j id:'</span> + str(id(j)))      <span class="comment">#j id:140396579590760</span></span><br><span class="line">    <span class="keyword">print</span> i <span class="keyword">is</span> j                    <span class="comment">#True</span></span><br><span class="line">    j = j + <span class="number">1</span></span><br><span class="line">    print(<span class="string">'new i id:'</span> + str(id(i)))  <span class="comment">#new i id:140396579590760</span></span><br><span class="line">    print(<span class="string">'new j id:'</span> + str(id(j)))  <span class="comment">#new j id:140396579590736</span></span><br><span class="line">    <span class="keyword">print</span> i <span class="keyword">is</span> j                    <span class="comment">#False</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    int_test()</span><br></pre></td></tr></table></figure>
+<p>首先i和j都指向77这个内存块。然后我们修改j的值，按道理j修改之后应该i的值也发生改变的，因为它们都是指向的同一块内存，但结果是并没有。<strong>因为int类型是不可变类型，所有其实是j复制了一份到新的内存地址然后+1，然后j又指向了新的地址。所以j的内存id发生了变化。</strong></p>
+<p>内存变化如下：</p>
+<p><img src="/2018/06/30/python编程进阶/python编程进阶（7）：可变对象和slots/02.png" alt></p>
+<h2 id="可变对象（在原内存上修改）"><a href="#可变对象（在原内存上修改）" class="headerlink" title="可变对象（在原内存上修改）"></a>可变对象（在原内存上修改）</h2><blockquote>
+<p>常见可变对象类型：list，dict，set，user-defined classes(unless specifically made immutable)</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">dict_test</span><span class="params">()</span>:</span></span><br><span class="line">    a = &#123;&#125;	</span><br><span class="line">    b = a</span><br><span class="line">    print(id(a))	<span class="comment"># 140367329543360</span></span><br><span class="line">    a[<span class="string">'a'</span>] = <span class="string">'hhhh'</span></span><br><span class="line">    print(<span class="string">'id a:'</span> + str(id(a)))	<span class="comment"># id a:140367329543360</span></span><br><span class="line">    print(<span class="string">'a:'</span> + str(a))	<span class="comment"># a:&#123;'a': 'hhhh'&#125;</span></span><br><span class="line">    print(<span class="string">'id b:'</span> + str(id(b)))	<span class="comment"># id b:140367329543360</span></span><br><span class="line">    print(<span class="string">'b:'</span> + str(b))	<span class="comment"># b:&#123;'a': 'hhhh'&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    dict_test()</span><br></pre></td></tr></table></figure>
+<p>可以看到a最早的内存地址id是<code>140367329543360</code> 然后把a赋值给b其实就是让变量b的也指向a所指向的内存空间。然后我们发现当a发生变化后，b也跟着发生变化了。<strong>因为list是可变类型，所以并不会复制一份再改变，而是直接在a所指向的内存空间修改数据，而b也是指向该内存空间的，自然b也就跟着改变了。</strong></p>
+<p><img src="/2018/06/30/python编程进阶/python编程进阶（7）：可变对象和slots/03.png" alt></p>
+<p>对于列表，首地址是不可变的，而对于列表内的所有元素进行修改，会改变单个元素的地址（指向不同的引用）。所以说对于列表中的单个元素而言是不可变的，对于整体列表而言是可变的，如下图所示</p>
+<p><img src="/2018/06/30/python编程进阶/python编程进阶（7）：可变对象和slots/04.jpg" alt></p>
+<h2 id="python函数的参数传递"><a href="#python函数的参数传递" class="headerlink" title="python函数的参数传递"></a>python函数的参数传递</h2><p>由于<strong>python规定参数传递都是传递引用，也就是传递给函数的是原变量实际所指向的内存空间，修改的时候就会根据该引用的指向去修改该内存中的内容</strong>，所以按道理说我们在函数内改变了传递过来的参数的值的话，原来外部的变量也应该受到影响。但是上面我们说到了python中有可变类型和不可变类型，这样的话，<strong>当传过来的是可变类型(list,dict)时，我们在函数内部修改就会影响函数外部的变量。而传入的是不可变类型时在函数内部修改改变量并不会影响函数外部的变量，因为修改的时候会先复制一份再修改</strong>。下面通过代码证明一下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">test</span><span class="params">(a_int, b_list)</span>:</span></span><br><span class="line">    a_int = a_int + <span class="number">1</span></span><br><span class="line">    b_list.append(<span class="string">'13'</span>)</span><br><span class="line">    print(<span class="string">'inner a_int:'</span> + str(a_int))</span><br><span class="line">    print(<span class="string">'inner b_list:'</span> + str(b_list))</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    a_int = <span class="number">5</span></span><br><span class="line">    b_list = [<span class="number">10</span>, <span class="number">11</span>]</span><br><span class="line"></span><br><span class="line">    test(a_int, b_list)</span><br><span class="line"></span><br><span class="line">    print(<span class="string">'outer a_int:'</span> + str(a_int))</span><br><span class="line">    print(<span class="string">'outer b_list:'</span> + str(b_list))</span><br></pre></td></tr></table></figure>
+<p>运行结果如下:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">inner a_int:<span class="number">6</span></span><br><span class="line"></span><br><span class="line">inner b_list:[<span class="number">10</span>, <span class="number">11</span>, <span class="string">'13'</span>]</span><br><span class="line"></span><br><span class="line">outer a_int:<span class="number">5</span></span><br><span class="line"></span><br><span class="line">outer b_list:[<span class="number">10</span>, <span class="number">11</span>, <span class="string">'13'</span>]</span><br></pre></td></tr></table></figure>
+<p>好啦！答案显而易见啦，经过<code>test()</code>方法修改后，传递过来的int类型外部变量没有发生改变，而list这种可变类型则因为<code>test()</code>方法的影响导致内容发生了改变。</p>
+<p>在很多的其他语言中在传递参数的时候允许程序员选择值传递还是引用传递(比如c语言加上<em>号传递指针就是引用传递，而直接传递变量名就是值传递)，<em>*而python只允许使用引用传递，但是它加上了可变类型和不可变类型，听说python只允许引用传递是为方便内存管理，因为python使用的内存回收机制是计数器回收，就是每块内存上有一个计数器，表示当前有多少个对象指向该内存。每当一个变量不再使用时，就让该计数器-1，有新对象指向该内存时就让计数器+1，当计时器为0时，就可以收回这块内存了。</em></em></p>
+<h1 id="slots-魔法"><a href="#slots-魔法" class="headerlink" title="_slots_魔法"></a>_<em>slots_</em>魔法</h1><p><strong>在Python中，每个类都有实例属性。默认情况下Python用一个字典来保存一个对象的实例属性。这非常有用，因为它允许我们在运行时去设置任意的新属性。</strong></p>
+<p>然而，对于有着已知属性的小类来说，它可能是个瓶颈。这个字典浪费了很多内存。<strong>Python不能在对象创建时直接分配一个固定量的内存来保存所有的属性。因此如果你创建许多对象（我指的是成千上万个），它会消耗掉很多内存</strong>。<br>不过还是有一个方法来规避这个问题。<strong>这个方法需要使用<code>__slots__</code>来告诉Python不要使用字典，而且只给一个固定集合的属性分配空间。</strong></p>
+<p>这里是一个使用与不使用<code>__slots__</code>的例子：</p>
+<ul>
+<li><p>不使用 <code>__slots__</code>:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyClass</span><span class="params">(object)</span>:</span></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, name, identifier)</span>:</span></span><br><span class="line">      self.name = name</span><br><span class="line">      self.identifier = identifier</span><br><span class="line">      self.set_up()</span><br><span class="line">  <span class="comment"># ...</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>使用 <code>__slots__</code>:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyClass</span><span class="params">(object)</span>:</span></span><br><span class="line">  __slots__ = [<span class="string">'name'</span>, <span class="string">'identifier'</span>]</span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, name, identifier)</span>:</span></span><br><span class="line">      self.name = name</span><br><span class="line">      self.identifier = identifier</span><br><span class="line">      self.set_up()</span><br><span class="line">  <span class="comment"># ...</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>第二段代码会为你的内存减轻负担。通过这个技巧，有些人已经看到内存占用率几乎40%~50%的减少。</p>
+<p>稍微备注一下，你也许需要试一下PyPy。它已经默认地做了所有这些优化。</p>
+<p>参考资料：</p>
+<p>【1】python可变和不可变对象：<a href="https://www.jianshu.com/p/c5582e23b26c" target="_blank" rel="noopener">https://www.jianshu.com/p/c5582e23b26c</a></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+    
+    
+    
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/29/python编程进阶/python编程进阶（6）：装饰器/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1836,388 +2296,11 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/10/Linux/The Linux Command Line学习笔记（二）/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Mosbyllc">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Mosbyllc">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/06/10/Linux/The Linux Command Line学习笔记（二）/" itemprop="url">The Linux Command Line学习笔记（二）</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-10T17:06:11+08:00">
-                2018-06-10
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux/" itemprop="url" rel="index">
-                    <span itemprop="name">Linux</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  4,115
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  16
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="第十一章：进程"><a href="#第十一章：进程" class="headerlink" title="第十一章：进程"></a>第十一章：进程</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br></pre></td><td class="code"><pre><span class="line">这一章将介绍以下命令：</span><br><span class="line">这一章将介绍以下命令：</span><br><span class="line">ps    –    报告当前进程快照</span><br><span class="line">top    –    显示任务</span><br><span class="line">jobs    –    列出活跃的任务</span><br><span class="line">bg    –    把一个任务放到后台执行</span><br><span class="line">fg    –    把一个任务放到前台执行</span><br><span class="line">kill    –    给一个进程发送信号</span><br><span class="line">killall    –    杀死指定名字的进程</span><br><span class="line">shutdown    –    关机或重启系统</span><br><span class="line"></span><br><span class="line">系统分配给每个进程一个数字，这个数字叫做进程ID    或    PID。PID    号按升序分配，init    进程的    PID    总是1。</span><br><span class="line">查看进程  ps。ps    程序有许多选项，它最简单地使用形式是这样的：</span><br><span class="line"></span><br><span class="line">[me@linuxbox    ~]$    ps</span><br><span class="line">PID    TTY                   TIME     CMD</span><br><span class="line">5198    pts/1             00:00:00    bash</span><br><span class="line">10129    pts/1            00:00:00    ps</span><br><span class="line">TTY    是“Teletype”    的简写，是指进程的控制终端，TIME    字段表示    进程所消耗的</span><br><span class="line">CPU    时间数量，CMD代表运行的命令</span><br><span class="line"></span><br><span class="line">[me@linuxbox    ~]$    ps    x    # 可以得到更多关于系统运行状态的信息：</span><br><span class="line">输出结果中，新添加了一栏，标题为    STAT    。STAT    是    “state”    的简写，它揭示了进程当前状态：</span><br><span class="line">表11-1:    进程状态</span><br><span class="line">|    状态    |    意义    |</span><br><span class="line">|    ---    |    ---    |</span><br><span class="line">|    R    |    运行。这意味着，进程正在运行或准备运行。    |</span><br><span class="line">|    S    |    正在睡眠。    进程没有运行，而是，正在等待一个事件，    比如说，一个按键或者网络数据包。    |</span><br><span class="line">|    D    |    不可中断睡眠。进程正在等待    I/O，比方说，一个磁盘驱动器的    I/O。    |</span><br><span class="line">|    T    |    已停止.    已经指示进程停止运行。稍后介绍更多。    |</span><br><span class="line">|    Z    |    一个死进程或“僵尸”进程</span><br><span class="line">|    &lt;    |    一个高优先级进程</span><br><span class="line">|    N    |    低优先级进程。</span><br><span class="line"></span><br><span class="line">另一个流行的选项组合是    “aux”（不带开头的”-“字符）。这会给我们更多信息：</span><br><span class="line">[me@linuxbox    ~]$    ps    aux</span><br><span class="line"></span><br><span class="line">用    top    命令动态查看进程</span><br><span class="line">[me@linuxbox    ~]$    top</span><br><span class="line">top    显示结果由两部分组成：    最上面是系统概要，下面是进程列表，以    CPU    的使用率排序。输入q退出top程序。</span><br><span class="line"></span><br><span class="line">把一个进程放置到后台(执行)</span><br><span class="line">启动一个程序，让它立即在后台    运行，我们在程序命令之后，加上”&amp;”字符：</span><br><span class="line"></span><br><span class="line">[me@linuxbox    ~]$    xlogo    &amp;   #xlogo打开一个试验窗口</span><br><span class="line">[1]    28236                        # 工作号为1</span><br><span class="line">[me@linuxbox    ~]$</span><br><span class="line">如果我们运行    ps    命令，可以看到我们的进程：</span><br><span class="line"></span><br><span class="line">[me@linuxbox    ~]$    ps</span><br><span class="line">PID    TTY                 TIME              CMD</span><br><span class="line">10603    pts/1            00:00:00            bash</span><br><span class="line">28236    pts/1            00:00:00            xlogo</span><br><span class="line">28239    pts/1            00:00:00            ps</span><br><span class="line">执行    jobs    命令，我们可以看到这个输出列表：</span><br><span class="line">[me@linuxbox    ~]$    jobs</span><br><span class="line">[1]+    Running                                                xlogo    &amp;</span><br><span class="line"></span><br><span class="line">进程返回到前台</span><br><span class="line">一个在后台运行的进程对一切来自键盘的输入都免疫，也不能用    Ctrl-c    来中断它。使用    fg    命令，让一个</span><br><span class="line">进程返回前台执行：</span><br><span class="line"></span><br><span class="line">[me@linuxbox    ~]$    jobs</span><br><span class="line">[1]+    Running                                xlogo    &amp;</span><br><span class="line">[me@linuxbox    ~]$    fg    %1</span><br><span class="line">xlogo</span><br><span class="line">fg    命令之后，跟随着一个百分号和工作序号，输入    Ctrl-c    来终止    xlogo    程序</span><br><span class="line"></span><br><span class="line">停止一个进程，输入    Ctrl-z，可以停止一个前台进程。</span><br><span class="line">使用    fg    命令，可以恢复程序到前台运行，或者用    bg    命令把程序移到后台。</span><br><span class="line"></span><br><span class="line">Signals</span><br><span class="line">kill    命令被用来“杀死”程序。这样我们就可以终止需要杀死的程序。指定我们想要终止的进程    PID。也可以用    jobspec（例如，“％1”）来代替    PID。</span><br><span class="line"></span><br><span class="line">[me@linuxbox    ~]$    xlogo    &amp;</span><br><span class="line">[1]    28401</span><br><span class="line">[me@linuxbox    ~]$    kill    28401</span><br><span class="line">[1]+    Terminated                                                            xlogo</span><br><span class="line">这个    kill    命令不是确切地“杀死”程序，而是给程序    发送信号。当程序    接到信号之后，则做出响应。</span><br><span class="line">通过    kill    命令给进程发送信号，kill    命令被用来给程序发送信号。它最常见的语法形式看起来像这样（默认TERM终止信号）：</span><br><span class="line">kill    [-signal]    PID...</span><br><span class="line">表    11-4:    常用信号</span><br><span class="line">|    编号    |    名字    |    含义    |</span><br><span class="line">|    1    |    HUP    |    挂起，这意味着，当发送这个信号到一个守护进程后，    这个进程会重新启动，并且重新读取它的配置文件</span><br><span class="line">|    2    |    INT    |    中断。实现和    Ctrl-c    一样的功能，由终端发送。通常，它会终止一个程序。    |</span><br><span class="line">|    15    |    TERM    |    终止。这是    kill    命令发送的默认信号</span><br><span class="line">|    18    |    CONT    |    继续。在停止一段时间后，进程恢复运行。    |</span><br><span class="line">|    19    |    STOP    |    停止。这个信号导致进程停止运行，而没有终止</span><br><span class="line">例如：</span><br><span class="line">[me@linuxbox    ~]$    kill    -1    13546     #挂起 工作号为13546的进程</span><br></pre></td></tr></table></figure>
-<h2 id="第十二章：shell环境"><a href="#第十二章：shell环境" class="headerlink" title="第十二章：shell环境"></a>第十二章：shell环境</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">在这一章，我们将用到以下命令：</span><br><span class="line">printenv    -    打印部分或所有的环境变量</span><br><span class="line">set    -    设置    shell    选项</span><br><span class="line">export    —    导出环境变量，让随后执行的程序知道。</span><br><span class="line">alias    -    创建命令别名</span><br><span class="line"></span><br><span class="line">shell    在环境中存储了两种基本类型的数据，虽然对于    bash    来说，很大程度上这些类型是不可    辨别的。</span><br><span class="line">它们是环境变量和    shell    变量。Shell    变量是由    bash    存放的少量数据，而剩下的基本上    都是环境变量</span><br><span class="line"></span><br><span class="line">[me@linuxbox    ~]$    printenv    |    less #显示环境变量</span><br><span class="line"></span><br><span class="line">非登录    shell    会话也会继承它们父进程的环境设置，通常是一个登录    shell</span><br><span class="line"></span><br><span class="line">曾经是否感到迷惑    shell    是怎样知道到哪里找到我们在命令行中输入的命令的？例如，当我们输入    ls    后，</span><br><span class="line">shell    不会查找整个计算机系统，来找到    /bin/ls（ls    命令的绝对路径名），而是，它查找一个目录列表，</span><br><span class="line">这些目录包含在    PATH    变量中。</span><br><span class="line"></span><br><span class="line">通过添加字符串    $HOME/bin    到    PATH    变量值的末尾，则目录    $HOME/bin    就添加到了命令搜索目录列表中。这意味着当我们想要在自己的家目录下，创建一个目录来存储我们自己的私人程序时，shell    已经给我们准备好了。我们所要做的事就是    把创建的目录叫做    bin</span><br><span class="line"></span><br><span class="line">按照通常的规则，添加目录到你的    PATH    变量或者是定义额外的环境变量，要把这些更改放置到</span><br><span class="line">.bash_profile    文件中.     对于其它的更改，要放到    .bashrc    文件中。(修改通过vi编辑器)</span><br><span class="line"></span><br><span class="line">移动    鼠标到文件的最后一行，然后添加以下几行到文件    .bashrc    中：</span><br><span class="line"></span><br><span class="line">umask    0002</span><br><span class="line">export    HISTCONTROL=ignoredups</span><br><span class="line">export    HISTSIZE=1000</span><br><span class="line">alias    l.=&apos;ls    -d    .*    --color=auto&apos;</span><br><span class="line">alias    ll=&apos;ls    -l    --color=auto&apos;</span><br><span class="line"></span><br><span class="line">|    文本行    |    含义    |</span><br><span class="line">|-------|---------|</span><br><span class="line">|    umask    0002    |    设置掩码来解决共享目录的问题。    |</span><br><span class="line">|    export    HISTCONTROL=ignoredups    |    使得    shell    的历史记录功能忽略一个命令，如果相同的命令已被</span><br><span class="line">记录。    |</span><br><span class="line">|    export    HISTSIZE=1000    |    增加命令历史的大小，从默认的    500    行扩大到    1000    行。    |</span><br><span class="line">|    alias    l.=&apos;ls    -d    .*    --color=auto&apos;    |    创建一个新命令，叫做&apos;l.&apos;，这个命令会显示所有以点开头的目录项。    |</span><br><span class="line">|    alias    ll=&apos;ls    -l    --color=auto&apos;    |    创建一个叫做&apos;ll&apos;的命令，这个命令会显示长格式目录列表。    |</span><br><span class="line"></span><br><span class="line">激活我们的修改</span><br><span class="line">我们对于文件    .bashrc    的修改不会生效，直到我们关闭终端会话，再重新启动一个新的会话，    因为</span><br><span class="line">.bashrc    文件只是在刚开始启动终端会话时读取。然而，我们可以强迫    bash    重新读取修改过的    .bashrc</span><br><span class="line">文件，使用下面的命令：</span><br><span class="line">[me@linuxbox    ~]$    source    .bashrc</span><br></pre></td></tr></table></figure>
-<h2 id="第十三章：VI简介"><a href="#第十三章：VI简介" class="headerlink" title="第十三章：VI简介"></a>第十三章：VI简介</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line">[me@linuxbox    ~]$    vi    #启动vi:q!                          #加感叹号是强制退出</span><br><span class="line">小贴示：如果你在    vi    中“迷失”了，试着按下    Esc    键两次来找到路（回到普通模式）。</span><br><span class="line"></span><br><span class="line">编辑模式</span><br><span class="line">再次启动    vi，这次传递给    vi    一个不存在的文件名。这也是用    vi    创建新文件的方法。</span><br><span class="line">[me@linuxbox    ~]$    vi    foo.txt</span><br><span class="line">当    vi    启动后，进入    的是命令模式。这种模式下，几乎每个按键都是一个命令，所以如果我们打算输入字符，vi    会发疯，弄得一团糟。</span><br><span class="line">插入模式</span><br><span class="line">为了在文件中添加文本，首先我们必须进入插入模式。按下”i”按键进入插入模式，按下    Esc    按键，返回命令模式。</span><br><span class="line"></span><br><span class="line">--    INSERT    --</span><br><span class="line"></span><br><span class="line">保存我们的工作</span><br><span class="line">在命令模式下输入一个    ex    命令（ex操作为命令模式下的操作）。    通过按下”:”键。为了写入我们修改的文件，我们在冒号之后输入”w”字符，然后按下回车键</span><br><span class="line"></span><br><span class="line">:w</span><br><span class="line"></span><br><span class="line">移动光标</span><br><span class="line">当在    vi    命令模式（不是插入模式）下时，vi    提供了大量的移动命令</span><br><span class="line">|    0    (零按键)    |    移动到当前行的行首。    |</span><br><span class="line">|    $    |    移动到当前行的末尾。    |</span><br><span class="line">|    Ctrl-f    or    Page    Down    |    向下翻一页    |</span><br><span class="line">|    Ctrl-b    or    Page    Up    |    向上翻一页    |</span><br><span class="line">|    G    |    移动到文件末尾。    |</span><br><span class="line"></span><br><span class="line">基本编辑</span><br><span class="line">如果我们按下“u”    按键，当在命令模式下，vi    将会撤销你所做的最后一次修改</span><br><span class="line">如果我们想要在这个句子的末尾添加一些文本，输入”a”，在光标处，vi    进入插入模式。”A”命令，在行尾进入插入模式。另外还有：</span><br><span class="line">|    o    |    当前行的下方打开一行。    |，进入插入模式</span><br><span class="line">|    O    |    当前行的上方打开一行。    | ，进入插入模式</span><br><span class="line">记住按下    Esc    按键来退出插入模式。</span><br><span class="line"></span><br><span class="line">删除文本</span><br><span class="line">表13-3:    文本删除命令</span><br><span class="line">|    命令    |    删除的文本    |</span><br><span class="line">|-------|---------|</span><br><span class="line">|    x    |    当前字符    |</span><br><span class="line">|    3x    |    当前字符及其后的两个字符。    |</span><br><span class="line">|    dd    |    当前行。    |</span><br><span class="line">|    5dd    |    当前行及随后的四行文本。    |</span><br><span class="line">|    d$    |    从光标位置开始到当前行的行尾。    |</span><br><span class="line">|    d0    |    从光标位置开始到当前行的行首。    |</span><br><span class="line"></span><br><span class="line">剪切，复制和粘贴文本</span><br><span class="line">这个    d    命令不仅删除文本，它还“剪切”文本。每次我们使用    d    命令，删除的部分被复制到一个    粘贴缓</span><br><span class="line">冲区中（看作剪切板）。过后我们执行小    p    命令把剪切板中的文本粘贴到光标位置之后，    或者是大    P    命</span><br><span class="line">令把文本粘贴到光标之前。</span><br><span class="line"></span><br><span class="line">y    命令用来“拉”（复制）文本。p命令粘贴。</span><br><span class="line">表13-4:    复制命令</span><br><span class="line">|    命令    |    复制的内容    |</span><br><span class="line">|-------|---------|</span><br><span class="line">|    yy    |    当前行。    |</span><br><span class="line">|    5yy    |    当前行及随后的四行文本。    |</span><br><span class="line">|    y$    |    从当前光标位置到当前行的末尾。    |</span><br><span class="line">|    y0    |    从当前光标位置到行首。    |</span><br><span class="line"></span><br><span class="line">查找和替换</span><br><span class="line">查找一行：   f    命令查找一行，移动光标到下一个所指定的字符上。例如，命令    fa    会把光标定位到同一行中    下一个出现的”a”字符上。在一行中执行了字符的查找命令之后，通过输入分号来重复这个查找。</span><br><span class="line"></span><br><span class="line">查找整个文件：移动光标到下一个出现的单词或短语上，使用    /    命令。下一步，输入要查找的单词或短语后，  按下回车。光标就会移动到下一个包含所查找字符串的位置。通过    n    命令来重复先前的查找</span><br></pre></td></tr></table></figure>
-<p> 全局查找和替代vi 使用 ex 命令来执行查找和替代操作（vi 中叫做“替换”）。把整个文件中的单词“Line”更改为“line”， 我们输入以下命令： </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:%s/Line/line/g</span><br></pre></td></tr></table></figure>
-<p><img src="/2018/06/10/Linux/The Linux Command Line学习笔记（二）/01.png" alt></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line">需要用户确认的替换命令。通过添加一个”c”字符到这个命令的末尾，来完成    这个替换命令。例如：</span><br><span class="line"></span><br><span class="line">:%s/line/Line/gc</span><br><span class="line">这个命令会把我们的文件恢复先前的模样；然而，在执行每个替换命令之前，vi    会停下来，    通过下面的信</span><br><span class="line">息，来要求我们确认这个替换：</span><br><span class="line"></span><br><span class="line">replace    with    Line    (y/n/a/q/l/^E/^Y)?</span><br><span class="line">表13-5:    替换确认按键</span><br><span class="line">|    按键    |    行为    |</span><br><span class="line">|-------|---------|</span><br><span class="line">|    y    |    执行替换操作    |</span><br><span class="line">|    n    |    跳过这个匹配的实例    |</span><br><span class="line">|    a    |    对这个及随后所有匹配的字符串执行替换操作。    |</span><br><span class="line">|    q    or    esc    |    退出替换操作。    |</span><br><span class="line">|    l    |    执行这次替换并退出。l    是    “last”    的简写。    |</span><br><span class="line">|    Ctrl-e,    Ctrl-y    |    分别是向下滚动和向上滚动。用于查看建议替换的上下文。    |</span><br><span class="line"></span><br><span class="line">文件之间转换</span><br><span class="line">从这个文件转到下一个文件，使用这个    ex    命令：</span><br><span class="line"></span><br><span class="line">:n</span><br><span class="line">回到先前的文件使用：</span><br><span class="line"></span><br><span class="line">:N</span><br><span class="line">当我们从一个文件移到另一个文件时，如果当前文件没有保存修改，vi    会阻止我们转换文件，    这是    vi    强制执行的政策。在命令之后添加感叹号，可以强迫    vi    放弃修改而转换文件。</span><br><span class="line">我们可以查看正在编辑的文件列表，使用:buffers    命令</span><br><span class="line">:buffers</span><br><span class="line"></span><br><span class="line">1    #       &quot;foo.txt&quot;                             line    1</span><br><span class="line">2    %a      &quot;ls-output.txt&quot;                       line    0</span><br><span class="line">Press    ENTER    or    type    command    to    continue</span><br><span class="line">注意：你不同通过:n    或:N    命令在由:e    命令加载的文件之间进行切换。这时要使用:buffer    命令，    其后加上缓冲区号码，来转换文件。</span><br><span class="line"></span><br><span class="line">从一个文件复制内容到另一个文件</span><br><span class="line">以打开的两个文件为例，首先转换到缓冲区1（foo.txt）    ，输入：</span><br><span class="line"></span><br><span class="line">:buffer    1</span><br><span class="line"></span><br><span class="line">我们应该得到以下输出：</span><br><span class="line"></span><br><span class="line">The    quick    brown    fox    jumped    over    the    lazy    dog.    It    was    cool.</span><br><span class="line">Line    2</span><br><span class="line">Line    3</span><br><span class="line">Line    4</span><br><span class="line">Line    5</span><br><span class="line">下一步，把光标移到第一行，并且输入    yy    来复制这一行。转换到第二个缓冲区，输入：</span><br><span class="line"></span><br><span class="line">:buffer    2</span><br><span class="line">现在屏幕会包含一些文件列表（这里只列出了一部分）：</span><br><span class="line"></span><br><span class="line">total    343700</span><br><span class="line">-rwxr-xr-x    1    root    root                31316        2007-12-05        08:58    [</span><br><span class="line">....</span><br><span class="line">移动光标到第一行，输入    p    命令把我们从前面文件中复制的一行粘贴到这个文件中：</span><br><span class="line"></span><br><span class="line">total    343700</span><br><span class="line">The    quick    brown    fox    jumped    over    the    lazy    dog.    It    was    cool.</span><br><span class="line">-rwxr-xr-x    1    root    root                31316        2007-12-05        08:58    [</span><br><span class="line">....</span><br><span class="line"></span><br><span class="line">保存工作</span><br><span class="line">像    vi    中的其它操作一样，有几种不同的方法来保存我们所修改的文件。我们已经研究了:w    这个    ex    命令，但还有几种方法，可能我们也觉得有帮助。</span><br><span class="line">在命令模式下，输入    ZZ    就会保存并退出当前文件</span><br></pre></td></tr></table></figure>
-<h2 id="第十四章：自定制shell提示符"><a href="#第十四章：自定制shell提示符" class="headerlink" title="第十四章：自定制shell提示符"></a>第十四章：自定制shell提示符</h2><p>并不是每个人都会花心思来更改提示符，因为通常默认的提示符就很让人满意</p>
-<h2 id="第十五章：软件包管理"><a href="#第十五章：软件包管理" class="headerlink" title="第十五章：软件包管理"></a>第十五章：软件包管理</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">软件包管理是指系统中一种安装和维护软件的方法，inux    系统中几乎所有的软件都可以在互联网上找到。其中大多数软件由发行商以    包文件的形式提供，剩下的则以源码形式存在，可以手动安装。在后面章节里，我们将会谈谈怎样    通过编译源码来安装软件。</span><br><span class="line"></span><br><span class="line">查找资源库中的软件包</span><br><span class="line">|    Red    Hat    |    yum    search    search_string    |</span><br><span class="line">例如：yum    search    emacs</span><br><span class="line"></span><br><span class="line">从资源库中安装一个软件包</span><br><span class="line">|    Red    Hat    |    yum    install    package_name    |</span><br><span class="line"></span><br><span class="line">通过软件包文件来安装软件</span><br><span class="line">如果从某处而不是从资源库中下载了一个软件包文件，可以使用底层工具来直接（没有经过依赖解析）安装它。</span><br><span class="line">|    Red    Hat    |    rpm    -i    package_file    |</span><br><span class="line"></span><br><span class="line">卸载软件</span><br><span class="line">|    Red    Hat    |    yum    erase    package_name    |</span><br><span class="line"></span><br><span class="line">经过资源库来更新软件包</span><br><span class="line">|    Red    Hat    |    yum    update    |</span><br><span class="line"></span><br><span class="line">经过软件包文件来升级软件</span><br><span class="line">如果已经从一个非资源库网站下载了一个软件包的最新版本，可以安装这个版本，用它来    替代先前的版本：</span><br><span class="line">|    Red    Hat    |    rpm    -U    package_file    |</span><br><span class="line"></span><br><span class="line">列出所安装的软件包</span><br><span class="line">|    Red    Hat    |    rpm    -qa    |</span><br><span class="line"></span><br><span class="line">确定是否安装了一个软件包</span><br><span class="line">|    Red    Hat    |    rpm    -q    package_name    |</span><br><span class="line"></span><br><span class="line">查找安装了某个文件的软件包</span><br><span class="line">|    Red    Hat    |    rpm    -qf    file_name    |</span><br></pre></td></tr></table></figure>
-
-          
-        
-      
-    </div>
-    
-    
-    
-    
-    
-    
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/07/Linux/The Linux Command Line学习笔记（一）/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Mosbyllc">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Mosbyllc">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/06/07/Linux/The Linux Command Line学习笔记（一）/" itemprop="url">The Linux Command Line学习笔记（一）</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-07T17:06:11+08:00">
-                2018-06-07
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux/" itemprop="url" rel="index">
-                    <span itemprop="name">Linux</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  3,075
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  13
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>记录读《The Linux Command Line》的学习笔记，因为之前是记在印象笔记里面的，格式有点对不上，这里内容就全部粘贴到代码框里面。</p>
-<p><a href="https://sevencai.github.io/2018/08/10/The-Linux-Command-Line-读书笔记（一）/" target="_blank" rel="noopener">另外一篇此书的学习笔记博客</a></p>
-<hr>
-<h2 id="文件查看"><a href="#文件查看" class="headerlink" title="文件查看"></a>文件查看</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">`pwd  —  打印出当前工作目录名`</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">`ls    —    列出目录内容ls -l  # 长模式ls -l  # 修改时间排序ls -a # 显示所用文件，默认不显示隐藏文件ls -S  # 按大小排序me@linuxbox    ~]$    ls    /usr   # 除了当前工作目录以外，也可以指定要列出内容的目录[me@linuxbox    ~]$    ls    ~    /usr #列出多个指定目录的内容 ,家目录（用字符“~”代表）`</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">cd    —    更改目录</span><br><span class="line">符号    “.”    指的是工作目录（找下一层使用，一般可省略使用），”..”    指的是工作目录的父目录（找上一层使用）</span><br><span class="line">|    cd    |    更改工作目录到你的家目录。    |</span><br><span class="line">|    cd    -    |    更改工作目录到先前的工作目录。    |</span><br><span class="line">|    cd    ~user_name    |    更改工作目录到用户家目录。例如,    cd    ~bob    会更改工作目录到用户“bob”的家目</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">linux一切皆文件，不依赖后缀名判断</span><br><span class="line">使用 file 打印文件描述</span><br><span class="line">me@linuxbox    ~]$    file    picture.jpg</span><br><span class="line">picture.jpg:    JPEG    image    data,    JFIF    standard    1.01</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">less浏览文本文件内容，以下是常用命令</span><br><span class="line">|    G    |    移动到最后一行    |</span><br><span class="line">|    1G    or    g    |    移动到开头一行    |</span><br><span class="line">|    /charaters    |    向前查找指定的字符串    |</span><br><span class="line">|    q    |    退出    less    程序    |</span><br><span class="line">|    h    |    显示帮助屏幕    |</span><br></pre></td></tr></table></figure>
-<h2 id="文件操作"><a href="#文件操作" class="headerlink" title="文件操作"></a>文件操作</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">接受文件名作为参数的任何命令，都可以使用通配符，要记得一些简单的规则（类似正则）</span><br><span class="line">cp   item1 item2 —    复制文件和目录</span><br><span class="line">mv  item1 item2—    移动/重命名文件和目录</span><br><span class="line">mkdir  dir1  —    创建目录</span><br><span class="line">rm   item1 —    删除文件和目录（一旦删除不可恢复，慎重使用）</span><br><span class="line">ln    —    创建硬链接和符号链接</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">这里列举了    cp    命令一些有用的选项（短选项和等效的长选项）：其他操作也类同</span><br><span class="line">|    -a,    --archive    |    复制文件和目录，以及它们的属性，包括所有权和权限。</span><br><span class="line">|    -i,    --interactive    |    在重写已存在文件之前，提示用户确认</span><br><span class="line">|    -r,    --recursive    |    递归地复制目录及目录中的内容。当复制目录时，    需要这个选项（或者-a    选项）。    |</span><br><span class="line">|    -u,    --update    |    当把文件从一个目录复制到另一个目录时，仅复制    目标目录中不存在的文件，或者是文</span><br><span class="line">件内容新于目标目录中已经存在的文件。    |</span><br><span class="line">|    -v,    --verbose    |    显示翔实的命令操作信息    |</span><br><span class="line"></span><br><span class="line">rm命令参数选项：</span><br><span class="line">|    -f,    --force    |    忽视不存在的文件，不显示提示信息。这选项颠覆了“--interactive”选项。    |</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">`ln    命令即可创建硬链接，也可以创建符号链接。`</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">`重命名：[me@linuxbox    playground]$    mv    oldname  newname`</span><br></pre></td></tr></table></figure>
-<h2 id="使用命令"><a href="#使用命令" class="headerlink" title="使用命令"></a>使用命令</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line">type    –    说明怎样解释一个命令名</span><br><span class="line">which    –    显示会执行哪个可执行程序</span><br><span class="line">man    –    显示命令手册页 ，完整正式又复杂</span><br><span class="line">apropos    –    显示一系列适合的命令，基于某个关键字的匹配项搜索</span><br><span class="line">info    –    显示命令    info</span><br><span class="line">whatis    –    显示一个命令的简洁描述</span><br><span class="line">alias    –    创建命令别名</span><br><span class="line"></span><br><span class="line">到底什么是命令？命令可以是下面四种形式之一：</span><br><span class="line">1.     是一个可执行程序，比如说shell，perl，python，ruby，等等。</span><br><span class="line">2.     是一个内建于    shell    自身的命令。cd    命令，就是一个    shell    内部命令。</span><br><span class="line">3.     是一个    shell    函数。</span><br><span class="line">4.     是一个命令别名。</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">[me@linuxbox    ~]$    type    ls</span><br><span class="line">ls    is    aliased    to    `ls    --color=tty`</span><br><span class="line">[me@linuxbox    ~]$    which    ls</span><br><span class="line">/bin/ls</span><br><span class="line">[me@linuxbox    ~]$    help    cd</span><br><span class="line">cd:    cd    [-L|-P]    [dir]      # 方括号，表示可选的项目。一个竖杠字符    表示互斥选项</span><br><span class="line">[me@linuxbox    ~]$    mkdir    --help   # 显示命令所支持的语法和选项说明</span><br><span class="line">Usage:    mkdir    [OPTION]    DIRECTORY...</span><br><span class="line">[me@linuxbox    ~]$    man    ls   # 手册页的组织形式|    章节    |    内容    |，可以指定章号</span><br><span class="line">[me@linuxbox    ~]$    apropos    floppy   #以”floppy”为关键词来搜索参考手册的</span><br><span class="line">create_floppy_devices    (8)            -    udev    callout    to    create    all    possible #输出结果每行的第一个字段是手册页的名字，第二个字段展示章节。注意，man    命令加上”-k”选项，和    apropos    完成一样的功能。</span><br><span class="line">许多手册页都很难阅读，whatis    程序显示匹配特定关键字的手册页的名字和一行命令说明。</span><br><span class="line">info    － GNU    项目提供了一个命令程序手册页的替代物，称为”info”，输入”info”，接着输入程序名称，启动    info。下表中的命令，当显示一个    info    页面时，    用来控制阅读器。</span><br><span class="line">表    6-2:    info    命令</span><br><span class="line">|    命令    |    行为    |</span><br><span class="line">|    ---    |    ---    |</span><br><span class="line">|    ?    |    显示命令帮助    |</span><br><span class="line">|    Pg Up    or    Backspace    |    显示上一页    |</span><br><span class="line">|    Pg Dn    or    Space    |    显示下一页    |</span><br><span class="line">|    n    |    下一个    -    显示下一个结点    |</span><br><span class="line">|    p    |    上一个    -    显示上一个结点    |</span><br><span class="line">|    u    |    Up    -    显示当前所显示结点的父结点，通常是个菜单    |</span><br><span class="line">|    Enter    |    激活光标位置下的超级链接    |</span><br><span class="line">|    q    |    退出    |</span><br><span class="line"></span><br><span class="line">[me@linuxbox    ~]$    type    test  # 检测新命名是否与系统重名</span><br><span class="line">test    is    a    shell    builtin #重名，需要换一个</span><br><span class="line">[me@linuxbox    ~]$    type    foo  # 检测</span><br><span class="line">bash:    type:    foo:    not    found # 不重名，可以使用这个新命名</span><br><span class="line">[me@linuxbox    ~]$    alias    foo=&apos;cd    /usr;    ls;    cd    -&apos; #通过    alia    命令    把这一串命令转变为一个命令</span><br><span class="line">注意命令结构：alias    name=&apos;string&apos;。在命令”alias”之后，输入“name”，紧接着（没有空格）是一个等号，等号之后是    一串用引号引起的字符串，字符串的内容要赋值给    name</span><br><span class="line">删除别名，使用    unalias    命令，像这样：</span><br><span class="line">[me@linuxbox    ~]$    unalias    foo</span><br><span class="line">[me@linuxbox    ~]$    type    foo</span><br><span class="line">bash:    type:    foo:    not    found</span><br></pre></td></tr></table></figure>
-<h2 id="IO重定向"><a href="#IO重定向" class="headerlink" title="IO重定向"></a>IO重定向</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">`重定向命令的输入输出，命令的输入来自文件，而输出也存到文件。    也可以把多个命令连接起来组成一个强大的命令管道。为了炫耀这个工具，我们将叙述    以下命令：`</span><br></pre></td></tr></table></figure>
-<h2 id="第八章：从shell眼中看世界"><a href="#第八章：从shell眼中看世界" class="headerlink" title="第八章：从shell眼中看世界"></a>第八章：从shell眼中看世界</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br></pre></td><td class="code"><pre><span class="line">echo    是一个    shell    内部命令，来完成非常简单的任务。    它在标准输出中打印出它的文本参数。</span><br><span class="line"></span><br><span class="line">[me@linuxbox    ~]$    echo    this    is    a    test</span><br><span class="line">this    is    a    test</span><br><span class="line">[me@linuxbox    ~]$    echo    *</span><br><span class="line">Desktop    Documents    ls-output.txt    Music    Pictures    Public    Templates    Videos</span><br><span class="line"></span><br><span class="line">为什么    echo    不打印“*”呢，最简单的答案就是在    echo    命令被执行前，    shell    把“*”展开成了    另外的东西（在这种情况下，就是在当前工作目录下的文件名字）</span><br><span class="line">类似还有</span><br><span class="line"></span><br><span class="line">[me@linuxbox    ~]$    echo    this    is    a                test</span><br><span class="line">this    is    a    test</span><br><span class="line">[me@linuxbox    ~]$    echo    The    total    is    $100.00</span><br><span class="line">The    total    is    00.00  # $1的值替换为一个空字符串，因为 1 是没有定义的变量</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">路径名展开</span><br><span class="line">这种通配符（即*）工作机制叫做路径名展开（当前工作目录下的文件名字）</span><br><span class="line"></span><br><span class="line">[me@linuxbox    ~]$    echo    D*</span><br><span class="line">Desktop        Documents  #列出当前工作目录下的D开头的文件名字</span><br><span class="line"></span><br><span class="line">波浪线展开</span><br><span class="line">波浪线字符(“~”)有特殊的意思。当它用在    一个单词的开头时，它会展开成指定用户的家目录名，如果没有指定用户名，则是当前用户的家目录：</span><br><span class="line"></span><br><span class="line">[me@linuxbox    ~]$    echo    ~</span><br><span class="line">/home/me</span><br><span class="line"></span><br><span class="line">算术表达式展开</span><br><span class="line">shell    允许算术表达式通过展开来执行。这允许我们把    shell    提示当作计算器来使用：</span><br><span class="line"></span><br><span class="line">[me@linuxbox    ~]$    echo    $((2    +    2))</span><br><span class="line">4</span><br><span class="line">|    /    |    除（取整数除法，所以结果是整数。）    |</span><br><span class="line">|    %    |    取余，只是简单的意味着，“余数”    |</span><br><span class="line">|    **    |    取幂    |</span><br><span class="line"></span><br><span class="line">[me@linuxbox    ~]$    echo    Five    divided    by    two    equals    $((5/2))</span><br><span class="line">Five    divided    by    two    equals    2</span><br><span class="line">[me@linuxbox    ~]$    echo    with    $((5%2))    left    over.</span><br><span class="line">with    1    left    over.</span><br><span class="line"></span><br><span class="line">花括号展开</span><br><span class="line">可能最奇怪的展开是花括号展开。通过它，你可以从一个包含花括号的模式中    创建多个文本字符串。例子：</span><br><span class="line"></span><br><span class="line">[me@linuxbox    ~]$    echo    Front-&#123;A,B,C&#125;-Back</span><br><span class="line">Front-A-Back    Front-B-Back    Front-C-Back</span><br><span class="line">[me@linuxbox    ~]$    echo    &#123;Z..A&#125; #可以一系列整数和字符</span><br><span class="line">Z    Y    X    W    V    U    T    S    R    Q    P    O    N    M    L    K    J    I    H    G    F    E    D    C    B    A</span><br><span class="line">[me@linuxbox    ~]$    echo    a&#123;A&#123;1,2&#125;,B&#123;3,4&#125;&#125;b  #嵌套</span><br><span class="line">a A1b    a A2b    a B3b    a B4b</span><br><span class="line"></span><br><span class="line">命令替换</span><br><span class="line">命令替换允许我们把一个命令的输出作为一个展开模式来使用：</span><br><span class="line"></span><br><span class="line">me@linuxbox    ~]$    echo    $(ls)</span><br><span class="line">Desktop    Documents    ls-output.txt    Music    Pictures    Public    Templates      Videos</span><br><span class="line">[me@linuxbox    ~]$    ls    -l    $(which    cp) #把 which cp的执行结果作为一个参传递给ls命令</span><br><span class="line">-rwxr-xr-x    1    root    root    71516    2007-12-05    08:58    /bin/cp</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">双引号、单引号</span><br><span class="line">双意味着单词分割，路径名展开，    波浪线展开，和花括号展开都被禁止，然而参数展开，算术展开，和命令替换    仍然执行。</span><br><span class="line">单引号所有都被禁止。</span><br><span class="line">[me@linuxbox    ~]$    echo    text    ~/*.txt    &#123;a,b&#125;    $(echo    foo)    $((2+2))    $USER</span><br><span class="line">text    /home/me/ls-output.txt    a    b    foo    4    me</span><br><span class="line">[me@linuxbox    ~]$    echo    &quot;text    ~/*.txt    &#123;a,b&#125;    $(echo    foo)    $((2+2))    $USER&quot;</span><br><span class="line">text    ~/*.txt            &#123;a,b&#125;    foo    4    me</span><br><span class="line">[me@linuxbox    ~]$    echo    &apos;text    ~/*.txt    &#123;a,b&#125;    $(echo    foo)    $((2+2))    $USER&apos;</span><br><span class="line">text    ~/*.txt        &#123;a,b&#125;    $(echo    foo)    $((2+2))    $USER</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">转义字符&apos;\&apos;</span><br><span class="line">|    \a    |    响铃（”警告”－导致计算机嘟嘟响）    |</span><br><span class="line">|    \b    |    退格符    |</span><br><span class="line">|    \n    |    新的一行。在类    Unix    系统中，产生换行。    |</span><br><span class="line">|    \r    |    回车符    |</span><br><span class="line">|    \t    |    制表符    |</span><br></pre></td></tr></table></figure>
-<h2 id="第九章：键盘高级操作技巧"><a href="#第九章：键盘高级操作技巧" class="headerlink" title="第九章：键盘高级操作技巧"></a>第九章：键盘高级操作技巧</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">`clear    －    清空屏幕`</span><br></pre></td></tr></table></figure>
-<h2 id="第十章：权限"><a href="#第十章：权限" class="headerlink" title="第十章：权限"></a>第十章：权限</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">`在这一章中，我们将看看这一系统安全的本质部分，会介绍以下命令：`</span><br></pre></td></tr></table></figure>
-<p>chmod － 更改文件模式chmod</p>
-<p>命令支持两种不同的方法来改变文件模式：1、八进制数字表示法，或 2、 符号表示法。这两种方法都有人用。首先我们讨论一下八进制数字表示法。</p>
-<p><img src="/2018/06/07/Linux/The Linux Command Line学习笔记（一）/01.png" alt></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">通过使用3个八进制数字，我们能够设置文件所有者，用户组，和其他人的权限：</span><br><span class="line">[me@linuxbox    ~]$    chmod    600    foo.txt</span><br><span class="line">通过传递参数    “600”，我们能够设置文件所有者的权限为读写权限，而删除用户组和其他人的所有    权限</span><br><span class="line"></span><br><span class="line">chmod    命令还支持另一种符号表示法，通过字符    “u”，“g”，“o”，和    “a”    的组合来指定    要影响的对象。如果没有指定字符，则假定使用”all”</span><br><span class="line">表10-4:    chmod    命令符号表示法</span><br><span class="line">|||</span><br><span class="line">|-----|-----------|</span><br><span class="line">|    u    |    &quot;user&quot;的简写，意思是文件或目录的所有者。    |</span><br><span class="line">|    g    |    用户组。    |</span><br><span class="line">|    o    |    &quot;others&quot;的简写，意思是其他所有的人。    |</span><br><span class="line">|    a    |    &quot;all&quot;的简写，是&quot;u&quot;,    &quot;g&quot;和“o”三者的联合。    |</span><br><span class="line">执行的操作可能是一个“＋”字符，表示加上一个权限，    一个“－”，表示删掉一个权限，或者是一个“＝”，表示只有指定的权限可用，其它所有的权限被删除。</span><br><span class="line">表10-5:    chmod    符号表示法实例</span><br><span class="line">|||</span><br><span class="line">|-----|-----------|</span><br><span class="line">|    u+x    |    为文件所有者添加可执行权限。    |</span><br><span class="line">|    u-x    |    删除文件所有者的可执行权限。    |</span><br><span class="line">|    +x    |    为文件所有者，用户组，和其他所有人添加可执行权限。    等价于    a+x。    |</span><br><span class="line">|    o-rw    |    除了文件所有者和用户组，删除其他人的读权限和写权限。    |</span><br><span class="line">|    go=rw    |    给群组的主人和任意文件拥有者的人读写权限。如果群组的主人或全局之前已经有了执行的权限，他们将被移除。</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">umask    －    设置默认权限</span><br><span class="line"></span><br><span class="line">[me@linuxbox    ~]$    rm    -f    foo.txt</span><br><span class="line">[me@linuxbox    ~]$    umask</span><br><span class="line">0002</span><br><span class="line">运行不带参数的    umask    命令，    看一下当前的掩码值。响应的数值是0002（0022是另一个常用值），这个数值是掩码的八进制表示形式，</span><br><span class="line">以下是掩码0002的八进制表达形式</span><br></pre></td></tr></table></figure>
-<p><img src="/2018/06/07/Linux/The Linux Command Line学习笔记（一）/02.png" alt></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">这次自己设置掩码</span><br><span class="line"></span><br><span class="line">[me@linuxbox    ~]$    rm    foo.txt</span><br><span class="line">[me@linuxbox    ~]$    umask    0000</span><br><span class="line">大多数情况下，你不必修改掩码值，系统提供的默认掩码值就很好了</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">`更改身份`</span><br></pre></td></tr></table></figure>
-          
-        
-      
-    </div>
-    
-    
-    
-    
-    
-    
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/4/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/6/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/4/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/6/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -2265,7 +2348,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">60</span>
+                  <span class="site-state-item-count">62</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -2276,7 +2359,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-count">11</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -2287,7 +2370,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">73</span>
+                  <span class="site-state-item-count">74</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -2382,7 +2465,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2020</span>
+        <div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2022</span>
   <span class="with-love">
     <i class="fa fa-star"></i>
   </span>

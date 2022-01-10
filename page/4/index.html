@@ -298,6 +298,847 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/23/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（五）：决策树/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mosbyllc">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Mosbyllc">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/07/23/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（五）：决策树/" itemprop="url">Sklearn 与 TensorFlow 机器学习实用指南（五）：决策树</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-23T11:07:30+08:00">
+                2018-07-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Sklearn-与-TensorFlow-机器学习实用指南/" itemprop="url" rel="index">
+                    <span itemprop="name">Sklearn 与 TensorFlow 机器学习实用指南</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  7,682
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  28
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="一些基本概念"><a href="#一些基本概念" class="headerlink" title="一些基本概念"></a>一些基本概念</h1><h2 id="决策树简述"><a href="#决策树简述" class="headerlink" title="决策树简述"></a>决策树简述</h2><p>决策树（Decision Tree）是数据挖掘中一种基本的分类和回归方法，它呈树形结构，在分类问题中，表示基于特征对实例进行分类的过程，可以认为是if−thenif−then规则的集合。决策树模型的主要优点是模型具有可读性，分类速度快。在学习时，利用训练数据，根据损失函数最小化原则建立决策树模型；而在预测时，对新的数据，利用决策树模型进行分类。主要的决策树算法有ID3算法、C4.5算法和CART算法。一个决策树的学习过程包括三个步骤：特征选择、决策树的生成以及决策树的修剪。</p>
+<h2 id="信息熵"><a href="#信息熵" class="headerlink" title="信息熵"></a>信息熵</h2><p>信息熵是衡量样本纯度的一种指标，嘉定当前样本集合D中第k类样本所占的比例为$p_k(k=1,2,…,|y|)$,则D的信息熵定义为</p>
+<script type="math/tex; mode=display">
+Ent(D)=-\sum_{k=1}^{\vert y\vert}p_klog_2{p_k}</script><p>Ent(D)的值越小，则D的纯度越高。</p>
+<p>以周志华西瓜书P76的西瓜数据集中的17个样本数据为例子。</p>
+<p><img src="/2018/07/23/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（五）：决策树/01.jpg" alt></p>
+<p>显然，标签类别|y|=2.其中正例占$p_1$=8/17，反例占$p_2$=9/17。于是根节点的信息熵为</p>
+<script type="math/tex; mode=display">
+Ent(D)=-\sum_{k=1}^2p_klog_2^{p_k}=-(\frac{8}{17}log_2\frac{8}{17}+\frac{9}{17}log_2\frac{9}{17})=0.998</script><h2 id="条件熵"><a href="#条件熵" class="headerlink" title="条件熵"></a>条件熵</h2><p>$Ent(Y|X)$表示在已知随机变量X的条件下随机变量Y的不确定性，定义为X给定条件下Y的条件概率分布的熵对X的数学期望</p>
+<script type="math/tex; mode=display">
+Ent\left( Y|X \right) =\sum_{i=1}^n{p_iEnt\left( Y|X=x_i \right)}</script><h1 id="特征选择"><a href="#特征选择" class="headerlink" title="特征选择"></a>特征选择</h1><h2 id="信息增益"><a href="#信息增益" class="headerlink" title="信息增益"></a>信息增益</h2><p><strong>信息增益表示得知特征X的信息而使得类Y的信息的不确定性减少的程度</strong>。特征A对训练数据集D的信息增益Gain(D,a)定义为集合D的经验熵$Ent(D)$与特征A给定条件下D的经验条件熵$Ent(Y | X)$之差，即假定离散属性a有n个可能的取值${a^1,a^2,…a^n}$，若使用属性a的取值来对样本集合划分，则会产生n个分支节点子集$D_1,D_2,..,Dn$，$|D_i|$ 为$D_i$的样本个数。(考虑不同的分支节点所包含的样本数不同，用$\frac{|D^i|}{|D|}$代替期望概率$p_i$，即样本越多的分支节点的影响越大)</p>
+<script type="math/tex; mode=display">
+Gain(D,a)=Ent(D)-\sum_{i=1}^n\frac{|D^i|}{|D|}End(D^i)</script><p>以西瓜数据集的“色泽”属性为例，它有3个可能的取值{青绿，乌黑，浅白}。若使用该属性对D角线划分，则可以得到三个子集，分布记为$D^1$(色泽=青绿)={1,4,6,10,13,17}，正反例率分别为$p_1=\frac{3}{6}$，$p_2=\frac{3}{6}$；$D^2$(色泽=乌黑)={2,3,7,8,9,15}，正反例率分别为$p_1=\frac{4}{6}$，$p_2=\frac{2}{6}$ ；$D^3$(色泽=乌黑)={5,11,12,14,16}，正反例率分别为$p_1=\frac{1}{5}$，$p_2=\frac{4}{5}$。</p>
+<p>首先，根据信息熵公式可计算出“色泽”划分之后所获得的3个分支节点的信息熵为</p>
+<script type="math/tex; mode=display">
+Ent(D^1)=-(\frac{3}{6}log_2\frac{3}{6}+\frac{3}{6}log_2\frac{3}{6})=1.000 \\ \\ \\ Ent(D^2)=-(\frac{4}{6}log_2\frac{4}{6}+\frac{2}{6}log_2\frac{2}{6})=0.918 \\ \\ \\ Ent(D^3)=-(\frac{1}{5}log_2\frac{1}{5}+\frac{4}{5}log_2\frac{4}{5})=0.722</script><p>之后根据上面公式可计算出属性“色泽”的信息增益为</p>
+<script type="math/tex; mode=display">
+Gain(D,色泽)=Ent(D)-\sum_{i=1}^3\frac{|D^i|}{|D|}Ent(D^i)  \\ \\ \\ =0.998-((\frac{6}{17}\times1.000+\frac{6}{17}\times0.918+\frac{5}{17}\times0.722)=0.109</script><p>一般而言，信息增益越大，则意味着使用属性a来进行划分所获得的“纯度提升”越大。其中ID3决策树就是以信息增益为准则来选择划分属性。根据得到的属性最大信息增益来划分结果示例如下所示。之后再根据子集样本进一步划分，直到只有一个样本个体或者样本个体都为同一类标签为止。</p>
+<p><img src="/2018/07/23/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（五）：决策树/02.jpg" alt></p>
+<p>若我们把样本编号1-17也作为一个划分属性，则根据信息增益公式可计算出它的信息增益为0.998，远大于其他候选划分属性。这很容易理解，“编号”将产生17个分支，每个分支仅包含一个样本，这些分支节点纯度已打最大。然而这些侧介绍显然不具有泛化能力。</p>
+<p><strong>所以实际上，信息增益准则对可取数目较多的属性有所偏好</strong>；为了减少这种偏好，著名的C4.5决策树算法不直接采用信息增益，而是使用增益率来做最优划分属性。</p>
+<h2 id="增益率"><a href="#增益率" class="headerlink" title="增益率"></a>增益率</h2><p>增益率定义为其信息增益Gain(D，a)与训练数据集D关于特征a样本数的信息熵之比，增益率的数学定义为</p>
+<script type="math/tex; mode=display">
+Gain_{ratio}(D,a)=\frac{Gain(D,a)}{IV(a)}</script><script type="math/tex; mode=display">
+IV(a)=-\sum_{v=1}^n\frac{|D^i|}{|D|}log_2\frac{|D^i|}{|D|}</script><p>（<strong>注意子集的划分是属性a样本的可取类别数目n，而不是标签类别|y|了啊</strong>），IV(a)可以成为属性a的内在信息，若属性a的可取数目越大，则IV(a)的值通常越大。这样就可以一定程度平衡信息增益对可取数目较多的属性的偏好。以“色泽”为例</p>
+<script type="math/tex; mode=display">
+IV(色泽)=-\frac{6}{17}log_2\frac{6}{17}-\frac{6}{17}log_2\frac{6}{17}-\frac{5}{17}log_2\frac{5}{17}=1.580</script><p>另外，需要注意的是，增益率准则对可取数值数目较少的属性有所偏好，因此，C4.5算法并不是直接选择增益率最大的候选划分属性，而是先从候选划分属性中找出信息增益高于平均水平的属性，再从中选择增益率的最高的。</p>
+<h2 id="基尼指数"><a href="#基尼指数" class="headerlink" title="基尼指数"></a>基尼指数</h2><p>数据集D的纯度可以用基尼指数来度量，Gini（D）越小，则数据集D的纯度越高。假设有K个类，样本点属于第k类的概率为$p_k$，则概率分布的基尼系数定义为</p>
+<script type="math/tex; mode=display">
+Gini\left( p \right) =\sum_{k=1}^K{p_k\left( 1-p_k \right) =1-\sum_{k=1}^K{p_k^2}}</script><p>根据基尼指数定义，可以得到样本集合D的基尼指数，其中$D_k$表示数据集D中属于第k类的样本子集</p>
+<script type="math/tex; mode=display">
+Gini(D)=1-\sum_{k=1}^{K}\left(\frac{|D_k|}{|D|} \right)^2</script><p>若样本集合D根据特征A是否取某一可能值a被分割成$D_1$和$D_2$两部分，即</p>
+<script type="math/tex; mode=display">
+D_1=\left\{ \left( x,y \right) \in D|A\left( x \right) =0 \right\} \mathrm{，}D_2=D-D_1</script><p>则在特征A的条件下，集合D的基尼指数定义为</p>
+<script type="math/tex; mode=display">
+Gini\left( D,A \right) =\frac{|D_1|}{|D|}Gini\left( D_1 \right) +\frac{|D_2|}{|D|}Gini\left( D_2 \right)</script><p>基尼系数Gini(D)表示集合D的不确定性，基尼系数Gini(D,A)表示A=a分割后集合D的不确定性。基尼指数越大，样本集合的不确定性越大。<strong>对于属性A，分别计算任意属性值将数据集划分为两部分之后的Gain_Gini</strong>，选取其中的最小值，作为属性A得到的<strong>最优二分方案</strong>。<strong>然后对于训练集S，计算所有属性的最优二分方案，选取其中的最小值，作为样本及S的最优二分方案</strong>。</p>
+<script type="math/tex; mode=display">
+\min_{i\epsilon A}(Gain\_Gini(D,A))</script><script type="math/tex; mode=display">
+\min_{A\epsilon Attribute}(\min_{i\epsilon A}(Gain\_Gini(D,A)))</script><h1 id="剪枝"><a href="#剪枝" class="headerlink" title="剪枝"></a>剪枝</h1><p>剪枝是决策树学习算法对付“过拟合”的主要手段。在决策树学习中，为了尽可能正确分类样本，节点划分过程不断重复，有时会造成决策树分支过多，这时有时候把自身特点当做所有数据都具有的一般性质而导致过拟合，因此，可以通过主动去掉一些分支来降低过拟合的风险</p>
+<p>基本策略有预剪枝和后剪枝，预剪枝是指在决策树生成过程中，对每个节点在划分前先进行估计，若当前节点的划分不能带来决策树泛化性能的提升，则停止划分当前节点标记为叶节点；后剪枝则是先从训练集生成一颗完整的决策树，然后自底向上地对非叶节点进行考察，若将该节点对应的字数替换为叶节点能带来决策树泛化性能提升，则将该子树替换为叶节点。</p>
+<h1 id="CART决策树的生成"><a href="#CART决策树的生成" class="headerlink" title="CART决策树的生成"></a>CART决策树的生成</h1><p> ID3算法和C4.5按照信息增益和增益率最大的特征作为节点特征，然后递归构建。比较简单，还要注意这两种方法都容易过拟合。这里主要讲一下CART分类与回归树。</p>
+<p>分类树与回归树（classification and regression tree，CART）模型（Breiman）由特征选择、树生成及剪枝组成，既可用于分类也可用于回归。CART算法采用<strong>二分递归分割的技术</strong>将当前样本集分为两个子样本集，使得生成的每个非叶子节点都有两个分支。因此CART算法生成的决策树是结构简洁的二叉树。CART可以处理连续型变量和离散型变量，利用训练数据递归的划分特征空间进行建树，用验证数据进行剪枝。利用训练数据递归的划分特征空间进行建树，用验证数据进行剪枝。</p>
+<ul>
+<li>如果待预测分类是离散型数据，则CART生成分类决策树。</li>
+<li>如果待预测分类是连续性数据，则CART生成回归决策树。</li>
+</ul>
+<h2 id="CART分类树"><a href="#CART分类树" class="headerlink" title="CART分类树"></a>CART分类树</h2><p>对分类树用基尼系数（Gini index）最小化准则，进行特征选择，生成二叉树。</p>
+<p>具体算法步骤如下：</p>
+<ul>
+<li>1）设结点的训练数据集为D，计算现有特征对该数据集的基尼指数。此时，对每一个特征A，对其可能取的每个值a，根据样本点对A=a的测试为”是”或者“否”将D分割为D1和D2两部分，计算其基尼系数。</li>
+<li>2）在所有可能的特征A以及他们所有可能的切分点a中，选择基尼系数最小的特征及其对应的切分点作为最优特征与最优切分点。依最优特征与最优切分点，从现结点生成两个子结点，将训练数据集依特征分配到两个子结点中去。</li>
+<li>3）对两个子结点递归地调用上述两个步骤，直至满足停止条件。</li>
+<li>4）生成CART决策树</li>
+</ul>
+<p>以生物特征分类数据为例</p>
+<p><img src="/2018/07/23/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（五）：决策树/03.jpg" alt></p>
+<p>针对上述离散型数据，按照<strong>体温为恒温和非恒温</strong>(多类别属性也按’非’分成两类别)进行划分。其中恒温时包括哺乳类5个、鸟类2个，非恒温时包括爬行类3个、鱼类3个、两栖类2个，如下所示我们计算以体温为划分特征D1,D2的基尼指数。</p>
+<script type="math/tex; mode=display">
+Gini(D_1)=1-[ (\frac{5}{7})^2+(\frac{2}{7})^2]=\frac{20}{49}</script><script type="math/tex; mode=display">
+Gini(D_2)=1-[ (\frac{3}{8})^2+(\frac{3}{8})^2+(\frac{2}{8})^2]=\frac{42}{64}</script><p>然后计算得到特征<strong>体温</strong>下数据集的Gini指数，最后我们选择Gain_Gini最小的特征和相应的划分</p>
+<script type="math/tex; mode=display">
+Gain\_Gini(D,体温)=\frac{7}{15}*\frac{20}{49}+\frac{8}{15}*\frac{42}{64}</script><p>在所有可能的特征A以及他们所有可能的切分点a中的二分划分中，选择基尼系数最小的特征及其对应的切分点作为最优特征与最优切分点，依次递归。</p>
+<h2 id="CART回归树"><a href="#CART回归树" class="headerlink" title="CART回归树"></a>CART回归树</h2><p>回归树衡量最好的标准不再是最大熵，而是<strong>最小化均方差</strong>。而且在每个节点（不一定是叶子节点）都会得一个预测值，这个预测值可为所有样本的平均值。我们利用最小二乘回归树生成算法来生成回归树f(x)，即在训练数据集所在的输入空间中，递归地将每个区域分为两个子区域并决定每个子区域上的输出值，构建二叉决策树。</p>
+<p><strong>回归树算法流程：j为选定的某个特征属性，s为在这个特征上的切分数值（需要遍历所有特征和切分点来选到最小化均方差），R1R2为切分的样本，C1C2为切分区域样本中的特征均值。</strong></p>
+<p><img src="/2018/07/23/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（五）：决策树/04.jpg" alt></p>
+<p><strong>实例详解：</strong></p>
+<p><img src="/2018/07/23/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（五）：决策树/05.jpg" alt></p>
+<p>考虑如上所示的连续性变量，根据给定的数据点，考虑<strong>1.5,2.5,3.5,4.5,5.5,6.5,7.5,8.5,9.5</strong>共9个自定均分的切分点。对各切分点依次求出<strong>R1,R2,c1,c2及m(s)</strong>，例如当切分点s=1.5时，得到R1={1},R2={2,3,4,5,6,7,8,9,10}，其中c1,c2,m(s)如下所示</p>
+<script type="math/tex; mode=display">
+c_1=\frac{1}{N_m}\sum_{x_i\epsilon R_m(j,s)}y_i=\frac{1}{1}\sum_{x_i\epsilon R_1(1,1.5)}5.56=5.56</script><script type="math/tex; mode=display">
+c_2=\frac{1}{N_m}\sum_{x_i\epsilon R_m(j,s)}y_i=\frac{1}{9}\sum_{x_i\epsilon R_2(1,1.5)}(5.70+5.91+...+9.05)=7.50</script><script type="math/tex; mode=display">
+m(s)=\min_{j,s}[\min_{c_1}\sum _{x_i\epsilon R_i(j,s)}(y_i-c_1)^2+\min_{c_2}\sum _{x_i\epsilon R_i(j,s)}(y_i-c_1)^2]=0+15.72=15.72</script><p><strong>依次改变(j,s)对，可以得到s及m(s)的计算结果</strong>，如下表所示。</p>
+<p><img src="/2018/07/23/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（五）：决策树/06.jpg" alt></p>
+<p>当x=6.5时，此时R1={1,2,3,4,5,6},R2={7,8,9,10},c1=6.24,c2=8.9。<strong>回归树T1(x)</strong>为</p>
+<script type="math/tex; mode=display">
+T_1(x)=\begin{cases}
+ & 6.24,x<6.5 \\ 
+ & 8.91,x\ge 6.5
+\end{cases}</script><script type="math/tex; mode=display">
+f_1(x)=T_1(x)</script><p><strong>然后我们利用f1(x)拟合训练数据的残差</strong>(各目标值减去对应的c1,c2)，如下表所示</p>
+<p><img src="/2018/07/23/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（五）：决策树/07.jpg" alt></p>
+<p><strong>用f1(x)拟合训练数据得到平方误差</strong></p>
+<script type="math/tex; mode=display">
+L(y,f_1(x))=\sum_{i=1}^{10}(y_i-f_1(x_i))^2=1.93</script><p>第二步求T2(x)与求T1(x)方法相同，只是拟合的数据是上表的残差。可以得到</p>
+<script type="math/tex; mode=display">
+T_2(x)=\begin{cases}
+ & -0.52,x<3.5 \\ 
+ & 0.22,x\ge 3.5
+\end{cases}</script><script type="math/tex; mode=display">
+f_2(x)=f_1(x)+T_2(x)=
+\begin{cases}
+ & 5.72,x<3.5 \\ 
+ & 6.46,3.5\le x \le 6.5 \\
+ & 9.13,x\ge 6.5
+\end{cases}</script><p>用f2(x)拟合训练数据的平方误差</p>
+<script type="math/tex; mode=display">
+L(y,f_2(x))=\sum_{i=1}^{10}(y_i-f_2(x_i))^2=0.79</script><p>继续求得T3(x)、T4(x)、T5(x)、T6(x)，如下所示</p>
+<script type="math/tex; mode=display">
+T_3(x)=\begin{cases}
+ & 0.15,x<6.5 \\ 
+ & -0.22,x\ge 6.5
+\end{cases}
+L(y,f_3(x))=0.47</script><script type="math/tex; mode=display">
+T_4(x)=\begin{cases}
+ & -0.16,x<4.5 \\ 
+ & 0.11,x\ge 4.5
+\end{cases}
+L(y,f_4(x))=0.30</script><script type="math/tex; mode=display">
+T_5(x)=\begin{cases}
+ & 0.07,x<6.5 \\ 
+ & -0.11,x\ge 6.5
+\end{cases}
+L(y,f_5(x))=0.23</script><script type="math/tex; mode=display">
+T_6(x)=\begin{cases}
+ & -0.15,x<2.5 \\ 
+ & 0.04,x\ge 2.5
+\end{cases}</script><script type="math/tex; mode=display">
+f_6(x)=f_5(x)+T_6(x)=T_1(x)+...+T_6(x)=
+\begin{cases}
+ & 5.63,x<2.5 \\ 
+ & 5.82,2.5\le x \le 3.5 \\
+  & 6.56,3.5\le x \le 4.5 \\
+ & 6.83,4.5\le x \le 6.5 \\
+  & 8.95,x\ge 6.5 
+\end{cases}</script><p>用f6(x)拟合训练数据的平方损失误差如下所示，假设此时已经满足误差要求，那么f(x)=f6(x)便是所求的回归树。</p>
+<script type="math/tex; mode=display">
+L(y,f_6(x))=\sum_{i=1}^{10}(y_i-f_6(x_i))^2=0.71</script><h2 id="CART剪枝"><a href="#CART剪枝" class="headerlink" title="CART剪枝"></a>CART剪枝</h2><p>们将一颗充分生长的树称为<strong>T0</strong> ，希望减少树的大小来防止过拟化。但同时<strong>去掉一些节点后预测的误差可能会增大</strong>，<strong>即完整树T0拟合的损失是最小的</strong>。那么如何达到这两个变量之间的平衡则是问题的关键。因此我们用一个变量α 来平衡，定义损失函数如下</p>
+<script type="math/tex; mode=display">
+C_\alpha(T)=C(T)+\alpha|T|</script><ul>
+<li>T为任意子树，|T|为子树T的叶子节点个数。</li>
+<li>α是参数，权衡拟合程度与树的复杂度。</li>
+<li>C(T)为<strong>预测误差</strong>，可以是平方误差也可以是基尼指数，C(T)衡量训练数据的拟合程度。</li>
+</ul>
+<p><strong>那么我们如何找到这个合适的α来使拟合程度与复杂度之间达到最好的平衡呢？</strong>准确的方法就是将α从0取到正无穷，对于每一个固定的α，我们都可以找到使得$C_\alpha(T)$最小的最优子树T(α)。</p>
+<ul>
+<li>当α很小的时候(相当于弱化正则)，T0 完整树是这样的最优子树.</li>
+<li>当α很大的时候(相当于强化正则)，单独一个根节点就是最优子树。</li>
+</ul>
+<p>Breiman等人证明：可以用递归地方法对树进行剪枝。将a从小增大，$0=a_0&lt;a_1&lt;…..a_n&lt;+∞$产生一系列的区间$[a_i,a_i+1),i=0,1,…,n$剪枝得到的子树序列对应着区间$a∈[a_i,a_i+1)，i=0,1,2,…,n$的最优子树序列为${T_0,T_1,T_2,…,T_n}$,序列的子树是嵌套的。</p>
+<p>具体地，从整体树$T_0$开始剪枝，对$T_0$的人以内部结点t，<strong>以t为单结点树</strong>的损失函数是</p>
+<script type="math/tex; mode=display">
+C_a\left( t \right) =C\left( t \right) +a</script><p><strong>以t为根结点的子树</strong>$T_t$的损失函数是</p>
+<script type="math/tex; mode=display">
+C_a(T_t)=C(T_t)+a|T_t|</script><p>到这里，我们的目的就变得很明确了，当t为单节点树的损失比以t为根节点的子树$T_t$损失相等的时候，损失相同，而t的节点少，就进行剪枝操作。其过程会随a由0逐渐增大，单节点树t损失一开始大于子树$T_t$，随后不断减少，直到大于子树损失。具体的，当$\alpha =\frac{C\left( t \right) -C\left( T_t \right)}{|T_t|-1}$ ，$T_t$和t有相同的损失。</p>
+<p>为此，对$T_0$中的每一个内部结点t，计算</p>
+<script type="math/tex; mode=display">
+g\left( t \right) =\frac{C\left( t \right) -C\left( T_t \right)}{|T_t|-1}</script><p>它表示剪枝后整体损失函数减少的程度。在$T_0$中减去g(t)最小的$T_t$，将得到的子树作为$T_1$，同时将最小的g(t)设为$a_1$，$T_1$为区间$[a_1,a_2)$的最优子树。如此剪枝下去，直至得到根结点。在这一过程中，不断得增加a的值，产生新的区间。</p>
+<p>然后，在剪枝得到的子树序列$T_0,T_1,…,T_n$中通过交叉验证选取最优子树$T_a$.</p>
+<p>具体地，利用独立的验证数据集，测试子树序列$T_0,T_1,…,T_n$中各棵子树的平方误差或基尼指数。平方误差或基尼指数最小的决策树被认为是最优的决策树。在子树序列中，每棵子树$T_0,T_1,…,T_n$都对应一个参数$a_1,a_2,…,a_n$。所以当最优子树$T_k$确定时，对应的$a_k$也就确定了，即得到最由决策树$T_a$.</p>
+<h1 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h1><h2 id="决策树分类边界"><a href="#决策树分类边界" class="headerlink" title="决策树分类边界"></a>决策树分类边界</h2><p>另外，决策树所形成的分类边界有一个明显的特点：轴平行，即它的分类边界有若干个与坐标轴平行的分段组成。</p>
+<p><img src="/2018/07/23/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（五）：决策树/08.png" alt></p>
+<h2 id="决策树的训练和可视化"><a href="#决策树的训练和可视化" class="headerlink" title="决策树的训练和可视化"></a>决策树的训练和可视化</h2><p>下面的代码就是在我们熟知的鸢尾花数据集上进行一个决策树分类器的训练</p>
+<blockquote>
+<p>决策树的众多特性之一就是， 它不需要太多的数据预处理， 尤其是不需要进行特征的缩放或者归一化。</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.datasets <span class="keyword">import</span> load_iris</span><br><span class="line"><span class="keyword">from</span> sklearn.tree <span class="keyword">import</span> DecisionTreeClassifier</span><br><span class="line">iris = load_iris()</span><br><span class="line">X = iris.data[:, <span class="number">2</span>:] <span class="comment"># petal length and width y = iris.target</span></span><br><span class="line">    tree_clf = DecisionTreeClassifier(max_depth=<span class="number">2</span>)</span><br><span class="line">    tree_clf.fit(X, y)</span><br></pre></td></tr></table></figure>
+<p>你可以通过使用export_graphviz()方法，通过生成一个叫做iris_tree.dot的图形定义文件将一个训练好的决策树模型可视化</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.tree <span class="keyword">import</span> export_graphviz</span><br><span class="line">    export_graphviz(</span><br><span class="line">            tree_clf,</span><br><span class="line">            out_file=image_path(<span class="string">"iris_tree.dot"</span>),</span><br><span class="line">            feature_names=iris.feature_names[<span class="number">2</span>:],</span><br><span class="line">            class_names=iris.target_names,</span><br><span class="line">            rounded=<span class="literal">True</span>,</span><br><span class="line">            filled=<span class="literal">True</span></span><br><span class="line">        )</span><br></pre></td></tr></table></figure>
+<p>然后，我们可以利用graphviz package 中的dot命令行，将.dot文件转换成 PDF 或 PNG 等多种数据格式。例如，使用命令行将.dot文件转换成.png文件的命令如下：</p>
+<blockquote>
+<p>Graphviz是一款开源图形可视化软件包，<a href="http://www.graphviz.org/" target="_blank" rel="noopener">http://www.graphviz.org/</a></p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ dot -Tpng iris_tree.dot -o iris_tree.png</span><br></pre></td></tr></table></figure>
+<p>我们的第一个决策树如图</p>
+<p><img src="/2018/07/23/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（五）：决策树/09.png" alt></p>
+<p>节点的samples属性统计出它应用于多少个训练样本实例，例如，我们有一百个训练实例是花瓣长度大于 2.45 里面的（深度为 1， 右侧），在这 100 个样例中又有 54 个花瓣宽度小于 1.75cm（深度为 2，左侧）；节点的value属性告诉你这个节点对于每一个类别的样例有多少个，例如：右下角的节点中包含 0 个 Iris-Setosa，1 个 Iris-Versicolor 和 45 个 Iris-Virginica；最后，节点的Gini属性用于测量它的纯度：如果一个节点包含的所有训练样例全都是同一类别的，我们就说这个节点是纯的（Gini=0）</p>
+<p>下面公式显示了训练算法如何计算第i个节点的 gini 分数 。例如， 深度为 2 的左侧节点基尼指数为：</p>
+<script type="math/tex; mode=display">G_i=\sum_{k=1}^nP_{i,k}^2</script><p> $p_{i,k}$ 是第i个节点中训练实例为的k类实例的比例</p>
+<blockquote>
+<p>Scikit-Learn 用的是 CART 算法， CART 算法仅产生二叉树：每一个非叶节点总是只有两个子节点（只有是或否两个结果）。然而，像 ID3 这样的算法可以产生超过两个子节点的决策树模型</p>
+</blockquote>
+<p>下图显示了决策树的决策边界。粗的垂直线代表根节点（深度为 0）的决定边界：花瓣长度为 2.45 厘米。由于左侧区域是纯的（只有 Iris-Setosa），所以不能再进一步分裂。然而，右边的区域是不纯的，所以深度为 1 的右边节点在花瓣宽度为 1.75 厘米处分裂（用虚线表示）。又由于max_depth设置为 2，决策树在那里停了下来。但是，如果将max_depth设置为 3，两个深度为 2 的节点，每个都将会添加另一个决策边界（用虚线表示）</p>
+<p><img src="/2018/07/23/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（五）：决策树/10.png" alt></p>
+<h2 id="估计分类概率"><a href="#估计分类概率" class="headerlink" title="估计分类概率"></a>估计分类概率</h2><p>决策树还可以估计某个实例属于特定类k的概率：首先遍历树来查找此实例的叶节点，然后它返回此节点中类k的训练实例的比例。</p>
+<p>例如，假设你发现了一个花瓣长 5 厘米，宽 1.5 厘米的花朵。相应的叶节点是深度为 2 的左节点，因此决策树应该输出以下概率：Iris-Setosa 为 0%（0/54），Iris-Versicolor 为 90.7%（49/54），Iris-Virginica 为 9.3%（5/54）。当然，如果你要求它预测具体的类，它应该输出 Iris-Versicolor（类别 1），因为它具有最高的概率。我们了测试一下</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>tree_clf.predict_proba([[<span class="number">5</span>, <span class="number">1.5</span>]])</span><br><span class="line">array([[ <span class="number">0.</span> , <span class="number">0.90740741</span>, <span class="number">0.09259259</span>]])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>tree_clf.predict([[<span class="number">5</span>, <span class="number">1.5</span>]])</span><br><span class="line">array([<span class="number">1</span>])</span><br></pre></td></tr></table></figure>
+<h2 id="CART-训练算法"><a href="#CART-训练算法" class="headerlink" title="CART 训练算法"></a>CART 训练算法</h2><p>Scikit-Learn 用分裂回归树（Classification And Regression Tree，简称 CART）算法训练决策树（也叫“增长树”）。这种算法思想真的非常简单：</p>
+<p>首先使用单个特征k和阈值$t_k$ (例如，“花瓣长度≤2.45cm”）将训练集分成两个子集。它如何选择k和$t_k$ 呢？它寻找到能够产生最纯粹的子集一对(k,$t_k$) ，然后通过子集大小加权计算.</p>
+<p>算法会尝试最小化成本函数。方法如公式</p>
+<p><img src="/2018/07/23/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（五）：决策树/11.png" alt></p>
+<p>当它成功的将训练集分成两部分之后， 它将会继续使用相同的递归式逻辑继续的分割子集，然后是子集的子集。当达到预定的最大深度之后将会停止分裂（由max_depth超参数决定），或者是它找不到可以继续降低不纯度的分裂方法的时候。几个其他超参数（之后介绍）控制了其他的停止生长条件（min_samples_split，min_samples_leaf，min_weight_fraction_leaf，max_leaf_nodes）。</p>
+<blockquote>
+<p>正如您所看到的，CART 算法是一种贪婪算法：它贪婪地搜索最高级别的最佳分割方式，然后在每个深度重复该过程。 它不检查分割是否能够在几个级别中的全部分割可能中找到最佳方法。贪婪算法通常会产生一个相当好的解决方法，但它不保证这是全局中的最佳解决方案</p>
+</blockquote>
+<h2 id="计算复杂度"><a href="#计算复杂度" class="headerlink" title="计算复杂度"></a>计算复杂度</h2><p>在建立好决策树模型后， 做出预测需要遍历决策树， 从根节点一直到叶节点。决策树通常近似左右平衡，因此遍历决策树需要经历大致 $O(log_2^m)$ 个节点。由于每个节点只需要检查一个特征的值，因此总体预测复杂度仅为$O(log_2^m)$ ，与特征的数量无关。 所以即使在处理大型训练集时，预测速度也非常快.</p>
+<p>然而，训练算法的时候（训练和预测不同）需要比较所有特征（如果设置了max_features会更少一些）<br>在每个节点的所有样本上。就有了$O(nmlog_2^m)$的训练复杂度。对于小型训练集（少于几千例），Scikit-Learn 可以通过预先设置数据（presort = True）来加速训练，但是这对于较大训练集来说会显着减慢训练速度。</p>
+<h2 id="基尼不纯度或是信息熵"><a href="#基尼不纯度或是信息熵" class="headerlink" title="基尼不纯度或是信息熵"></a>基尼不纯度或是信息熵</h2><p>通常，算法使用 Gini 不纯度来进行检测， 但是你也可以通过将标准超参数设置为”entropy”来使用熵不纯度进行检测。这里熵的概念是源于热力学中分子混乱程度的概念，当分子井然有序的时候，熵值接近于 0</p>
+<p>那么我们到底应该使用 Gini 指数还是熵(ID3,C4.5决策树)呢？ 事实上大部分情况都没有多大的差别：他们会生成类似的决策树。 基尼指数计算稍微快一点，所以这是一个很好的默认值。但是，也有的时候它们会产生不同的树，基尼指数会趋于在树的分支中将最多的类隔离出来，而熵指数趋向于产生略微平衡一些的决策树模型。</p>
+<h2 id="正则化超参数"><a href="#正则化超参数" class="headerlink" title="正则化超参数"></a>正则化超参数</h2><p>决策树几乎不对训练数据做任何假设（于此相反的是线性回归等模型，这类模型通常会假设数据是符合线性关系的）。</p>
+<p>如果不添加约束，树结构模型通常将根据训练数据调整自己，使自身能够很好的拟合数据，而这种情况下大多数会导致模型过拟合。</p>
+<p>这一类的模型通常会被称为非参数模型，这不是因为它没有任何参数（通常也有很多），而是因为在训练之前没有确定参数的具体数量，所以模型结构可以根据数据的特性自由生长。</p>
+<p>DecisionTreeClassifier类还有一些其他的参数用于限制树模型的形状:</p>
+<blockquote>
+<p>min_samples_split（节点在被分裂之前必须具有的最小样本数），min_samples_leaf（叶节点必须具有的最小样本数），min_weight_fraction_leaf（和min_samples_leaf相同，但表示为加权总数的一小部分实例），max_leaf_nodes（叶节点的最大数量）和max_features（在每个节点被评估是否分裂的时候，具有的最大特征数量）。增加min_hyperparameters或者减少max_hyperparameters会使模型正则化</p>
+<p>预剪枝与后剪枝</p>
+</blockquote>
+<p>下图显示了对moons数据集进行训练生成的两个决策树模型，左侧的图形对应的决策树使用默认超参数生成（没有限制生长条件），右边的决策树模型设置为min_samples_leaf=4。很明显，左边的模型过拟合了，而右边的模型泛用性更好。</p>
+<p><img src="/2018/07/23/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（五）：决策树/12.png" alt></p>
+<h2 id="回归"><a href="#回归" class="headerlink" title="回归"></a>回归</h2><p>决策树也能够执行回归任务，让我们使用 Scikit-Learn 的DecisionTreeRegressor类构建一个回归树，让我们用max_depth = 2在具有噪声的二次项数据集上进行训练。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.tree <span class="keyword">import</span> DecisionTreeRegressor</span><br><span class="line">tree_reg = DecisionTreeRegressor(max_depth=<span class="number">2</span>)</span><br><span class="line">tree_reg.fit(X, y)</span><br></pre></td></tr></table></figure>
+<p>结果如图：</p>
+<p><img src="/2018/07/23/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（五）：决策树/13.png" alt></p>
+<p>这棵树看起来非常类似于你之前建立的分类树，它的主要区别在于，它不是预测每个节点中的样本所属的分类，而是预测一个具体的数值。例如，假设您想对  的新实例进行预测。从根开始遍历树，最终到达预测值等于 0.1106 的叶节点。该预测仅仅是与该叶节点相关的 110 个训练实例的平均目标值。而这个预测结果在对应的 110 个实例上的均方误差（MSE）等于 0.0151</p>
+<p>下图的左侧显示的是模型的预测结果，如果你将max_depth=3设置为 3，模型就会如 6-5 图右侧显示的那样.注意每个区域的预测值总是该区域中实例的平均目标值。算法以一种使大多数训练实例尽可能接近该预测值的方式分割每个区域。</p>
+<blockquote>
+<p>译者注：图里面的红线就是训练实例的平均目标值，对应上图中的value</p>
+</blockquote>
+<p><img src="/2018/07/23/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（五）：决策树/14.png" alt></p>
+<p>CART 算法的工作方式与之前处理分类模型基本一样，不同之处在于，现在不再以最小化不纯度的方式分割训练集，而是试图以最小化 MSE 的方式分割训练集</p>
+<p>下面公式显示了成本函数，该算法试图最小化这个成本函数。</p>
+<p><img src="/2018/07/23/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（五）：决策树/15.png" alt></p>
+<p>和处理分类任务时一样，决策树在处理回归问题的时候也容易过拟合。如果不添加任何正则化（默认的超参数），你就会得到图 6-6 左侧的预测结果，显然，过度拟合的程度非常严重。而当我们设置了min_samples_leaf = 10，相对就会产生一个更加合适的模型了，就如图 6-6 所示的那样</p>
+<p><img src="/2018/07/23/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（五）：决策树/16.png" alt></p>
+<h2 id="不稳定性"><a href="#不稳定性" class="headerlink" title="不稳定性"></a>不稳定性</h2><p>它很容易理解和解释，易于使用且功能丰富而强大。然而，它也有一些限制，首先，你可能已经注意到了，决策树很喜欢设定正交化的决策边界，（所有边界都是和某一个轴相垂直的），这使得它对训练数据集的旋转很敏感，例如图 6-7 显示了一个简单的线性可分数据集。在左图中，决策树可以轻易的将数据分隔开，但是在右图中，当我们把数据旋转了 45° 之后，决策树的边界看起来变的格外复杂。尽管两个决策树都完美的拟合了训练数据，右边模型的泛化能力很可能非常差。</p>
+<p>解决这个难题的一种方式是使用 PCA 主成分分析，这样通常能使训练结果变得更好一些。</p>
+<p><img src="/2018/07/23/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（五）：决策树/17.png" alt></p>
+<p>更加通俗的讲，决策时的主要问题是它对训练数据的微小变化非常敏感，举例来说，我们仅仅从鸢尾花训练数据中将最宽的 Iris-Versicolor 拿掉（花瓣长 4.8 厘米，宽 1.8 厘米），然后重新训练决策树模型，你可能就会得到图 6-8 中的模型。正如我们看到的那样，决策树有了非常大的变化（原来的如图 6-2），事实上，由于 Scikit-Learn 的训练算法是非常随机的，即使是相同的训练数据你也可能得到差别很大的模型（除非你设置了随机数种子）</p>
+<p><img src="/2018/07/23/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（五）：决策树/18.png" alt></p>
+<h1 id="练习题"><a href="#练习题" class="headerlink" title="练习题"></a>练习题</h1><ol>
+<li>在 100 万例训练集上训练（没有限制）的决策树的近似深度是多少？</li>
+<li>节点的基尼指数比起它的父节点是更高还是更低？它是通常情况下更高/更低，还是永远更高/更低？</li>
+<li>如果决策树过拟合了，减少最大深度是一个好的方法吗？</li>
+<li>如果决策树对训练集欠拟合了，尝试缩放输入特征是否是一个好主意？</li>
+<li>如果对包含 100 万个实例的数据集训练决策树模型需要一个小时，在包含 1000 万个实例的培训集上训练另一个决策树大概需要多少时间呢？</li>
+<li>如果你的训练集包含 100,000 个实例，设置<code>presort=True</code>会加快训练的速度吗？</li>
+</ol>
+<hr>
+<p>1、$log_210^6\approx20$</p>
+<p>2、子节点的基尼指数通常比父节点更低，这是由CART训练树损失函数决定的，它只会每次减少子节点权重求和后的Gini指数。然而子节点的Gini并不会永远小于父节点，比如现在根节点包括{A B A A A}五个样本，其Gini为$1-\frac{1}{5}^2-\frac{4}{5}^2=0.32$，划分样本后为{A B}和 {A A A} ，Gini分别为0.5和0。权重求和后的Gini为$\frac{2}{5}\times0.5+\frac{3}{5}\times0=0.2$，其Gini指数划分后只会比原来的更小。</p>
+<p>3、如果决策树过度拟合训练集，那么减少max_depth是个不错的选择。</p>
+<p>4、决策树不关心训练数据是否缩放或居中，这是他们的优势之一。 因此，如果决策树如果欠拟合，缩放输入功能只会浪费时间。</p>
+<p>5、训练决策树的时间复杂度为$O(nmlog_2m)$，m为样本数，n为特征数。所以训练样本增加十倍，其训练时间会增加$K=(n\cdot 10m\cdot log_2(10m))=10\times log(10m)/log(m)$.如果m=10^6,则K$\approx$11.7</p>
+<p>6、仅当数据集小于几千个实例时，预先训练训练集能加速训练。 如果它包含100,000个实例，则设置presort = True将大大减慢训练速度。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+    
+    
+    
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/18/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（四）：支持向量机/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mosbyllc">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Mosbyllc">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/07/18/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（四）：支持向量机/" itemprop="url">Sklearn 与 TensorFlow 机器学习实用指南（四）：支持向量机</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-18T14:18:23+08:00">
+                2018-07-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Sklearn-与-TensorFlow-机器学习实用指南/" itemprop="url" rel="index">
+                    <span itemprop="name">Sklearn 与 TensorFlow 机器学习实用指南</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  9,756
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  36
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="推导"><a href="#推导" class="headerlink" title="推导"></a>推导</h1><h2 id="支持向量机条件描述"><a href="#支持向量机条件描述" class="headerlink" title="支持向量机条件描述"></a>支持向量机条件描述</h2><h3 id="样本分类"><a href="#样本分类" class="headerlink" title="样本分类"></a>样本分类</h3><p>Y∈{+1， -1}是样本的标签，分别代表两个不同的类。这里我们需要用这些样本去训练学习一个线性分类器（超平面）：$f(x)=sgn(w^Tx + b)$，也就是$w^Tx + b$大于0的时候，输出+1，小于0的时候，输出-1。sgn()表示取符号。而$g(x) =w^Tx + b=0$就是我们要寻找的分类超平面</p>
+<p>也就是，对于任何一个正样本$y_i$=+1，它都要处于超平面的一边，也就是要保证：$y= w^Tx + b&gt;0$。对于任何一个负样本$y_i=-1$，它都要处于超平面的另一边，也就是要保证：$y = w^Tx + b&lt;0$这两个约束，其实可以合并成同一个式子：$y_i (w^Tx_i+b)\geq0$</p>
+<h3 id="最大间隔"><a href="#最大间隔" class="headerlink" title="最大间隔"></a>最大间隔</h3><p>点到直线距离距离引理：设直线 L 的方程为Ax+By+C=0，点 P 的坐标为（Xo，Yo），则点 P 到直线 L 的距离为</p>
+<script type="math/tex; mode=display">
+\frac{\vert Ax_0+By_0+c\vert}{\sqrt{A^2+B^2}}</script><p><strong>间隔:间隔表示距离划分超平面最近的样本到划分超平面距离的两倍</strong>,即($x_i$为离直线最近的样本i)</p>
+<script type="math/tex; mode=display">
+\gamma=2\min_i \frac{1}{\Vert w \Vert}\vert w^Tx_i+b \vert</script><h3 id="约束条件"><a href="#约束条件" class="headerlink" title="约束条件"></a>约束条件</h3><p>所以，线性支持向量机的目标是找到一组合适的参数(<strong>w</strong>, b), 在满足分割样本的条件下，使得上诉间隔最大</p>
+<script type="math/tex; mode=display">
+\max_{w,b} \min_i \frac{2}{\Vert w \Vert}\vert w^Tx_i+b \vert \\ \\ \\s.t. \quad y_i(w^T+b)>0, i=1,2,...,m</script><p><strong>上面的优化问题十分复杂, 难以处理. 为了能在现实中应用, 我们希望能对其做一些简化, 使其变为可以求解的, 经典的凸二次规划 (QP) 问题</strong></p>
+<blockquote>
+<p>凸二次规划的优化问题是指目标函数是凸二次函数, 约束是线性约束的一类优化问题</p>
+</blockquote>
+<p>支持向量机的缩放引理：若（w* ,b*）是上面优化问题的解，那么对任何的r&gt;0,(rw*,rb*)仍是该问题的解。</p>
+<p>由于对 (w, b) 的放缩不影响解, 为了简化优化问题,我们约束 (w, b) 使得最短距离固定为1.</p>
+<script type="math/tex; mode=display">
+\min_i \quad \vert w^Tx_i+b \vert = 1</script><p><strong>所以最后我们的优化目标可以等价为下面优化目标</strong>：</p>
+<script type="math/tex; mode=display">
+\min_{w,b} \quad \frac{1}{2}w^Tw \\ \\ \\s.t. \quad y_i(w^T+b)\geq1, i=1,2,...,m</script><p><strong>这是一个凸二次规划问题，除了用解决QP问题的常规方法之外，还可以应用拉格朗日对偶性，通过求解对偶问题得到最优解，这就是线性可分条件下支持向量机的对偶算法，这样做的优点在于：一是对偶问题往往更容易求解；二者可以自然的引入核函数，进而推广到非线性分类问题</strong>。</p>
+<h2 id="拉格朗日函数与对偶形式"><a href="#拉格朗日函数与对偶形式" class="headerlink" title="拉格朗日函数与对偶形式"></a>拉格朗日函数与对偶形式</h2><h4 id="拉格朗日函数"><a href="#拉格朗日函数" class="headerlink" title="拉格朗日函数"></a>拉格朗日函数</h4><p>对于优化问题</p>
+<script type="math/tex; mode=display">
+\min_{u} \quad f(u) \\ \\ \\s.t. \quad g_i(u)\leq 0, i=1,2,...,m \\ \\ \\ \qquad  \ \ \ h_j(u)=0, j=1,2,...,n \qquad（6）</script><p>定义其拉格朗日函数为</p>
+<script type="math/tex; mode=display">
+L(u,\alpha,\beta):=f(u)+\sum_{i=1}^m\alpha_ig_i(u)+\sum_{j=1}^n\beta_jh_j(u)\\ \\ \\s.t.\quad \alpha_i\geq0</script><p><strong>公式6的优化问题等价于</strong></p>
+<script type="math/tex; mode=display">
+\min \limits_{u} \max \limits_{\alpha,\beta} \quad L(u,\alpha,\beta) \\ \\ \\ s.t. \alpha_i\geq0, \ \ i=1,2,...,m \qquad(8)</script><p>其证明过程如下</p>
+<p><img src="/2018/07/18/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（四）：支持向量机/08.jpg" alt></p>
+<p>其中，当$g_i$不满足约束时，即$g_i(u)&gt;0$,我们可以取$\alpha_i=\infty $;当$h_j$不满足约束时, 即$h_j(u)\neq 0$, 我们可以取$\beta_j=sign(h_j(u))\infty$，使得$\beta_jh_j(u)=\infty$. 当u满足约束时，由于$\alpha_i\geq 0,g_i(u)\leq 0$,则$\alpha_ig_i(u) \leq 0$.因此$\alpha_ig_i(u)$的最大值为0.</p>
+<h4 id="KKT条件和对偶形式"><a href="#KKT条件和对偶形式" class="headerlink" title="KKT条件和对偶形式"></a>KKT条件和对偶形式</h4><p>公式8描述的优化问题在最优值必须满足如下条件(KKT完整条件放后面)</p>
+<ul>
+<li>主问题可行：$g_i(u)\leq 0,h_i(u)=0$;</li>
+<li>对偶问题可行：$\alpha_i \geq 0$;</li>
+<li>互补松弛：$\alpha_i g_i(u)=0$.</li>
+</ul>
+<p>主问题可行和对偶问题可行是公式6和公式8描述的优化问题的约束项。松弛互补是在主问题和对偶问题都可行的条件下的最大值</p>
+<p>在对偶问题里，公式6描述的优化问题，其等价形式公式8称为主问题，其对偶问题为(最大最小条件互换)</p>
+<script type="math/tex; mode=display">
+\max \limits_{\alpha,\beta} \min \limits_{u}  \quad L(u,\alpha,\beta) \\ \\ \\ s.t. \alpha_i\geq0, \ \ i=1,2,...,m</script><ul>
+<li>引理一：对偶问题是主 (primal) 问题的下界（最大值里取最小值肯定会大于最小值里取最大值）</li>
+</ul>
+<script type="math/tex; mode=display">
+\max \limits_{\alpha,\beta} \min \limits_{u}  \quad L(u,\alpha,\beta)\leq \min \limits_{u} \max \limits_{\alpha,\beta} \quad L(u,\alpha,\beta)</script><ul>
+<li>引理二(Slater条件)：当主问题为凸优化问题，即$f$和$g_i$ 为凸函数，$h_j$为仿射函数(类似于kx+b的一类函数)，且可行域中至少有一点使不等式约束严格成立时，对偶问题等价于原问题。(支持向量机的优化函数和约束函数都为凸函数)</li>
+</ul>
+<h2 id="线性支持向量机"><a href="#线性支持向量机" class="headerlink" title="线性支持向量机"></a>线性支持向量机</h2><p>线性支持向量机的拉格朗日函数为</p>
+<script type="math/tex; mode=display">
+L(w,b,\alpha):=\frac{1}{2}w^tw+\sum_{i=1}^m\alpha_i(1-y_i(w^Tx_i+b))</script><p>其对偶问题为（并非主问题）</p>
+<script type="math/tex; mode=display">
+\max \limits_{\alpha}\min\limits_{w,b}\frac{1}{2}w^Tw+\sum_{i=1}^m\alpha_i(1-y_i(w^Tx_i+b)) \\ \\ \\ s.t.\quad \alpha_i\geq0,\quad i=1,2,...,m. \qquad(12)</script><p>因为其内层的(w,b)属于无约束优化问题，我们可以通过令偏导等于0的方法得到(w,b)的最优值</p>
+<script type="math/tex; mode=display">
+\frac{\partial L}{\partial w}=0\Rightarrow w=\sum_{i=1}^m{a_iy_ix_i}</script><script type="math/tex; mode=display">
+\frac{\partial L}{\partial b}=0\Rightarrow \sum_{i=1}^m{a_iy_i=0}</script><p>将上面公式带入(12)消去(w,b)即可得(变为min是因为化简过程有个负号，转为求最小)</p>
+<script type="math/tex; mode=display">
+L\left( w,b,a \right) =\frac{1}{2}\sum_{i=1}^m{\sum_{j=1}^m{a_ia_jy_iy_j\left( x_i·x_j \right) -\sum_{i=1}^m{a_iy_i\left( \left( \sum_{j=1}^m{a_jy_jx_j} \right) ·x_i+b \right) +\sum_{i=1}^m{a_i}}}}  \\ \\ \\ =-\frac{1}{2}\sum_{i=1}^m{\sum_{j=1}^m{a_ia_jy_iy_j\left( x_i·x_j \right) +\sum_{i=1}^m{a_i}}}</script><p><strong>故最终化简得到线性支持向量机对偶型</strong></p>
+<script type="math/tex; mode=display">
+\min \limits_{\alpha} \frac{1}{2}\sum_{i=1}^m\sum_{j=1}^m\alpha_i\alpha_jy_iy_jx_i^Tx_j-\sum_{i=1}^m\alpha_i \\ \\ \\ s.t.\sum_{i=1}^m\alpha_iy_i=0, \\ \\ \\ \alpha_i\geq 0,\quad i=1,2,...,m.</script><p>上诉为线性支持向量机的最终化简对偶问题，其优化模型还要满足以下的KKT条件</p>
+<ul>
+<li>主问题可行：$1-y_i(w^Tx_i+b)\leq0$</li>
+<li>对偶问题可行：$\alpha_i\geq0$</li>
+<li>互补松弛：$\alpha_i(1-y_i(w^Tx_i+b))=0$</li>
+</ul>
+<p>根据KKT条件，我们可以得到两个非常重要的结论（这么多证明得出两个结论，不容易啊）</p>
+<ul>
+<li>结论一：落在间隔边界上的支持向量，其对应的样本的对偶变量$\alpha_i&gt;0$</li>
+</ul>
+<p>证明：由KKT可知，根据$\alpha_i(1-y_i(w^Tx_i+b))=0$ 当;$\alpha_i&gt;0$时，有$1-y_i(w^Tx_i+b)=0$ ，即$y_i(w^Tx_i+b)=1$</p>
+<ul>
+<li>结论二：支持向量机的参数(w,b)仅仅由支持向量决定，与其他样本无关</li>
+</ul>
+<p>证明：由于对偶变量$\alpha_i&gt;0$对应的样本是支持向量，</p>
+<script type="math/tex; mode=display">
+w=\sum_{i=1}^m\alpha_iy_ix_i=\sum_{i:\alpha_i=0}^m0\cdot y_ix_i+\sum_{i:\alpha_i>0}^m\alpha_iy_ix_i=\sum_{i\in SV}\alpha_iy_ix_i</script><p>其中SV代表所有支持向量的集合.b可以由互补松弛算出，对于某一支持向量$x_s$ 及其标记$y_s$，由于$y_s(w^Tx_s+b)=1$,</p>
+<p>则有</p>
+<script type="math/tex; mode=display">
+b=y_s-w^Tx_s=y_s-\sum_{i\in SV}\alpha_iy_ix_i^Tx_s</script><p><strong>根据对偶公式(16)先计算最优解$\alpha_1,\alpha_2,…,\alpha_m$， 然后可以得到w和b，这样我们就可以写出分类超平面$w^\ast\cdot x+b^\ast=0$ 和分类决策函数$f(x)=sign(w^\ast·x+b^\ast)$</strong> </p>
+<blockquote>
+<p> 在实践中，为了得到对b更稳健的估计,通常使用对所有支持向量求解得到b的平均值</p>
+</blockquote>
+<h2 id="软间隔支持向量机"><a href="#软间隔支持向量机" class="headerlink" title="软间隔支持向量机"></a>软间隔支持向量机</h2><p>对每个样本点引进一个松弛变量$\xi \geqslant 0 $，使函数间隔加上松弛变量大于等于1.这样，<strong>约束条件</strong>变成</p>
+<script type="math/tex; mode=display">
+y_i\left( w·x_i+b \right) \geqslant 1-\xi _i</script><p>当然，如果我们允许$\xi \geqslant 0 $任意大的话，那任意的超平面都是符合条件的了。这里我们引入松弛变量$\xi$，松弛变量值越大，当样本违背约束的程度越大，当松弛变量为0时，样本分类正确。所以，我们在原来的目标函数后面加上一项，使得这些 $\xi \geqslant 0 $的总和也要最小，<strong>优化最大间隔和违背约束程度越小</strong>，<strong>目标函数</strong>由原来的$\frac{1}{2}||w||^2$变成</p>
+<script type="math/tex; mode=display">
+\frac{1}{2}||w||^2+C\sum_{i=1}^N{\xi _i}</script><p>这里，$C&gt;0$称为惩罚参数，一般事先由应用问题决定，用于权衡优化间隔和少量样本违背大间隔约束这两个目标，C越大时(看重这一项)对误分类的惩罚增大，，有更多的样本满足大间隔约束。C值小时对误分类的惩罚减小，允许有一些样本不满足大间隔约束.。最小化目标函数包含两层含义：使$\frac{1}{2}||w||^2$尽量最小间隔尽量大，同时使误分类点的个数尽量小，C是调和二者的系数。</p>
+<p><strong>则有软间隔支持向量机基本型</strong>：软间隔支持向量机旨在找到一组合适的参数 (w, b), 使得</p>
+<script type="math/tex; mode=display">
+\underset{w,b,\xi}{\min}\ \frac{1}{2}||w||^2+C\sum_{i=1}^m{\xi _i} \\ \\ \\ s.t.\ \ y_i\left( w^T·x_i+b \right) \geqslant 1-\xi _i\ ,\ i=1,2,···,m \\ \\ \\ \xi _i\geqslant 0,\ i=1,2,···\mathrm{，}m  \qquad(21)</script><p>可证明w的解是唯一的，但b的解不唯一，b的解存在于一个区间。</p>
+<p>用之前的方法将限制加入到目标函数中，得到如下<strong>原始最优化问题的拉格朗日函数</strong>(不等式为大于转为负号形式)：</p>
+<script type="math/tex; mode=display">
+L\left( w,b,\xi ,\alpha,\beta \right) =\frac{1}{2}||w||^2+C\sum_{i=1}^m{\xi _i-\sum_{i=1}^m{\alpha_i\left( y_i\left( w^T·x_i+b \right) -1+\xi _i \right) -\sum_{i=1}^m{\beta_i\xi _i}}} \\ \\ \\ s.t.\alpha\geq0 ,\beta\geq0.</script><p>其对偶问题为</p>
+<script type="math/tex; mode=display">
+\max_\limits{\alpha,\beta}\min_\limits{w,b,\xi} L\left( \alpha,\beta,w,b,\xi \right) \qquad(23)</script><p>首先求拉格朗日函数针对$w,b,\xi$求极小</p>
+<script type="math/tex; mode=display">
+\frac{\partial L}{\partial w}=0\Rightarrow w=\sum_{i=1}^m{a_iy_ix_i} \\ \\ \\ \frac{\partial L}{\partial b}=0\Rightarrow \sum_{i=1}^m{\alpha_iy_i=0} \\ \\ \\ \frac{\partial L}{\partial \xi _i}=0\Rightarrow C-\alpha_i-\beta_i=0，i=1,2,3···,m \qquad(24)</script><p>其中，有$\alpha\geq0,\beta\geq0$。因为$\beta_i=C-\alpha_i\geq0$，不失一般性，我们可以约束$0\leq\alpha_i\leq C$，从而<strong>去掉变量</strong>$\beta_i$.将这些求解变量带入拉格朗日对偶型即公式(23)，得到和原来一样的目标函数，唯一的区别就是现在拉格朗日乘子$\alpha$多了一个上限C。</p>
+<p><strong>最终化简的软间隔支持向量机对偶型</strong>问题(软间隔支持向量机的对偶问题等价于找到一组合适的$\alpha$使得)</p>
+<script type="math/tex; mode=display">
+\underset{\alpha}{\min}\ \ \frac{1}{2}\sum_{i=1}^m{\sum_{j=1}^m{\alpha_i\alpha_jy_iy_j⟨x_i·x_j ⟩-\sum_{i=1}^m{\alpha_i}}} \\ \\ \\ s.t.\ \sum_{i=1}^m{a_iy_i=0} \\ \\ \\ 0\le a_i\le C\ ,\ \ i=1,2,···,m</script><p>上诉为最终化简的软间隔支持向量机对偶型问题，其优化模型还要满足以下的KKT条件</p>
+<ul>
+<li>主问题可行：$1-\xi_i-y_i(w^Tx_i+b)\leq0$,$-\xi\leq0$;</li>
+<li>对偶问题可行：$\alpha_i\geq0$, $\beta_i\geq0$;</li>
+<li>互补松弛：$\alpha_i(1-\xi_i-y_i(w^Tx_i+b))=0$,$\beta_i\xi_i=0$.</li>
+</ul>
+<p>根据KKT条件，我们也可以得到两个结论：</p>
+<ul>
+<li>结论一：软间隔支持向量机中, 支持向量落在最大间隔边界, 内部, 或被错误分类的样本</li>
+</ul>
+<p>证明：由软间隔支持向量机的 KKT 条件可知，$\alpha_i(1-\xi_i-y_i(w^Tx_i+b))=0$且$\beta_i\xi_i=0$。当$\alpha_i&gt;0$时，$1-\xi_i-y_i(w^Tx_i+b)=0$，进一步可以分为两种情况：</p>
+<p>第一：$0&lt;\alpha_i&lt;’C$， 此时$\beta_i$=C-$\alpha_i$&gt;0(公式24的偏导约束)。因此$\xi_i$=0，即样本恰好落在最大间隔边界上。</p>
+<p>第二：$\alpha_i=C$， 此时$\beta_i=C-\alpha_i=0$. 若$\xi$ &lt;1’则分类正确，该样本落在最大间隔内部(间隔边界与分离超平面之间)；若$\xi$=1，该样本在分隔超面上。若$\xi$&gt;0样本位于分离超平面误分的一侧。</p>
+<ul>
+<li>结论二：支持向量机的参数 (w, b) 仅由支持向量决定,与其他样本无关。</li>
+</ul>
+<p>证明：和线性支持向量机证明方式相同.</p>
+<p>求解w，b的方式也与线性支持向量机相同。注意：对任一适合条件0&lt;a&lt;C都可求得一个$b^∗$，即这些点正好是位于分隔边界上的点来求出b点的。但是由于原始问题对b的求解并不唯一，所以实际计算时可以取在所有符合条件的样本点上的平均值。</p>
+<script type="math/tex; mode=display">
+w^*=\sum_{i=1}^N{a_{i}^{*}y_ix_i}</script><p>选择a的一个分量的一个分量$a_i$适合约束条件适合约束条件0&lt;$a_i$&lt;C,计算</p>
+<script type="math/tex; mode=display">
+b^*=y_j-\sum_{i=1}^N{a_{i}^{*}y_i⟨x_i·x_j ⟩}</script><h2 id="Hinge损失函数"><a href="#Hinge损失函数" class="headerlink" title="Hinge损失函数"></a>Hinge损失函数</h2><p>线性支持向量机学习除了原始最优化问题，还有另外一种解释，就是最优化以下目标函数.下标”+”表示以下取正值的函数z=max(0，z)：</p>
+<script type="math/tex; mode=display">
+\sum_i^{m}[1-y_i(w·x_i+b)]_++\lambda||w||^2</script><p>目标函数的第一项是经验损失或经验风险，函数$L(y·(w·x+b))=[1-y(w·x+b)]_+$ ,称为<strong>合页损失函数（hinge loss function）</strong>.这就是说，当样本点$(x_i,y_i)$被分类正确且函数间隔（确信度）$y_i(w\cdot x_i+b)$大于1时，损失是0，否则损失是$1-y_i(w\cdot x_i+b)$。目标函数目标函数的第二项是系数的L2范数，是正则项。下面要证明上面的公式等价于线性支持向量机原始最优化问题，即(公式21)</p>
+<p>证明：先令$[1-y<em>i(w·x_i+b)]</em>+=\xi_i$， 则可以写成$\xi_i=\max(0,\ 1-y_i(w·x_i+b) )$ 。当样本满足约束分类正确时，$y_i(w\cdot x_i+b)&gt;1$， 有$1-y_i(w\cdot x_i+b)\leq0$，得$\xi_i=0$; 当当样本不满足约束时分类错误时， 有$\xi_i=1-y_i(w\cdot x_i+b)$ </p>
+<p>故公式21的两个约束条件满足，其最优问题可以写作</p>
+<script type="math/tex; mode=display">
+\underset{w,b}{min}\sum_{i=1}^m\xi_i+\lambda||w||^2</script><p>若取$\lambda =\frac{1}{2C}$， 则$\underset{w,b}{min} \frac{1}{C}(\frac{1}{2} ||w||^2+C\sum_{i=1}^N \xi_i)$ 与原始最优问题等价</p>
+<p><img src="/2018/07/18/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（四）：支持向量机/09.png" alt></p>
+<p>图中还画出了0-1损失函数，可以认为它是一个二类分类问题的真正的损失函数，而合页损失函数是0-1损失函数的上界。由于0-1损失函数不是连续可导的，直接优化其构成的目标函数比较困难，可以认为线性支持向量机是优化由0-1损失函数的上界（合页损失函数）构成的目标函数。这时的上界损失函数又称为代理损失函数（surrogate function）。</p>
+<p>图中虚线显示的是感知机的损失函数，相比之下，合页损失函数不仅要分类正确，而且确信度足够高时损失才是0，也就是说，合页损失函数对学习有更高的要求。</p>
+<h2 id="核函数"><a href="#核函数" class="headerlink" title="核函数"></a>核函数</h2><p>线性可分问题：既然在原始的特征空间$R^d$不是线性可分的, 支持向量机希望通过一个映射 $\phi$ :$R^d$ →<br> $R^{\widetilde{d}}$,使得数据在新的空间 $R^{\widetilde{d}}$ 是线性可分的.</p>
+<p>令 $\phi$(x)代表将样本 x 映射到 $R^{\widetilde{d}}$中的特征向量,参数 w 的维数也要相应变为 $\widetilde{d}$维.</p>
+<p>在上面的支持向量机对偶公式中，注意到，被映射到高维的特征向量总是以成对内积的形式存在，即 $\phi (x_i)^T\phi(x_j)$ ,如果先计算特征在$R^{\widetilde{d}}$ 空间的映射, 再计算内积, 复杂度是O($\widetilde{d}$) ,当特征被映射到非常高维的空间, 甚至是无穷维空间时, 这将会是沉重的存储和计算负担.</p>
+<p>核技巧旨在将特征映射和内积这两步运算压缩为一步, 并且使复杂度由O($\widetilde{d}$)降为O($d$),即, 核技巧希望构造一个核函数 $\kappa (x_i,x_j) $ ,使得</p>
+<script type="math/tex; mode=display">
+\kappa(x_i,x_j)=\phi (x_i)^T\phi(x_j)</script><p>并且，$\kappa (x_i,x_j) $ 的计算复杂度是 O($d$) .</p>
+<h1 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h1><h2 id="软间隔分类"><a href="#软间隔分类" class="headerlink" title="软间隔分类"></a>软间隔分类</h2><p>如果我们严格地规定所有的数据都不在“街道”上，都在正确地两边，称为<strong>硬间隔分类</strong>，硬间隔分类有两个问题，第一，只对线性可分的数据起作用，第二，对异常点敏感。</p>
+<p>为了避免上述的问题，我们更倾向于使用更加软性的模型。目的在保持“街道”尽可能大和避免间隔违规（例如：数据点出现在“街道”中央或者甚至在错误的一边）之间找到一个良好的平衡。这就是软间隔分类。</p>
+<p><strong>在 Scikit-Learn 库的 SVM 类，你可以用C超参数（惩罚系数）来控制这种平衡：较小的C会导致更宽的“街道”，但更多的间隔违规</strong>。下图显示了在非线性可分隔的数据集上，两个软间隔SVM分类器的判定边界。左边图中，使用了较大的C值，导致更少的间隔违规，但是间隔较小。右边的图，使用了较小的C值，间隔变大了，但是许多数据点出现在了“街道”上。然而，<strong>第二个分类器似乎泛化地更好</strong>：事实上，在这个训练数据集上减少了预测错误，因为实际上大部分的间隔违规点出现在了判定边界正确的一侧</p>
+<p><img src="/2018/07/18/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（四）：支持向量机/01.jpg" alt></p>
+<blockquote>
+<p>如果你的 SVM 模型过拟合，你可以尝试通过减小超参数C去调整(街道更宽)</p>
+<p>SVM 特别适合复杂的分类，而中小型的数据集分类中很少用到。另外，SVM 对特征缩放比较敏感，要先做数据缩放处理。</p>
+</blockquote>
+<p>以下的 Scikit-Learn 代码加载了内置的鸢尾花（Iris）数据集，缩放特征，并训练一个线性 SVM 模型（使用<code>LinearSVC</code>类，超参数<code>C=1</code>，hinge 损失函数）来检测 Virginica 鸢尾花。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">from</span> sklearn <span class="keyword">import</span> datasets</span><br><span class="line"><span class="keyword">from</span> sklearn.pipeline <span class="keyword">import</span> Pipeline</span><br><span class="line"><span class="keyword">from</span> sklearn.preprocessing <span class="keyword">import</span> StandardScaler</span><br><span class="line"><span class="keyword">from</span> sklearn.svm <span class="keyword">import</span> LinearSVC</span><br><span class="line"></span><br><span class="line">iris = datasets.load_iris()</span><br><span class="line">X = iris[<span class="string">"data"</span>][:, (<span class="number">2</span>, <span class="number">3</span>)] <span class="comment"># petal length, petal width</span></span><br><span class="line">y = (iris[<span class="string">"target"</span>] == <span class="number">2</span>).astype(np.float64) <span class="comment"># Iris-Virginica</span></span><br><span class="line"></span><br><span class="line">svm_clf = Pipeline((</span><br><span class="line">        (<span class="string">"scaler"</span>, StandardScaler()),</span><br><span class="line">        (<span class="string">"linear_svc"</span>, LinearSVC(C=<span class="number">1</span>, loss=<span class="string">"hinge"</span>)),</span><br><span class="line">    ))</span><br><span class="line"></span><br><span class="line">svm_clf.fit(X_scaled, y)</span><br><span class="line"></span><br><span class="line">Then, <span class="keyword">as</span> usual, you can use the model to make predictions:</span><br><span class="line"></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>svm_clf.predict([[<span class="number">5.5</span>, <span class="number">1.7</span>]])</span><br><span class="line">array([ <span class="number">1.</span>])</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>不同于 Logistic 回归分类器，SVM 分类器不会输出每个类别的概率。</p>
+<p>SVM的分类器为SVC类，回归则为SVR类。</p>
+</blockquote>
+<p>作为一种选择，你可以在 SVC 类，使用<code>SVC(kernel=&quot;linear&quot;, C=1)</code>，但是它比较慢，尤其在较大的训练集上，所以一般不被推荐。另一个选择是使用<code>SGDClassifier</code>类，即<code>SGDClassifier(loss=&quot;hinge&quot;, alpha=1/(m*C))</code>。它应用了随机梯度下降（SGD 见第四章）来训练一个线性 SVM 分类器。尽管它不会和<code>LinearSVC</code>一样快速收敛，但是对于处理那些不适合放在内存的大数据集是非常有用的，或者处理在线分类任务同样有用。</p>
+<blockquote>
+<p><code>LinearSVC</code>要使偏置项规范化，首先你应该集中训练集减去它的平均数，完成数据中心化。如果你使用了<code>StandardScaler</code>，那么它会自动处理。此外，确保你设置<code>loss</code>参数为<code>hinge</code>，因为它不是默认值。最后，为了得到更好的效果，你需要将<code>dual</code>参数设置为<code>False</code>，除非特征数比样本量多。</p>
+</blockquote>
+<h2 id="常用损失函数"><a href="#常用损失函数" class="headerlink" title="常用损失函数"></a>常用损失函数</h2><ol>
+<li><strong>铰链损失（Hinge Loss）</strong>：主要用于支持向量机（SVM） 中， 二分类<em>SVM</em>等于Hinge损失+ L2正则化。</li>
+<li><strong>互熵损失 （Cross Entropy Loss，Softmax Loss ）</strong>：用于Logistic 回归与Softmax 分类中； </li>
+<li><strong>平方损失（Square Loss）</strong>：主要是最小二乘法（OLS）中； </li>
+<li><strong>指数损失（Exponential Loss）</strong> ：主要用于Adaboost 集成学习算法中； </li>
+</ol>
+<p>Hinge loss 的叫法来源于其损失函数的图形，为一个折线，通用的函数表达式为：</p>
+<script type="math/tex; mode=display">
+L(m_i) = max(0,1-m_i(w)) =\max(0, 1-y\tilde{y}), 其中y=\pm 1</script><p>表示如果被正确分类，损失是0，否则损失就是 $1-m_i(w)​$</p>
+<p><img src="/2018/07/18/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（四）：支持向量机/02.JPG" alt></p>
+<p>在机器学习中，Hing 可以用来解 <strong>间距最大化</strong> 的问题，最有代表性的就是SVM 问题，最初的SVM 优化函数如下： </p>
+<script type="math/tex; mode=display">
+\underset{w,\zeta}{argmin} \frac{1}{2}||w||^2+ C\sum_i \zeta_i \\
+st.\quad \forall y_iw^Tx_i \geq 1- \zeta_i \\
+\zeta_i \geq 0</script><p>将约束项进行变形，则为： </p>
+<script type="math/tex; mode=display">
+\zeta_i \geq 1-y_iw^Tx_i</script><p>则损失函数可以进一步写为： </p>
+<script type="math/tex; mode=display">
+\begin{equation}\begin{split}J(w)&=\frac{1}{2}||w||^2 + C\sum_i max(0,1-y_iw^Tx_i) \\
+&= \frac{1}{2}||w||^2 + C\sum_i max(0,1-m_i(w)) \\
+&= \frac{1}{2}||w||^2 + C\sum_i L_{Hinge}(m_i)
+\end{split}\end{equation}</script><p>因此， <strong>SVM 的损失函数可以看作是 L2-norm 和 Hinge loss 之和</strong>。</p>
+<h2 id="非线性支持向量机分类"><a href="#非线性支持向量机分类" class="headerlink" title="非线性支持向量机分类"></a>非线性支持向量机分类</h2><h3 id="创建多项式特征"><a href="#创建多项式特征" class="headerlink" title="创建多项式特征"></a>创建多项式特征</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.datasets <span class="keyword">import</span> make_moons</span><br><span class="line"><span class="keyword">from</span> sklearn.pipeline <span class="keyword">import</span> Pipeline</span><br><span class="line"><span class="keyword">from</span> sklearn.preprocessing <span class="keyword">import</span> PolynomialFeatures</span><br><span class="line"></span><br><span class="line">polynomial_svm_clf = Pipeline((</span><br><span class="line">        (<span class="string">"poly_features"</span>, PolynomialFeatures(degree=<span class="number">3</span>)),</span><br><span class="line">        (<span class="string">"scaler"</span>, StandardScaler()),</span><br><span class="line">        (<span class="string">"svm_clf"</span>, LinearSVC(C=<span class="number">10</span>, loss=<span class="string">"hinge"</span>))</span><br><span class="line">    ))</span><br><span class="line"></span><br><span class="line">polynomial_svm_clf.fit(X, y)</span><br></pre></td></tr></table></figure>
+<h3 id="多项式核"><a href="#多项式核" class="headerlink" title="多项式核"></a>多项式核</h3><p>添加多项式特征很容易实现，不仅仅在 SVM，在各种机器学习算法都有不错的表现，但是<strong>低次数的多项式不能处理非常复杂的数据集，而高次数的多项式却产生了大量的特征，会使模型变得慢.</strong></p>
+<p>幸运的是，当你使用 SVM 时，你可<strong>以运用一个被称为“核技巧”（kernel trick）的神奇数学技巧。它可以取得就像你添加了许多多项式，甚至有高次数的多项式，一样好的结果。所以不会大量特征导致的组合爆炸，因为你并没有增加任何特征</strong>。超参数<code>coef0</code>控制了高阶多项式与低阶多项式对模型的影响。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.svm <span class="keyword">import</span> SVC</span><br><span class="line">poly_kernel_svm_clf = Pipeline((</span><br><span class="line">        (<span class="string">"scaler"</span>, StandardScaler()),</span><br><span class="line">        (<span class="string">"svm_clf"</span>, SVC(kernel=<span class="string">"poly"</span>, degree=<span class="number">3</span>, coef0=<span class="number">1</span>, C=<span class="number">5</span>))</span><br><span class="line">    ))</span><br><span class="line">poly_kernel_svm_clf.fit(X, y)</span><br></pre></td></tr></table></figure>
+<h3 id="增加相似特征"><a href="#增加相似特征" class="headerlink" title="增加相似特征"></a>增加相似特征</h3><p><strong>另一种解决非线性问题的方法是使用相似函数（similarity funtion）计算每个样本与特定地标（landmark）的相似度。</strong>例如，让我们来看看前面讨论过的一维数据集，<strong>并在x1=-2和x1=1之间增加两个地标</strong>。接下来，我们定义一个相似函数，即高斯径向基函数（Gaussian Radial Basis Function，RBF），设置γ = 0.3。</p>
+<script type="math/tex; mode=display">
+RBF:\quad \phi_{\gamma}(x, \ell) = exp(-\gamma \|x - \ell \|^2)</script><p>它是个从 0 到 1 的钟型函数，值为 0 的离地标很远，值为 1 的在地标上。<strong>现在我们准备计算新特征。例如，我们看一下样本x0=-1：它距离第一个地标距离(x1=-2)是 1，距离第二个地标(x1=1)是 2。因此它的新特征为x2=exp((-0.3 × 1)^2)≈0.74和x3=exp((-0.3 × 2)^2)≈0.30</strong>。右边的图显示了特征转换后的数据集（删除了原始特征），正如你看到的，它现在是线性可分了。</p>
+<p><img src="/2018/07/18/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（四）：支持向量机/03.jpg" alt></p>
+<p><strong>你可能想知道如何选择地标。最简单的方法是在数据集中的每一个样本的位置创建地标。这将产生更多的维度从而增加了转换后数据集是线性可分的可能性</strong>。<strong>但缺点是，m个样本，n个特征的训练集被转换成了m个实例，m个特征的训练集（假设你删除了原始特征）。这样一来，如果你的训练集非常大，你最终会得到同样大的特征</strong></p>
+<h3 id="高斯-RBF-核"><a href="#高斯-RBF-核" class="headerlink" title="高斯 RBF 核"></a>高斯 RBF 核</h3><p>就像多项式特征法一样，相似特征法对各种机器学习算法同样也有不错的表现。但是在所有额外特征上的计算成本可能很高，特别是在大规模的训练集上。然而，“核” 技巧再一次显现了它在 SVM 上的神奇之处：<strong>高斯核让你可以获得同样好的结果成为可能，就像你在相似特征法添加了许多相似特征一样</strong>，但事实上，你并不需要在RBF添加它们。我们使用 SVC 类的高斯 RBF 核来检验一下。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">rbf_kernel_svm_clf = Pipeline((</span><br><span class="line">        (<span class="string">"scaler"</span>, StandardScaler()),</span><br><span class="line">        (<span class="string">"svm_clf"</span>, SVC(kernel=<span class="string">"rbf"</span>, gamma=<span class="number">5</span>, C=<span class="number">0.001</span>))</span><br><span class="line">    ))</span><br><span class="line">rbf_kernel_svm_clf.fit(X, y)</span><br></pre></td></tr></table></figure>
+<p>下图显示了用不同的超参数gamma (γ)和C训练的模型<strong>。增大γ使钟型曲线更窄，导致每个样本的影响范围变得更小：即判定边界最终变得更不规则，在单个样本周围环绕。相反的，较小的γ值使钟型曲线更宽，样本有更大的影响范围，判定边界最终则更加平滑。所以γ是可调整的超参数：如果你的模型过拟合，你应该减小γ值，若欠拟合，则增大γ（与超参数C相似）。</strong></p>
+<p><img src="/2018/07/18/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（四）：支持向量机/04.JPG" alt></p>
+<p>还有其他的核函数，但很少使用。例如，一些核函数是专门用于特定的数据结构。在对文本文档或者 DNA 序列进行分类时，有时会使用字符串核（String kernels）（例如，使用 SSK 核（string subsequence kernel）或者基于编辑距离（Levenshtein distance）的核函数）</p>
+<blockquote>
+<p>这么多可供选择的核函数，你如何决定使用哪一个？一般来说，你应该先尝试线性核函数（记住LinearSVC比SVC(kernel=”linear”)要快得多），尤其是当训练集很大或者有大量的特征的情况下。如果训练集不太大，你也可以尝试高斯径向基核（Gaussian RBF Kernel），它在大多数情况下都很有效。如果你有空闲的时间和计算能力，你还可以使用交叉验证和网格搜索来试验其他的核函数，特别是有专门用于你的训练集数据结构的核函数</p>
+</blockquote>
+<h2 id="计算复杂性"><a href="#计算复杂性" class="headerlink" title="计算复杂性"></a>计算复杂性</h2><p><strong>LinearSVC类基于liblinear库，它实现了线性 SVM 的优化算法。它并不支持核技巧</strong>，但是它样本和特征的数量几乎是线性的：训练时间复杂度大约为O(m × n)。</p>
+<p>如果你要非常高的精度，这个算法需要花费更多时间。这是由容差值超参数ϵ（在 Scikit-learn 称为tol）控制的。大多数分类任务中，使用默认容差值的效果是已经可以满足一般要求。</p>
+<p><strong>SVC 类基于libsvm库，它实现了支持核技巧的算法</strong>。训练时间复杂度通常介于O(m^2 × n)和O(m^3 × n)之间。不幸的是，<strong>这意味着当训练样本变大时，它将变得极其慢</strong>（例如，成千上万个样本）。这个算法对于复杂但小型或中等数量的数据集表现是完美的。然而，它能对特征数量很好的缩放，尤其对稀疏特征来说（sparse features）（即每个样本都有一些非零特征）。在这个情况下，算法对每个样本的非零特征的平均数量进行大概的缩放。下表对 Scikit-learn 的 SVM 分类模型进行比较。</p>
+<p><img src="/2018/07/18/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（四）：支持向量机/05.jpg" alt></p>
+<h2 id="SVM-回归"><a href="#SVM-回归" class="headerlink" title="SVM 回归"></a>SVM 回归</h2><p>正如我们之前提到的，<strong>SVM 算法应用广泛：不仅仅支持线性和非线性的分类任务，还支持线性和非线性的回归任务</strong>。技巧在于逆转我们的目标：限制间隔违规的情况下，<strong>不是试图在两个类别之间找到尽可能大的“街道”（即间隔）。SVM 回归任务是限制间隔违规情况下，尽量放置更多的样本在“街道”上</strong>。“街道”的宽度由超参数ϵ控制。下图显示了在一些随机生成的线性数据上，两个线性 SVM 回归模型的训练情况。一个有较大的间隔（ϵ=1.5），另一个间隔较小（ϵ=0.5）</p>
+<p><img src="/2018/07/18/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（四）：支持向量机/06.jpg" alt></p>
+<p>添加更多的数据样本在间隔之内并不会影响模型的预测，因此，这个模型认为是不敏感的（ϵ-insensitive）。</p>
+<p>你可以使用 Scikit-Learn 的LinearSVR类去实现线性 SVM 回归。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.svm <span class="keyword">import</span> LinearSVR</span><br><span class="line">svm_reg = LinearSVR(epsilon=<span class="number">1.5</span>)</span><br><span class="line">svm_reg.fit(X, y)</span><br></pre></td></tr></table></figure>
+<p><strong>处理非线性回归任务，你可以使用核化的 SVM 模型</strong>。比如，图显示了在随机二次方的训练集，使用二次方多项式核函数的 SVM 回归。左图是较小的正则化（即更大的C值），右图则是更大的正则化（即小的C值）。</p>
+<p><img src="/2018/07/18/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（四）：支持向量机/07.jpg" alt></p>
+<p>下面的代码使用了 Scikit-Learn 的SVR类（支持核技巧）。在回归任务上，SVR类和SVC类是一样的，并且LinearSVR是和LinearSVC等价。LinearSVR类和训练集的大小成线性（就像LinearSVC类），当训练集变大，SVR会变的很慢（就像SVC类）</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.svm <span class="keyword">import</span> SVR</span><br><span class="line"></span><br><span class="line">svm_poly_reg = SVR(kernel=<span class="string">"poly"</span>, degree=<span class="number">2</span>, C=<span class="number">100</span>, epsilon=<span class="number">0.1</span>)</span><br><span class="line">svm_poly_reg.fit(X, y)</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>SVM 也可以用来做异常值检测，详情见 Scikit-Learn 文档</p>
+</blockquote>
+<h1 id="补充"><a href="#补充" class="headerlink" title="补充"></a>补充</h1><h2 id="拉格朗日子乘与KKT"><a href="#拉格朗日子乘与KKT" class="headerlink" title="拉格朗日子乘与KKT"></a>拉格朗日子乘与KKT</h2><h3 id="等式约束问题"><a href="#等式约束问题" class="headerlink" title="等式约束问题"></a>等式约束问题</h3><p><img src="/2018/07/18/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（四）：支持向量机/10.png" alt></p>
+<p><img src="/2018/07/18/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（四）：支持向量机/11.png" alt></p>
+<p><strong>可以得到一个重要的结论：▽f(x)一定与▽h(x)平行，故其关系可以写成▽f(x) =λ ▽h(x).</strong></p>
+<p>扩展到高维度等式：f(x)为目标优化函数，hi(x)为约束等式，其表达式恒等于0。F(x)为等价的拉格朗日子乘函数。</p>
+<p><img src="/2018/07/18/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（四）：支持向量机/12.png" alt></p>
+<p>计算 F 对x与$\lambda$ 的偏导数并令其为零，可得最优解的必要条件：</p>
+<p><img src="/2018/07/18/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（四）：支持向量机/13.png" alt></p>
+<p><strong>其中第一式为定常方程式(stationary equation)</strong>，第二式为约束条件。也就是之前已经证明过得结果</p>
+<p><strong>故等式约束要满足的条件</strong>为</p>
+<p><img src="/2018/07/18/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（四）：支持向量机/14.png" alt></p>
+<h3 id="不等式约束问题"><a href="#不等式约束问题" class="headerlink" title="不等式约束问题"></a>不等式约束问题</h3><p><img src="/2018/07/18/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（四）：支持向量机/15.jpg" alt></p>
+<p>这两种情况的最佳解具有两种不同的必要条件</p>
+<ol>
+<li>内部解：h(x)&lt;0，不满足h(x)的等式约束，故不在边界上，在可行域的内部。在约束条件无效的情形下， h(x)不起作用，约束优化问题退化为无约束优化问题，因此驻点(最优解)<strong>满足▽f(x)=0且$\lambda$=0</strong> ($\lambda$为0才能消去F(x)的约束项)。</li>
+<li>边界解：在约束条件有效的情形下，约束不等式变成等式约束，有h(x)=0。和等式约束做相同的处理。另外，存在$\lambda$ 使得$\bigtriangledown f=-\lambda \bigtriangledown g$，但这里$\lambda$ 的正负号是有其意义的。<strong>因为我们希望最小化</strong> f，梯度$\bigtriangledown f$ <strong>(函数</strong> f<strong>在点</strong>x<strong>的最陡上升方向)应该指向可行域的内部(因为你的最优解最小值是在边界取得的)，但</strong> $\bigtriangledown g$<strong>指向可行域的的外部(即 g(x)&gt;0的区域，因为你的约束是小于等于0)，因此$\lambda \geq0$，称为对偶可行性(dual feasibility)</strong>。</li>
+</ol>
+<p>所以，不论是内部解或边界解，$\lambda h(x)=0$恒成立(不同情况总有一个为0)，称为互补松弛性(complementary slackness)。整合上述两种情况，最佳解的必要条件包括拉格朗日函数常定方程式、主问题可行，对偶可行，和互补松弛。</p>
+<p><img src="/2018/07/18/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（四）：支持向量机/16.jpg" alt></p>
+<h2 id="对偶性"><a href="#对偶性" class="headerlink" title="对偶性"></a>对偶性</h2><p>一个优化问题，通过求出它的 dual problem ，在只有 weak duality 成立的情况下，我们至少可以得到原始问题的一个下界。而如果 strong duality 成立，则可以直接求解 dual problem 来解决原始问题，就如同经典的 SVM 的求解过程一样。有可能 dual problem 比 primal problem 更容易求解，或者 dual problem 有一些优良的结构（例如 SVM 中通过 dual problem 我们可以将问题表示成数据的内积形式从而使得 kernel trick 的应用成为可能）。此外，还有一些情况会同时求解 dual 和 primal problem ，比如在迭代求解的过程中，通过判断 duality gap 的大小，可以得出一个有效的迭代停止条件.</p>
+<h2 id="支持向量机的其他变体"><a href="#支持向量机的其他变体" class="headerlink" title="支持向量机的其他变体"></a>支持向量机的其他变体</h2><h3 id="Prob-SVM"><a href="#Prob-SVM" class="headerlink" title="Prob SVM."></a>Prob SVM.</h3><p><strong>Prob SVM</strong>. 对数几率回归可以估计出样本属于正类的概率, 而支持向量机只能判断样本属于正类或负类,无法得到概率.Prob SVM 先训练一个支持向量机, 得到参数(w,b)。再令$s_i:=y_iw^Tx_i+b$，将${(s_1,y_1),(s_2,y_2),…,(s_m,y_m)}$当做新的训练数据训练一个对数几率回归模型，得到参数$(\theta_1,\theta_0)$.因此，ProbSVM 的假设函数为</p>
+<script type="math/tex; mode=display">
+h(x):=sigm(\theta_1(w^Tx_i+b)+\theta_0)</script><p>对数几率回归模型可以认为是对训练得到的支持向量机的微调, 包括尺度 (对应$\theta_1)$和平移(对应$\theta_0$).</p>
+<h3 id="多分类支持向量机"><a href="#多分类支持向量机" class="headerlink" title="多分类支持向量机"></a>多分类支持向量机</h3><p>支持向量机也可以扩展到多分类问题中. 对于 K 分类问题, 多分类支持向量机有 K组参数 ${(w_1,b_1),(w_2,b_2),…,(w_K,b_K)}$并希望模型对于属于正确标记的结果以 1 的间隔高于其他类的结果, 形式化如下</p>
+<script type="math/tex; mode=display">
+\min \limits_{W,b} \frac{1}{m}\sum_{i=1}^m\sum_{k=1}^Kmax(0,(w_{yi}^Tx_i+b_{yi})-(w_{k}^Tx_i+b_{k}+1)+\frac{2}{\lambda}\sum_{k=1}^Kw_k^Tw_k</script><h3 id="支持向量回归-SVR"><a href="#支持向量回归-SVR" class="headerlink" title="支持向量回归 (SVR)"></a>支持向量回归 (SVR)</h3><p>支持向量回归 (SVR). 经典回归模型的损失函数度量了模型的预测 $h(x_i)$与$y_i$的差别, 支持向量回归能够容忍$h(x_i)$与$y_i$之间小于$\epsilon$ 的偏差.令$s:=y-w^Tx+b$，我们定义$\epsilon$不敏感损失为</p>
+<p><img src="/2018/07/18/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（四）：支持向量机/17.jpg" alt></p>
+<h2 id="支持向量机和LR的异同"><a href="#支持向量机和LR的异同" class="headerlink" title="支持向量机和LR的异同"></a>支持向量机和LR的异同</h2><h3 id="SVM与LR的相同点"><a href="#SVM与LR的相同点" class="headerlink" title="SVM与LR的相同点"></a>SVM与LR的相同点</h3><ol>
+<li>LR和SVM都是分类算法，都是监督学习算法。</li>
+<li>如果不考虑核函数，LR和SVM都是线性分类算法，也就是说他们的分类决策面都是线性的。LR也是可以用核函数的，至于为什么通常在SVM中运用核函数而不在LR中运用，后面讲到他们之间区别的时候会重点分析。总之，原始的LR和SVM都是线性分类器，这也是为什么通常没人问你决策树和LR什么区别，决策树和SVM什么区别，你说一个非线性分类器和一个线性分类器有什么区别？</li>
+<li>LR和SVM都是判别模型。判别模型会生成一个表示P(Y|X)的判别函数（或预测模型），而生成模型先计算联合概率p(Y,X)然后通过贝叶斯公式转化为条件概率。简单来说，在计算判别模型时，不会计算联合概率，而在计算生成模型时，必须先计算联合概率。或者这样理解：生成算法尝试去找到底这个数据是怎么生成的（产生的），然后再对一个信号进行分类。基于你的生成假设，那么那个类别最有可能产生这个信号，这个信号就属于那个类别。判别模型不关心数据是怎么生成的，它只关心信号之间的差别，然后用差别来简单对给定的一个信号进行分类。常见的判别模型有：KNN、SVM、LR，常见的生成模型有：朴素贝叶斯，隐马尔可夫模型。当然，这也是为什么很少有人问你朴素贝叶斯和LR以及朴素贝叶斯和SVM有什么区别。</li>
+<li>LR和SVM在学术界和工业界都广为人知并且应用广泛。</li>
+</ol>
+<h3 id="SVM与LR的不同点"><a href="#SVM与LR的不同点" class="headerlink" title="SVM与LR的不同点"></a>SVM与LR的不同点</h3><p>1.损失函数</p>
+<p>SVM的处理方法是只考虑support vectors，也就是和分类最相关的少数点，去学习分类器。而逻辑回归通过非线性映射，大大减小了离分类平面较远的点的权重，相对提升了与分类最相关的数据点的权重,两者的根本目的都是一样的。即支持向量机只考虑局部的边界线附近的点，而逻辑回归考虑全局（远离的点对边界线的确定也起作用）。</p>
+<p>影响SVM决策面的样本点只有少数的支持向量，当在支持向量外添加或减少任何样本点对分类决策面没有任何影响；而在LR中，每个样本点都会影响决策面的结果</p>
+<p>2.核技巧</p>
+<p>在解决非线性问题时，支持向量机采用核函数的机制，而LR通常不采用核函数的方法。</p>
+<p>这个问题理解起来非常简单。分类模型的结果就是计算决策面，模型训练的过程就是决策面的计算过程。通过上面的第二点不同点可以了解，在计算决策面时，SVM转化为对偶问题后，只有少数几个代表支持向量的样本参与了计算，也就是只有少数几个样本需要参与核计算（即kernal machine解的系数是稀疏的），这个在进行复杂核函数计算时优势很明显，能够大大简化模型和计算量。。然而，LR算法里，每个样本点都必须参与决策面的计算过程，也就是说，假设我们在LR里也运用核函数的原理，那么每个样本点都必须参与核计算，这带来的计算复杂度是相当高的。所以，在具体应用时，LR很少运用核函数机制。</p>
+<p>3.正则项</p>
+<p>根据需要，两个方法都可以增加不同的正则化项，如l1,l2等等。所以在很多实验中，两种算法的结果是很接近的。但是逻辑回归相对来说模型更简单，好理解，实现起来，特别是大规模线性分类时比较方便。而SVM的理解和优化相对来说复杂一些。但是SVM的理论基础更加牢固，有一套结构化风险最小化的理论基础，虽然一般使用的人不太会去关注。</p>
+<p>4.异常值</p>
+<p>两者对异常的敏感度也不一样。同样的线性分类情况下，如果异常点较多的话，无法剔除，首先LR，LR中每个样本都是有贡献的，最大似然后会自动压制异常的贡献，SVM+软间隔对异常还是比较敏感，因为其训练只需要支持向量，有效样本本来就不高，一旦被干扰，预测结果难以预料。</p>
+<p>5.normalization</p>
+<p>两个模型对数据和参数的敏感程度不同，Linear SVM比较依赖penalty的系数和数据表达空间的测度，而（带正则项的）LR比较依赖对参数做L1 regularization的系数。但是由于他们或多或少都是线性分类器，所以实际上对低维度数据overfitting的能力都比较有限，相比之下对高维度数据，LR的表现会更加稳定，为什么呢？</p>
+<p>因为Linear SVM在计算margin有多“宽”的时候是依赖数据表达上的距离测度的，换句话说如果这个测度不好（badly scaled，这种情况在高维数据尤为显著），所求得的所谓Large margin就没有意义了，这个问题即使换用kernel trick（比如用Gaussian kernel）也无法完全避免。所以使用Linear SVM之前一般都需要先对数据做normalization，而求解LR（without regularization）时则不需要或者结果不敏感。</p>
+<h1 id="练习题"><a href="#练习题" class="headerlink" title="练习题"></a>练习题</h1><ol>
+<li>支持向量机背后的基本思想是什么</li>
+<li>什么是支持向量</li>
+<li>当使用 SVM 时，为什么标准化输入很重要？</li>
+<li>分类一个样本时，SVM 分类器能够输出一个置信值吗？概率呢？</li>
+<li>在一个有数百万训练样本和数百特征的训练集上，你是否应该使用 SVM 原始形式或对偶形式来训练一个模型？</li>
+<li>假设你用 RBF 核来训练一个 SVM 分类器，如果对训练集欠拟合：你应该增大或者减小<code>γ</code>吗？调整参数<code>C</code>呢？</li>
+</ol>
+<hr>
+<p>1、支持向量机背后的基本目标是在训练实例中分隔两个类的决策边界之间具有最大可能的间隔。 当执行软间隔分类时，SVM在完全分离两个类和具有尽可能宽的街道之间搜索折衷。 另一个关键思想是在训练非线性数据集时使用核技巧。</p>
+<p>2、在训练SVM之后，支持向量是位于“街道”上的任何实例，包括其边界。 决策边界完全由支持向量决定。 任何不是支持向量的实例（即街道外）都没有任何影响; 你可以删除它们，添加更多实例或移动它们，只要它们离开街道它们就不会影响决策边界。 计算预测仅涉及支持向量，而不是整个训练集。</p>
+<p>3、SVM尝试适应类之间最大可能的“街道”，因此如果训练集未缩放，SVM将倾向于忽略数值小的特征。</p>
+<p>4、SVM分类器可以输出测试实例与决策边界之间的距离，您可以将其用作置信度分数。 但是，这个分数不能直接转换为类概率的估计。 如果在Scikit-Learn中创建SVM时设置probability = True，则在训练之后，它将使用SVM分数的Logistic回归校准概率（通过对训练数据进行额外的5折交叉验证进行训练）。 这会将predict_proba（）和predict_log_proba（）方法添加到SVM。</p>
+<p>5、此问题仅适用于线性SVM，因为进行核化kernelized需要用到对偶形式(对偶问题就是为了可以进行核化)。 SVM问题的原始形式的计算复杂度与训练实例m的数量成比例，而对偶形式的计算复杂度与m2和m3之间的数量成比例。 所以如果有数百万个实例，你肯定应该使用原始形式，因为对偶形式会太慢。</p>
+<p>6、如果使用RBF内核训练的SVM分类器不适合训练集，则可能存在正则化强度过高。 要减少它，您需要增加gamma或C（或两者）。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+    
+    
+    
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/14/Sklearn 与 TensorFlow 机器学习实用指南/Sklearn-与-TensorFlow-机器学习实用指南（三）：回归/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2550,471 +3391,11 @@ TNR = \frac{TN}{N} = \frac{TN}{TN+FP}</script><p><img src="/2018/07/11/Sklearn �
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/30/python编程进阶/python编程进阶（8）：容器Collections/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Mosbyllc">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Mosbyllc">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/06/30/python编程进阶/python编程进阶（8）：容器Collections/" itemprop="url">python编程进阶（8）：容器Collections</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-30T16:14:32+08:00">
-                2018-06-30
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python编程进阶/" itemprop="url" rel="index">
-                    <span itemprop="name">python编程进阶</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  2,945
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  13
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="容器-Collections"><a href="#容器-Collections" class="headerlink" title="容器(Collections)"></a>容器(Collections)</h1><p>Python附带一个模块，它包含许多容器数据类型，名字叫作<code>collections</code>。我们将讨论它的作用和用法。</p>
-<p>我们将讨论的是：</p>
-<ul>
-<li>defaultdict</li>
-<li>counter</li>
-<li>deque</li>
-<li>namedtuple</li>
-<li>enum.Enum (包含在Python 3.4以上)</li>
-</ul>
-<h2 id="defaultdict"><a href="#defaultdict" class="headerlink" title="defaultdict"></a>defaultdict</h2><p>众所周知，在Python中如果访问字典中不存在的键，会引发KeyError异常（JavaScript中如果对象中不存在某个属性，则返回undefined）。<strong>但是有时候，字典中的每个键都存在默认值是非常方便的</strong>。例如下面的例子：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">strings = (<span class="string">'puppy'</span>, <span class="string">'kitten'</span>, <span class="string">'puppy'</span>, <span class="string">'puppy'</span>,</span><br><span class="line">           <span class="string">'weasel'</span>, <span class="string">'puppy'</span>, <span class="string">'kitten'</span>, <span class="string">'puppy'</span>)</span><br><span class="line">counts = &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> kw <span class="keyword">in</span> strings:</span><br><span class="line">    counts[kw] += <span class="number">1</span>	<span class="comment"># 第一次统计时没有键对应的默认值</span></span><br></pre></td></tr></table></figure>
-<p>该例子统计strings中某个单词出现的次数，并在counts字典中作记录。单词每出现一次，在counts相对应的键所存的值数字加1。<strong>但是事实上，运行这段代码会抛出KeyError异常，出现的时机是每个单词第一次统计的时候，因为Python的dict中不存在默认值的说法</strong>，可以在Python命令行中验证：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>counts = dict()</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>counts</span><br><span class="line">&#123;&#125;</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>counts[<span class="string">'puppy'</span>] += <span class="number">1</span></span><br><span class="line">Traceback (most recent call last):</span><br><span class="line">  File <span class="string">"&lt;stdin&gt;"</span>, line <span class="number">1</span>, <span class="keyword">in</span> &lt;module&gt;</span><br><span class="line">KeyError: <span class="string">'puppy'</span></span><br></pre></td></tr></table></figure>
-<h3 id="使用判断语句检查"><a href="#使用判断语句检查" class="headerlink" title="使用判断语句检查"></a>使用判断语句检查</h3><p>既然如此，首先可能想到的方法是在单词第一次统计的时候，<strong>在counts中相应的键存下默认值1</strong>。这需要在处理的时候添加一个判断语句：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">strings = (<span class="string">'puppy'</span>, <span class="string">'kitten'</span>, <span class="string">'puppy'</span>, <span class="string">'puppy'</span>,</span><br><span class="line">           <span class="string">'weasel'</span>, <span class="string">'puppy'</span>, <span class="string">'kitten'</span>, <span class="string">'puppy'</span>)</span><br><span class="line">counts = &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> kw <span class="keyword">in</span> strings:</span><br><span class="line">    <span class="keyword">if</span> kw <span class="keyword">not</span> <span class="keyword">in</span> counts:</span><br><span class="line">        counts[kw] = <span class="number">1</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        counts[kw] += <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># counts:</span></span><br><span class="line"><span class="comment"># &#123;'puppy': 5, 'weasel': 1, 'kitten': 2&#125;</span></span><br></pre></td></tr></table></figure>
-<h3 id="使用dict-setdefault-方法"><a href="#使用dict-setdefault-方法" class="headerlink" title="使用dict.setdefault()方法"></a>使用<code>dict.setdefault()</code>方法</h3><p>也可以通过<code>dict.setdefault()</code>方法来设置默认值：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">strings = (<span class="string">'puppy'</span>, <span class="string">'kitten'</span>, <span class="string">'puppy'</span>, <span class="string">'puppy'</span>,</span><br><span class="line">           <span class="string">'weasel'</span>, <span class="string">'puppy'</span>, <span class="string">'kitten'</span>, <span class="string">'puppy'</span>)</span><br><span class="line">counts = &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> kw <span class="keyword">in</span> strings:</span><br><span class="line">    counts.setdefault(kw, <span class="number">0</span>)</span><br><span class="line">    counts[kw] += <span class="number">1</span></span><br></pre></td></tr></table></figure>
-<p><strong><code>dict.setdefault()</code>方法接收两个参数，第一个参数是健的名称，第二个参数是默认值。假如字典中不存在给定的键，则返回参数中提供的默认值；反之，则返回字典中保存的值</strong>。利用<code>dict.setdefault()</code>方法的返回值可以重写for循环中的代码，使其更加简洁：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">strings = (<span class="string">'puppy'</span>, <span class="string">'kitten'</span>, <span class="string">'puppy'</span>, <span class="string">'puppy'</span>,</span><br><span class="line">           <span class="string">'weasel'</span>, <span class="string">'puppy'</span>, <span class="string">'kitten'</span>, <span class="string">'puppy'</span>)</span><br><span class="line">counts = &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> kw <span class="keyword">in</span> strings:</span><br><span class="line">    counts[kw] = counts.setdefault(kw, <span class="number">0</span>) + <span class="number">1</span></span><br></pre></td></tr></table></figure>
-<h3 id="使用collections-defaultdict类"><a href="#使用collections-defaultdict类" class="headerlink" title="使用collections.defaultdict类"></a>使用<code>collections.defaultdict</code>类</h3><p>以上的方法虽然在一定程度上解决了dict中不存在默认值的问题，但是这时候我们会想，有没有一种字典它本身提供了默认值的功能呢？答案是肯定的，那就是<code>collections.defaultdict</code>。</p>
-<p><strong>defaultdict类就好像是一个dict，但是它是使用一个类型来初始化的</strong>：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> collections <span class="keyword">import</span> defaultdict</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>dd = defaultdict(list)	<span class="comment"># 接受一个list类型作为初始化参数</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>dd</span><br><span class="line">defaultdict(&lt;type <span class="string">'list'</span>&gt;, &#123;&#125;)</span><br></pre></td></tr></table></figure>
-<p><strong>defaultdict类的初始化函数接受一个类型作为参数，当所访问的键不存在的时候，可以实例化一个值作为默认值：</strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>dd[<span class="string">'foo'</span>]</span><br><span class="line">[]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>dd</span><br><span class="line">defaultdict(&lt;type <span class="string">'list'</span>&gt;, &#123;<span class="string">'foo'</span>: []&#125;)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>dd[<span class="string">'bar'</span>].append(<span class="string">'quux'</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>dd</span><br><span class="line">defaultdict(&lt;type <span class="string">'list'</span>&gt;, &#123;<span class="string">'foo'</span>: [], <span class="string">'bar'</span>: [<span class="string">'quux'</span>]&#125;)</span><br></pre></td></tr></table></figure>
-<p>需<strong>要注意的是，这种形式的默认值只有在通过<code>dict[key]</code>或者<code>dict.__getitem__(key)</code>访问的时候才有效</strong>，这其中的原因在下文会介绍。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> collections <span class="keyword">import</span> defaultdict</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>dd = defaultdict(list)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="string">'something'</span> <span class="keyword">in</span> dd</span><br><span class="line"><span class="literal">False</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>dd.pop(<span class="string">'something'</span>)</span><br><span class="line">Traceback (most recent call last):</span><br><span class="line">  File <span class="string">"&lt;stdin&gt;"</span>, line <span class="number">1</span>, <span class="keyword">in</span> &lt;module&gt;</span><br><span class="line">KeyError: <span class="string">'pop(): dictionary is empty'</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>dd.get(<span class="string">'something'</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>dd[<span class="string">'something'</span>]</span><br><span class="line">[]</span><br></pre></td></tr></table></figure>
-<p><strong>该类除了接受类型名称作为初始化函数的参数之外，还可以使用任何不带参数的可调用函数，到时该函数的返回结果作为默认值</strong>，这样使得默认值的取值更加灵活。下面用一个例子来说明，如何用自定义的不带参数的函数zero()作为初始化函数的参数：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> collections <span class="keyword">import</span> defaultdict</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="function"><span class="keyword">def</span> <span class="title">zero</span><span class="params">()</span>:</span></span><br><span class="line"><span class="meta">... </span>    <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">...</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>dd = defaultdict(zero)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>dd</span><br><span class="line">defaultdict(&lt;function zero at <span class="number">0xb7ed2684</span>&gt;, &#123;&#125;)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>dd[<span class="string">'foo'</span>]</span><br><span class="line"><span class="number">0</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>dd</span><br><span class="line">defaultdict(&lt;function zero at <span class="number">0xb7ed2684</span>&gt;, &#123;<span class="string">'foo'</span>: <span class="number">0</span>&#125;)</span><br></pre></td></tr></table></figure>
-<p>利用<code>collections.defaultdict</code>来解决最初的单词统计问题，代码如下：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> defaultdict</span><br><span class="line"></span><br><span class="line">strings = (<span class="string">'puppy'</span>, <span class="string">'kitten'</span>, <span class="string">'puppy'</span>, <span class="string">'puppy'</span>,</span><br><span class="line">           <span class="string">'weasel'</span>, <span class="string">'puppy'</span>, <span class="string">'kitten'</span>, <span class="string">'puppy'</span>)</span><br><span class="line">counts = defaultdict(<span class="keyword">lambda</span>: <span class="number">0</span>)  <span class="comment"># 使用lambda来定义简单的函数</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> s <span class="keyword">in</span> strings:</span><br><span class="line">    counts[s] += <span class="number">1</span></span><br></pre></td></tr></table></figure>
-<h3 id="defaultdict-类是如何实现的"><a href="#defaultdict-类是如何实现的" class="headerlink" title="defaultdict 类是如何实现的"></a>defaultdict 类是如何实现的</h3><p>通过上面的内容，想必大家已经了解了defaultdict类的用法，那么在defaultdict类中又是如何来实现默认值的功能呢？<strong>这其中的关键是使用了看<code>__missing__()</code>这个方法</strong>：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> collections <span class="keyword">import</span> defaultdict</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">print</span> defaultdict.__missing__.__doc__</span><br><span class="line">__missing__(key) <span class="comment"># Called by __getitem__ for missing key; pseudo-code:</span></span><br><span class="line">  <span class="keyword">if</span> self.default_factory <span class="keyword">is</span> <span class="literal">None</span>: <span class="keyword">raise</span> KeyError(key)</span><br><span class="line">  self[key] = value = self.default_factory()</span><br><span class="line">  <span class="keyword">return</span> value</span><br></pre></td></tr></table></figure>
-<p><strong>通过查看<code>__missing__()</code>方法的docstring，可以看出当使用<code>__getitem__()</code>方法访问一个不存在的键时(dict[key]这种形式实际上是<code>__getitem__()</code>方法的简化形式)，会调用<code>__missing__()</code>方法获取默认值，并将该键添加到字典中去</strong>。</p>
-<h2 id="counter"><a href="#counter" class="headerlink" title="counter"></a>counter</h2><p>Counter是一个计数器，它可以帮助我们针对某项数据进行计数。比如它可以用来计算每个人喜欢多少种颜色：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> Counter</span><br><span class="line"></span><br><span class="line">colours = (</span><br><span class="line">    (<span class="string">'Yasoob'</span>, <span class="string">'Yellow'</span>),</span><br><span class="line">    (<span class="string">'Ali'</span>, <span class="string">'Blue'</span>),</span><br><span class="line">    (<span class="string">'Arham'</span>, <span class="string">'Green'</span>),</span><br><span class="line">    (<span class="string">'Ali'</span>, <span class="string">'Black'</span>),</span><br><span class="line">    (<span class="string">'Yasoob'</span>, <span class="string">'Red'</span>),</span><br><span class="line">    (<span class="string">'Ahmed'</span>, <span class="string">'Silver'</span>),</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">favs = Counter(name <span class="keyword">for</span> name, colour <span class="keyword">in</span> colours)</span><br><span class="line">print(favs)</span><br><span class="line"></span><br><span class="line"><span class="comment">## 输出:</span></span><br><span class="line"><span class="comment">## Counter(&#123;</span></span><br><span class="line"><span class="comment">##     'Yasoob': 2,</span></span><br><span class="line"><span class="comment">##     'Ali': 2,</span></span><br><span class="line"><span class="comment">##     'Arham': 1,</span></span><br><span class="line"><span class="comment">##     'Ahmed': 1</span></span><br><span class="line"><span class="comment">##  &#125;)</span></span><br></pre></td></tr></table></figure>
-<p>我们也可以在利用它统计一个文件，例如：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> open(<span class="string">'filename'</span>, <span class="string">'rb'</span>) <span class="keyword">as</span> f:</span><br><span class="line">    line_count = Counter(f)</span><br><span class="line">print(line_count)</span><br></pre></td></tr></table></figure>
-<p>还有</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> collections <span class="keyword">import</span> Counter</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>c = Counter()</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">for</span> ch <span class="keyword">in</span> <span class="string">'programming'</span>:</span><br><span class="line"><span class="meta">... </span>    c[ch] = c[ch] + <span class="number">1</span></span><br><span class="line">...</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>c</span><br><span class="line">Counter(&#123;<span class="string">'g'</span>: <span class="number">2</span>, <span class="string">'m'</span>: <span class="number">2</span>, <span class="string">'r'</span>: <span class="number">2</span>, <span class="string">'a'</span>: <span class="number">1</span>, <span class="string">'i'</span>: <span class="number">1</span>, <span class="string">'o'</span>: <span class="number">1</span>, <span class="string">'n'</span>: <span class="number">1</span>, <span class="string">'p'</span>: <span class="number">1</span>&#125;)</span><br></pre></td></tr></table></figure>
-<h2 id="deque"><a href="#deque" class="headerlink" title="deque"></a>deque</h2><p>deque提供了一个双端队列，你可以从头/尾两端添加或删除元素。要想使用它，首先我们要从<code>collections</code>中导入<code>deque</code>模块：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> deque</span><br></pre></td></tr></table></figure>
-<p>现在，你可以创建一个<code>deque</code>对象。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">d = deque()</span><br></pre></td></tr></table></figure>
-<p>它的用法就像python的<code>list</code>，并且提供了类似的方法，例如：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">d = deque()</span><br><span class="line">d.append(<span class="string">'1'</span>)</span><br><span class="line">d.append(<span class="string">'2'</span>)</span><br><span class="line">d.append(<span class="string">'3'</span>)</span><br><span class="line"></span><br><span class="line">print(len(d))</span><br><span class="line"></span><br><span class="line"><span class="comment">## 输出: 3</span></span><br><span class="line"></span><br><span class="line">print(d[<span class="number">0</span>])</span><br><span class="line"></span><br><span class="line"><span class="comment">## 输出: '1'</span></span><br><span class="line"></span><br><span class="line">print(d[<span class="number">-1</span>])</span><br><span class="line"></span><br><span class="line"><span class="comment">## 输出: '3'</span></span><br></pre></td></tr></table></figure>
-<p>你可以从两端取出(pop)数据：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">d = deque(range(<span class="number">5</span>))</span><br><span class="line">print(len(d))</span><br><span class="line"></span><br><span class="line"><span class="comment">## 输出: 5</span></span><br><span class="line"></span><br><span class="line">d.popleft()</span><br><span class="line"></span><br><span class="line"><span class="comment">## 输出: 0</span></span><br><span class="line"></span><br><span class="line">d.pop()</span><br><span class="line"></span><br><span class="line"><span class="comment">## 输出: 4</span></span><br><span class="line"></span><br><span class="line">print(d)</span><br><span class="line"></span><br><span class="line"><span class="comment">## 输出: deque([1, 2, 3])</span></span><br></pre></td></tr></table></figure>
-<p>我们也可以限制这个列表的大小，当超出你设定的限制时，数据会从对队列另一端被挤出去(pop)。<br>最好的解释是给出一个例子：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">d = deque(maxlen=<span class="number">30</span>)</span><br></pre></td></tr></table></figure>
-<p>现在当你插入30条数据时，最左边一端的数据将从队列中删除。</p>
-<p>你还可以从任一端扩展这个队列中的数据：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">d = deque([<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>])</span><br><span class="line">d.extendleft([<span class="number">0</span>])</span><br><span class="line">d.extend([<span class="number">6</span>,<span class="number">7</span>,<span class="number">8</span>])</span><br><span class="line">print(d)</span><br><span class="line"></span><br><span class="line"><span class="comment">## 输出: deque([0, 1, 2, 3, 4, 5, 6, 7, 8])</span></span><br></pre></td></tr></table></figure>
-<h2 id="namedtuple"><a href="#namedtuple" class="headerlink" title="namedtuple"></a>namedtuple</h2><p>您可能已经熟悉元组。<br>一个元组是一个不可变的列表，你可以存储一个数据的序列，它和命名元组(<code>namedtuples</code>)非常像，但有几个关键的不同。<br><strong>主要相似点是都不像列表，你不能修改元组中的数据。为了获取元组中的数据，你需要使用整数作为索引</strong>：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">man = (<span class="string">'Ali'</span>, <span class="number">30</span>)</span><br><span class="line">print(man[<span class="number">0</span>])</span><br><span class="line"></span><br><span class="line"><span class="comment">## 输出: Ali</span></span><br></pre></td></tr></table></figure>
-<p><strong>嗯，那<code>namedtuples</code>是什么呢？它把元组变成一个针对简单任务的容器。你不必使用整数索引来访问一个<code>namedtuples</code>的数据。你可以像字典(<code>dict</code>)一样访问<code>namedtuples</code>，但<code>namedtuples</code>是不可变的</strong>。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> namedtuple</span><br><span class="line"></span><br><span class="line">Animal = namedtuple(<span class="string">'Animal'</span>, <span class="string">'name age type'</span>)</span><br><span class="line">perry = Animal(name=<span class="string">"perry"</span>, age=<span class="number">31</span>, type=<span class="string">"cat"</span>)</span><br><span class="line"></span><br><span class="line">print(perry)</span><br><span class="line"></span><br><span class="line"><span class="comment">## 输出: Animal(name='perry', age=31, type='cat')</span></span><br><span class="line"></span><br><span class="line">print(perry.name)</span><br><span class="line"></span><br><span class="line"><span class="comment">## 输出: 'perry'</span></span><br></pre></td></tr></table></figure>
-<p>现在你可以看到，我们可以用名字来访问<code>namedtuple</code>中的数据。我们再继续分析它。<strong>一个命名元组(<code>namedtuple</code>)有两个必需的参数。它们是元组名称和字段名称。</strong></p>
-<p><strong>在上面的例子中，我们的元组名称是<code>Animal</code>，字段名称是’name’，’age’和’type’。</strong><br><code>namedtuple</code>让你的元组变得<strong>自文档</strong>了。你只要看一眼就很容易理解代码是做什么的。<br><strong>你也不必使用整数索引来访问一个命名元组，这让你的代码更易于维护</strong>。<br>而且，<strong>namedtuple的每个实例没有对象字典</strong>，<strong>所以它们很轻量</strong>，与普通的元组比，并不需要更多的内存。这使得它们比字典更快。</p>
-<p><strong>然而，要记住它是一个元组，属性值在<code>namedtuple</code>中是不可变的，所以下面的代码不能工作</strong>：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> namedtuple</span><br><span class="line"></span><br><span class="line">Animal = namedtuple(<span class="string">'Animal'</span>, <span class="string">'name age type'</span>)</span><br><span class="line">perry = Animal(name=<span class="string">"perry"</span>, age=<span class="number">31</span>, type=<span class="string">"cat"</span>)</span><br><span class="line">perry.age = <span class="number">42</span></span><br><span class="line"></span><br><span class="line"><span class="comment">## 输出:</span></span><br><span class="line"><span class="comment">## Traceback (most recent call last):</span></span><br><span class="line"><span class="comment">##     File "", line 1, in</span></span><br><span class="line"><span class="comment">## AttributeError: can't set attribute</span></span><br></pre></td></tr></table></figure>
-<p>你应该使用命名元组来让代码<strong>自文档</strong>，<strong>它们向后兼容于普通的元组</strong>，<strong>这意味着你可以既使用整数索引，也可以使用名称来访问<code>namedtuple</code>：</strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> namedtuple</span><br><span class="line"></span><br><span class="line">Animal = namedtuple(<span class="string">'Animal'</span>, <span class="string">'name age type'</span>)</span><br><span class="line">perry = Animal(name=<span class="string">"perry"</span>, age=<span class="number">31</span>, type=<span class="string">"cat"</span>)</span><br><span class="line">print(perry[<span class="number">0</span>])</span><br><span class="line"></span><br><span class="line"><span class="comment">## 输出: perry</span></span><br></pre></td></tr></table></figure>
-<p>最后，你可以将一个命名元组转换为字典，方法如下：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> namedtuple</span><br><span class="line"></span><br><span class="line">Animal = namedtuple(<span class="string">'Animal'</span>, <span class="string">'name age type'</span>)</span><br><span class="line">perry = Animal(name=<span class="string">"Perry"</span>, age=<span class="number">31</span>, type=<span class="string">"cat"</span>)</span><br><span class="line">print(perry._asdict())</span><br><span class="line"></span><br><span class="line"><span class="comment">## 输出: OrderedDict([('name', 'Perry'), ('age', 31), ...</span></span><br></pre></td></tr></table></figure>
-<h2 id="enum-Enum-Python-3-4"><a href="#enum-Enum-Python-3-4" class="headerlink" title="enum.Enum (Python 3.4+)"></a>enum.Enum (Python 3.4+)</h2><p>另一个有用的容器是枚举对象，它属于<code>enum</code>模块，存在于Python 3.4以上版本中（同时作为一个独立的PyPI包<code>enum34</code>供老版本使用）。Enums(枚举类型)基本上是一种组织各种东西的方式。</p>
-<p>让我们回顾一下上一个’Animal’命名元组的例子。它有一个type字段，问题是，type是一个字符串。那么问题来了，万一程序员输入了<code>Cat</code>，因为他按到了Shift键，或者输入了’CAT’，甚至’kitten’？解决的方法是为这样的枚举类型定义一个class类型，然后，<strong>每个常量都是class的一个唯一实例</strong>。Python提供了<code>Enum</code>类来实现这个功能：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> enum <span class="keyword">import</span> Enum</span><br><span class="line"></span><br><span class="line">Month = Enum(<span class="string">'Month'</span>, (<span class="string">'Jan'</span>, <span class="string">'Feb'</span>, <span class="string">'Mar'</span>, <span class="string">'Apr'</span>, <span class="string">'May'</span>, <span class="string">'Jun'</span>, <span class="string">'Jul'</span>, <span class="string">'Aug'</span>, <span class="string">'Sep'</span>, <span class="string">'Oct'</span>, <span class="string">'Nov'</span>, <span class="string">'Dec'</span>))</span><br></pre></td></tr></table></figure>
-<p>这样我们就获得了<code>Month</code>类型的枚举类，可以直接使用<code>Month.Jan</code>来引用一个常量，或者枚举它的所有成员：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> name, member <span class="keyword">in</span> Month.__members__.items():</span><br><span class="line">    print(name, <span class="string">'=&gt;'</span>, member, <span class="string">','</span>, member.value)</span><br></pre></td></tr></table></figure>
-<p><code>value</code>属性则是自动赋给成员的<code>int</code>常量，默认从<code>1</code>开始计数。</p>
-<p>如果需要更精确地控制枚举类型，可以从<code>Enum</code>派生出自定义类：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> namedtuple</span><br><span class="line"><span class="keyword">from</span> enum <span class="keyword">import</span> Enum</span><br><span class="line"></span><br><span class="line"><span class="meta">@unique		# @unique装饰器可以帮助我们检查保证没有重复值。</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Species</span><span class="params">(Enum)</span>:</span></span><br><span class="line">    cat = <span class="number">1</span></span><br><span class="line">    dog = <span class="number">2</span></span><br><span class="line">    horse = <span class="number">3</span></span><br><span class="line">    aardvark = <span class="number">4</span></span><br><span class="line">    butterfly = <span class="number">5</span></span><br><span class="line">    owl = <span class="number">6</span></span><br><span class="line">    platypus = <span class="number">7</span></span><br><span class="line">    dragon = <span class="number">8</span></span><br><span class="line">    unicorn = <span class="number">9</span></span><br><span class="line">    <span class="comment"># 依次类推</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 但我们并不想关心同一物种的年龄，所以我们可以使用一个别名</span></span><br><span class="line">    kitten = <span class="number">1</span>  <span class="comment"># (译者注：幼小的猫咪)</span></span><br><span class="line">    puppy = <span class="number">2</span>   <span class="comment"># (译者注：幼小的狗狗)</span></span><br><span class="line"></span><br><span class="line">Animal = namedtuple(<span class="string">'Animal'</span>, <span class="string">'name age type'</span>)</span><br><span class="line">perry = Animal(name=<span class="string">"Perry"</span>, age=<span class="number">31</span>, type=Species.cat)</span><br><span class="line">drogon = Animal(name=<span class="string">"Drogon"</span>, age=<span class="number">4</span>, type=Species.dragon)</span><br><span class="line">tom = Animal(name=<span class="string">"Tom"</span>, age=<span class="number">75</span>, type=Species.cat)</span><br><span class="line">charlie = Animal(name=<span class="string">"Charlie"</span>, age=<span class="number">2</span>, type=Species.kitten)</span><br></pre></td></tr></table></figure>
-<p>现在，我们进行一些测试：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>charlie.type == tom.type</span><br><span class="line"><span class="literal">True</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>charlie.type</span><br><span class="line">&lt;Species.cat: <span class="number">1</span>&gt;</span><br></pre></td></tr></table></figure>
-<p><strong>这样就没那么容易错误，我们必须更明确，而且我们应该只使用定义后的枚举类型</strong>。</p>
-<p>有三种方法访问枚举数据，例如以下方法都可以获取到’cat’的值：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Species(<span class="number">1</span>)</span><br><span class="line">Species[<span class="string">'cat'</span>]</span><br><span class="line">Species.cat</span><br></pre></td></tr></table></figure>
-<p>参考资料</p>
-<p>【1】：<a href="http://kodango.com/understand-defaultdict-in-python" target="_blank" rel="noopener">http://kodango.com/understand-defaultdict-in-python</a></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-    
-    
-    
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/30/python编程进阶/python编程进阶（7）：可变对象和slots/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Mosbyllc">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Mosbyllc">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/06/30/python编程进阶/python编程进阶（7）：可变对象和slots/" itemprop="url">python编程进阶（7）：可变对象和slots</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-30T10:46:27+08:00">
-                2018-06-30
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python编程进阶/" itemprop="url" rel="index">
-                    <span itemprop="name">python编程进阶</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  1,567
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  6
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="对象变动-Mutation"><a href="#对象变动-Mutation" class="headerlink" title="对象变动(Mutation)"></a>对象变动(Mutation)</h1><p>当你将一个变量赋值为另一个可变类型的变量时，<strong>对这个数据的任意改动会同时反映到这两个变量上去。新变量只不过是老变量的一个别名而已。对象可变与不可变性，是对内存地址而言的</strong>。现在讲述的这个情况只是针对可变数据类型。</p>
-<h2 id="不可变对象（需要复制到新内存）"><a href="#不可变对象（需要复制到新内存）" class="headerlink" title="不可变对象（需要复制到新内存）"></a>不可变对象（需要复制到新内存）</h2><blockquote>
-<p>常见不可变对象类型：int，string，float，tuple，bool ，frozenset，bytes</p>
-</blockquote>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">int_test</span><span class="params">()</span>:</span> </span><br><span class="line">    i = <span class="number">77</span></span><br><span class="line">    j = <span class="number">77</span></span><br><span class="line">    print(id(<span class="number">77</span>))                  <span class="comment">#140396579590760</span></span><br><span class="line">    print(<span class="string">'i id:'</span> + str(id(i)))      <span class="comment">#i id:140396579590760</span></span><br><span class="line">    print(<span class="string">'j id:'</span> + str(id(j)))      <span class="comment">#j id:140396579590760</span></span><br><span class="line">    <span class="keyword">print</span> i <span class="keyword">is</span> j                    <span class="comment">#True</span></span><br><span class="line">    j = j + <span class="number">1</span></span><br><span class="line">    print(<span class="string">'new i id:'</span> + str(id(i)))  <span class="comment">#new i id:140396579590760</span></span><br><span class="line">    print(<span class="string">'new j id:'</span> + str(id(j)))  <span class="comment">#new j id:140396579590736</span></span><br><span class="line">    <span class="keyword">print</span> i <span class="keyword">is</span> j                    <span class="comment">#False</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    int_test()</span><br></pre></td></tr></table></figure>
-<p>首先i和j都指向77这个内存块。然后我们修改j的值，按道理j修改之后应该i的值也发生改变的，因为它们都是指向的同一块内存，但结果是并没有。<strong>因为int类型是不可变类型，所有其实是j复制了一份到新的内存地址然后+1，然后j又指向了新的地址。所以j的内存id发生了变化。</strong></p>
-<p>内存变化如下：</p>
-<p><img src="/2018/06/30/python编程进阶/python编程进阶（7）：可变对象和slots/02.png" alt></p>
-<h2 id="可变对象（在原内存上修改）"><a href="#可变对象（在原内存上修改）" class="headerlink" title="可变对象（在原内存上修改）"></a>可变对象（在原内存上修改）</h2><blockquote>
-<p>常见可变对象类型：list，dict，set，user-defined classes(unless specifically made immutable)</p>
-</blockquote>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">dict_test</span><span class="params">()</span>:</span></span><br><span class="line">    a = &#123;&#125;	</span><br><span class="line">    b = a</span><br><span class="line">    print(id(a))	<span class="comment"># 140367329543360</span></span><br><span class="line">    a[<span class="string">'a'</span>] = <span class="string">'hhhh'</span></span><br><span class="line">    print(<span class="string">'id a:'</span> + str(id(a)))	<span class="comment"># id a:140367329543360</span></span><br><span class="line">    print(<span class="string">'a:'</span> + str(a))	<span class="comment"># a:&#123;'a': 'hhhh'&#125;</span></span><br><span class="line">    print(<span class="string">'id b:'</span> + str(id(b)))	<span class="comment"># id b:140367329543360</span></span><br><span class="line">    print(<span class="string">'b:'</span> + str(b))	<span class="comment"># b:&#123;'a': 'hhhh'&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    dict_test()</span><br></pre></td></tr></table></figure>
-<p>可以看到a最早的内存地址id是<code>140367329543360</code> 然后把a赋值给b其实就是让变量b的也指向a所指向的内存空间。然后我们发现当a发生变化后，b也跟着发生变化了。<strong>因为list是可变类型，所以并不会复制一份再改变，而是直接在a所指向的内存空间修改数据，而b也是指向该内存空间的，自然b也就跟着改变了。</strong></p>
-<p><img src="/2018/06/30/python编程进阶/python编程进阶（7）：可变对象和slots/03.png" alt></p>
-<p>对于列表，首地址是不可变的，而对于列表内的所有元素进行修改，会改变单个元素的地址（指向不同的引用）。所以说对于列表中的单个元素而言是不可变的，对于整体列表而言是可变的，如下图所示</p>
-<p><img src="/2018/06/30/python编程进阶/python编程进阶（7）：可变对象和slots/04.jpg" alt></p>
-<h2 id="python函数的参数传递"><a href="#python函数的参数传递" class="headerlink" title="python函数的参数传递"></a>python函数的参数传递</h2><p>由于<strong>python规定参数传递都是传递引用，也就是传递给函数的是原变量实际所指向的内存空间，修改的时候就会根据该引用的指向去修改该内存中的内容</strong>，所以按道理说我们在函数内改变了传递过来的参数的值的话，原来外部的变量也应该受到影响。但是上面我们说到了python中有可变类型和不可变类型，这样的话，<strong>当传过来的是可变类型(list,dict)时，我们在函数内部修改就会影响函数外部的变量。而传入的是不可变类型时在函数内部修改改变量并不会影响函数外部的变量，因为修改的时候会先复制一份再修改</strong>。下面通过代码证明一下：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">test</span><span class="params">(a_int, b_list)</span>:</span></span><br><span class="line">    a_int = a_int + <span class="number">1</span></span><br><span class="line">    b_list.append(<span class="string">'13'</span>)</span><br><span class="line">    print(<span class="string">'inner a_int:'</span> + str(a_int))</span><br><span class="line">    print(<span class="string">'inner b_list:'</span> + str(b_list))</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    a_int = <span class="number">5</span></span><br><span class="line">    b_list = [<span class="number">10</span>, <span class="number">11</span>]</span><br><span class="line"></span><br><span class="line">    test(a_int, b_list)</span><br><span class="line"></span><br><span class="line">    print(<span class="string">'outer a_int:'</span> + str(a_int))</span><br><span class="line">    print(<span class="string">'outer b_list:'</span> + str(b_list))</span><br></pre></td></tr></table></figure>
-<p>运行结果如下:</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">inner a_int:<span class="number">6</span></span><br><span class="line"></span><br><span class="line">inner b_list:[<span class="number">10</span>, <span class="number">11</span>, <span class="string">'13'</span>]</span><br><span class="line"></span><br><span class="line">outer a_int:<span class="number">5</span></span><br><span class="line"></span><br><span class="line">outer b_list:[<span class="number">10</span>, <span class="number">11</span>, <span class="string">'13'</span>]</span><br></pre></td></tr></table></figure>
-<p>好啦！答案显而易见啦，经过<code>test()</code>方法修改后，传递过来的int类型外部变量没有发生改变，而list这种可变类型则因为<code>test()</code>方法的影响导致内容发生了改变。</p>
-<p>在很多的其他语言中在传递参数的时候允许程序员选择值传递还是引用传递(比如c语言加上<em>号传递指针就是引用传递，而直接传递变量名就是值传递)，<em>*而python只允许使用引用传递，但是它加上了可变类型和不可变类型，听说python只允许引用传递是为方便内存管理，因为python使用的内存回收机制是计数器回收，就是每块内存上有一个计数器，表示当前有多少个对象指向该内存。每当一个变量不再使用时，就让该计数器-1，有新对象指向该内存时就让计数器+1，当计时器为0时，就可以收回这块内存了。</em></em></p>
-<h1 id="slots-魔法"><a href="#slots-魔法" class="headerlink" title="_slots_魔法"></a>_<em>slots_</em>魔法</h1><p><strong>在Python中，每个类都有实例属性。默认情况下Python用一个字典来保存一个对象的实例属性。这非常有用，因为它允许我们在运行时去设置任意的新属性。</strong></p>
-<p>然而，对于有着已知属性的小类来说，它可能是个瓶颈。这个字典浪费了很多内存。<strong>Python不能在对象创建时直接分配一个固定量的内存来保存所有的属性。因此如果你创建许多对象（我指的是成千上万个），它会消耗掉很多内存</strong>。<br>不过还是有一个方法来规避这个问题。<strong>这个方法需要使用<code>__slots__</code>来告诉Python不要使用字典，而且只给一个固定集合的属性分配空间。</strong></p>
-<p>这里是一个使用与不使用<code>__slots__</code>的例子：</p>
-<ul>
-<li><p>不使用 <code>__slots__</code>:</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyClass</span><span class="params">(object)</span>:</span></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, name, identifier)</span>:</span></span><br><span class="line">      self.name = name</span><br><span class="line">      self.identifier = identifier</span><br><span class="line">      self.set_up()</span><br><span class="line">  <span class="comment"># ...</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>使用 <code>__slots__</code>:</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyClass</span><span class="params">(object)</span>:</span></span><br><span class="line">  __slots__ = [<span class="string">'name'</span>, <span class="string">'identifier'</span>]</span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, name, identifier)</span>:</span></span><br><span class="line">      self.name = name</span><br><span class="line">      self.identifier = identifier</span><br><span class="line">      self.set_up()</span><br><span class="line">  <span class="comment"># ...</span></span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<p>第二段代码会为你的内存减轻负担。通过这个技巧，有些人已经看到内存占用率几乎40%~50%的减少。</p>
-<p>稍微备注一下，你也许需要试一下PyPy。它已经默认地做了所有这些优化。</p>
-<p>参考资料：</p>
-<p>【1】python可变和不可变对象：<a href="https://www.jianshu.com/p/c5582e23b26c" target="_blank" rel="noopener">https://www.jianshu.com/p/c5582e23b26c</a></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-    
-    
-    
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/5/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/5/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -3062,7 +3443,7 @@ TNR = \frac{TN}{N} = \frac{TN}{TN+FP}</script><p><img src="/2018/07/11/Sklearn �
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">60</span>
+                  <span class="site-state-item-count">62</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -3073,7 +3454,7 @@ TNR = \frac{TN}{N} = \frac{TN}{TN+FP}</script><p><img src="/2018/07/11/Sklearn �
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-count">11</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -3084,7 +3465,7 @@ TNR = \frac{TN}{N} = \frac{TN}{TN+FP}</script><p><img src="/2018/07/11/Sklearn �
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">73</span>
+                  <span class="site-state-item-count">74</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -3179,7 +3560,7 @@ TNR = \frac{TN}{N} = \frac{TN}{TN+FP}</script><p><img src="/2018/07/11/Sklearn �
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2020</span>
+        <div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2022</span>
   <span class="with-love">
     <i class="fa fa-star"></i>
   </span>
